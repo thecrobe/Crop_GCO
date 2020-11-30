@@ -1,0 +1,446 @@
+
+---
+title: "GCO Crop Pathogens"
+author: "JD Stewart (@thecrobe)"
+output:
+  *html_document: default
+  *pdf_document: default
+---
+# The goal of this study is to answer:
+
+"Are crop yields greater inside or outside the crop's geographic center of origin as a function of escaping pest and pathogen pressure?"
+
+# Reproducibility
+This document can be regenerated using Rmarkdown and the associated R-script (Analyses_Figures.R). This R-script, in combination with the supplementary data files (available online at github.com/thecrobe) also allows for full reproducibility of all the the figures and analyses conducted in R. All other analyses are conducted in ArcMap by ESRI. 
+
+## Focal Crops (n=12) Barley, Cassava, Groundnuts, Maize, Millet, Rapeseed, Rice, Rye, Sorghum, Soybean, Sunflower, Wheat
+  
+## Data Sources:
+### Crop Yields:
+Resolution: Five minute by five minute (~10km x 10km at equator)) 
+  
+Data is extracted from EarthStat for average yields per hectare from 1997-2003 as raster images and then the mean value per country is then calculated using zonal statistics. Data is derived from United Nations Food and Agriculture Organization (FAO), the International Food Policy Research Institute (IFPRI), the Center for Sustainability and the Global Environment (SAGE). When subnational statistics were unavailable, national figures from the Food and Agriculture Organization’s statistical database were used. List of all sources is available on EarthStat 
+
+
+### Inputs
+
+Fertilizer 
+Resolution: Five minute by five minute (~10km x 10km at equator)) 
+  
+List of all sources is available on EarthStat.A major source of data was the fifth edition of “Fertilizer Use by Crop” (the FUBC5 dataset), a joint publication from the International Fertilizer Industry Association (IFA), the International Fertilizer Development Center (IFDC), the International Potash Institute (IPI), the Phosphate and Potash Institute (PPI), and the Food and Agriculture Organization of the United Nations (FAO). 
+
+The publication contains national-level application rate data by crop for 42 countries, compiled from the following data sources: FAO questionnaires given to member countries; IFA questionnaires given to industry companies, research institutes, and fertilizer associations; IFDC questionnaires sent to experts attending courses, seminars, and professional meetings; and IPI and PPI communications with experts. Most of the application rate data from the FUBC5 dataset are for the years 1999 or 2000, but data for some countries are as old as 1994 and as recent as 2001. 
+
+# Drivers to test
+  
+### Climate: Still working on with Google Earth Engine
+Resolution: ~4-km (1/24th degree) spatial resolution averaged across 1997-2003. 
+  
+TerraClimate uses climatically aided interpolation, combining high-spatial resolution climatological normals from the WorldClim dataset, with coarser spatial resolution, but time-varying data from CRU Ts4.0 and the Japanese 55-year Reanalysis (JRA55). 
+
+#### Pests: 
+Resolution: Resolution: Country level. Mean from 1997-2003 derived from FAO
+
+### GDP: 
+Resolution: Country level. Mean from 1997-2003 derived from WorldBank
+  
+### Growing Season
+Resolution: Raster based (10km2)
+UNEP (2010): The GEO Data Portal, as compiled from FAO, TERRASTAT I Global GIS Databases Poverty and Food Insecurity Mapping Project. United Nations Environment Program.
+  
+
+
+# Geographic Centers of Origin: 
+###These are defined at the country level for each crop with regions being taken from FAOSTAT labels and publications of origins from a mixture of molecular and archaeological studies.
+  
+### Near East
+  * Barley
+  * Wheat
+    
+### South America
+  * Cassava
+  * Groundnuts
+
+### Central America 
+  * Maize
+    
+### China + SE Asia + India
+  * Rice
+  
+### China
+  * Soybean
+  * Millet
+  
+### North America 
+  * Sunflower
+
+### North East Africa
+  * Sorghum
+
+### Central Asia, Turkey, Transcaucasia,and Iran  
+  * Rye
+  
+### Central Europe 
+  * Rapeseed
+  
+***
+
+```{r setup,include=TRUE, cache=FALSE, echo=FALSE}
+#set working directory and load libraries
+rm(list=ls())
+
+#spatial
+library(raster)
+library(sp)
+library(spatialEco)
+library(rgdal)
+
+#models
+library(RVAideMemoire)
+library(caret)
+
+#plots
+library(RColorBrewer)
+library(ggplot2)
+
+#data wrangling
+library(reshape2)
+library(dplyr)
+library(Hmisc)
+
+```
+
+## Yields Inside and Outside GCO 
+
+<div class = "col-md-4">
+<br><br> **What Was Tested:** Do crop yields vary inside and outside GCO?
+</div>
+
+<div class = "col-md-4">
+<br><br> **What This Allows Me To Do:** Identify the distribution of yields inside and outside GCO and if they statistically differ 
+</div>
+
+<div class = "col-md-4">
+<br><br> **What Are The Model Assumptions:** Permutations T-Tests were used to test if there is a significant difference in the means of each crop separated by inside/outside GCO. These tests were chosen as they have few assumptions about the distribution and independence of the data (i.e. exchangability is th only assumption however there is no way to test for this as we do not know the true distribution). Likewise permutational tests destroy the spatial-autocorrelation structure that influences test results. Plots are solely visual.
+</div>
+
+<div class = "col-md-12">
+<br><br> **What Are The Model Assumptions:** Permutations T-Tests were used to test if there is a significant difference in the means of each crop separated by inside/outside GCO. These tests were chosen as they have few assumptions about the distribution and independence of the data (i.e. exchangability is th only assumption however there is no way to test for this as we do not know the true distribution). Likewise permutational tests destroy the spatial-autocorrelation structure that influences test results. Plots are solely visual.
+</div>
+
+```{r, Merge Mapping,echo=FALSE}
+mapping<-read.csv("mapping_GCOfishnet.csv", header=T)
+yield<-read.csv("yield_fishnet.csv", header=T)
+yield.mapping<-merge(yield,mapping, by="Fishnet_ID")
+```
+
+## Barley 
+```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Barley yield with individual colors"}
+barley<-na.omit(yield.mapping %>% select(barley_HgHa,barley_GCO))
+barley.inside<-filter(barley, barley_GCO == "Inside")
+barley.outside<-filter(barley, barley_GCO == "Outside")
+barley.m<-melt(barley)
+
+ggplot(barley.m, aes(x=barley.m$barley_GCO, y=barley.m$value, color=barley.m$barley_GCO)) + 
+  geom_jitter(alpha=0.4) + 
+  geom_boxplot(color="black", fill="transparent", lwd=1)+
+  scale_color_brewer(palette = "Dark2") + 
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+# Permutational T Test
+barley.perm<-perm.t.test(barley.inside$barley_HgHa,barley.outside$barley_HgHa,progress=FALSE)
+print(barley.perm)
+```
+## Cassava 
+```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Cassava yield with individual colors"}
+cassava<-na.omit(yield.mapping %>% select(cassava_HgHa,cassava_GCO))
+cassava.inside<-filter(cassava, cassava_GCO == "Inside")
+cassava.outside<-filter(cassava, cassava_GCO == "Outside")
+cassava.m<-melt(cassava)
+
+ggplot(cassava.m, aes(x=cassava.m$cassava_GCO, y=cassava.m$value, color=cassava.m$cassava_GCO)) + 
+  geom_jitter(alpha=0.4) + 
+   geom_boxplot(color="black", fill="transparent", lwd=1)+
+  scale_color_brewer(palette = "Dark2") + 
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+# Permutational T Test
+cassava.perm<-perm.t.test(cassava.inside$cassava_HgHa,cassava.outside$cassava_HgHa,progress=FALSE)
+print(cassava.perm)
+```
+## Groundnut 
+```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Groundnut yield with individual colors"}
+groundnut<-na.omit(yield.mapping %>% select(groundnut_HgHa,groundnut_GCO))
+groundnut.inside<-filter(groundnut, groundnut_GCO == "Inside")
+groundnut.outside<-filter(groundnut, groundnut_GCO == "Outside")
+groundnut.m<-melt(groundnut)
+
+
+ggplot(groundnut.m, aes(x=groundnut.m$groundnut_GCO, y=groundnut.m$value, color=groundnut.m$groundnut_GCO)) + 
+  geom_jitter(alpha=0.4) + 
+  geom_boxplot(color="black", fill="transparent", lwd=1)+
+  scale_color_brewer(palette = "Dark2") + 
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+# Permutational T Test
+groundnut.perm<-perm.t.test(groundnut.inside$groundnut_HgHa,groundnut.outside$groundnut_HgHa, progress=FALSE)
+print(groundnut.perm)
+
+```
+## Maize 
+```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Maize yield with individual colors"}
+maize<-na.omit(yield.mapping %>% select(maize_HgHa,maize_GCO))
+maize.inside<-filter(maize, maize_GCO == "Inside")
+maize.outside<-filter(maize, maize_GCO == "Outside")
+maize.m<-melt(maize)
+
+ggplot(maize.m, aes(x=maize.m$maize_GCO, y=maize.m$value, color=maize.m$maize_GCO)) + 
+  geom_jitter(alpha=0.4) + 
+  geom_boxplot(color="black", fill="transparent", lwd=1)+
+  scale_color_brewer(palette = "Dark2") + 
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+# Permutational T Test
+maize.perm<-perm.t.test(maize.inside$maize_HgHa,maize.outside$maize_HgHa, progress=FALSE)
+print(maize.perm)
+
+```
+## Millet 
+```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Millet yield with individual colors"}
+millet<-na.omit(yield.mapping %>% select(millet_HgHa,millet_GCO))
+millet.inside<-filter(millet, millet_GCO == "Inside")
+millet.outside<-filter(millet, millet_GCO == "Outside")
+millet.m<-melt(millet)
+
+ggplot(millet.m, aes(x=millet.m$millet_GCO, y=millet.m$value, color=millet.m$millet_GCO)) + 
+  geom_jitter(alpha=0.4) + 
+  geom_boxplot(color="black", fill="transparent", lwd=1)+
+  scale_color_brewer(palette = "Dark2") + 
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+# Permutational T Test
+millet.perm<-perm.t.test(millet.inside$millet_HgHa,millet.outside$millet_HgHa, progress=FALSE)
+print(millet.perm)
+```
+## Rapeseed 
+```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Rapeseed yield with individual colors"}
+rapeseed<-na.omit(yield.mapping %>% select(rapeseed_HgHa,rapeseed_GCO))
+rapeseed.inside<-filter(rapeseed, rapeseed_GCO == "Inside")
+rapeseed.outside<-filter(rapeseed, rapeseed_GCO == "Outside")
+rapeseed.m<-melt(rapeseed)
+
+ggplot(rapeseed.m, aes(x=rapeseed.m$rapeseed_GCO, y=rapeseed.m$value, color=rapeseed.m$rapeseed_GCO)) + 
+  geom_jitter(alpha=0.4) + 
+  geom_boxplot(color="black", fill="transparent", lwd=1)+
+  scale_color_brewer(palette = "Dark2") + 
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+# Permutational T Test
+rapeseed.perm<-perm.t.test(rapeseed.inside$rapeseed_HgHa,rapeseed.outside$rapeseed_HgHa, progress=FALSE)
+print(rapeseed.perm)
+```
+## Rice 
+```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Rice yield with individual colors"}
+rice<-na.omit(yield.mapping %>% select(rice_HgHa,rice_GCO))
+rice.inside<-filter(rice, rice_GCO == "Inside")
+rice.outside<-filter(rice, rice_GCO == "Outside")
+rice.m<-melt(rice)
+
+ggplot(rice.m, aes(x=rice.m$rice_GCO, y=rice.m$value, color=rice.m$rice_GCO)) + geom_jitter(alpha=0.4) + 
+  geom_boxplot(color="black", fill="transparent", lwd=1)+
+  scale_color_brewer(palette = "Dark2") + 
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+# Permutational T Test
+rice.perm<-perm.t.test(rice.inside$rice_HgHa,rice.outside$rice_HgHa, progress=FALSE)
+print(rice.perm)
+```
+## Rye 
+```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Rye yield with individual colors"}
+rye<-na.omit(yield.mapping %>% select(rye_HgHa,rye_GCO))
+rye.inside<-filter(rye, rye_GCO == "Inside")
+rye.outside<-filter(rye, rye_GCO == "Outside")
+rye.m<-melt(rye)
+
+ggplot(rye.m, aes(x=rye.m$rye_GCO, y=rye.m$value, color=rye.m$rye_GCO)) + 
+  geom_jitter(alpha=0.4) + 
+  geom_boxplot(color="black", fill="transparent", lwd=1)+
+  scale_color_brewer(palette = "Dark2") + 
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+# Permutational T Test
+rye.perm<-perm.t.test(rye.inside$rye_HgHa,rye.outside$rye_HgHa,progress=FALSE)
+print(rye.perm)
+```
+## Sorghum 
+```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Sorghum yield with individual colors"}
+sorghum<-na.omit(yield.mapping %>% select(sorghum_HgHa,sorghum_GCO))
+sorghum.inside<-filter(sorghum, sorghum_GCO == "Inside")
+sorghum.outside<-filter(sorghum, sorghum_GCO == "Outside")
+sorghum.m<-melt(sorghum)
+
+ggplot(sorghum.m, aes(x=sorghum.m$sorghum_GCO, y=sorghum.m$value, color=sorghum.m$sorghum_GCO)) + 
+  geom_jitter(alpha=0.4) + 
+  geom_boxplot(color="black", fill="transparent", lwd=1)+
+  scale_color_brewer(palette = "Dark2") + 
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+# Permutational T Test
+sorghum.perm<-perm.t.test(sorghum.inside$sorghum_HgHa,sorghum.outside$sorghum_HgHa, progress=FALSE)
+print(sorghum.perm)
+```
+## Soybean 
+```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Soybean yield with individual colors"}
+soybean<-na.omit(yield.mapping %>% select(soybean_HgHa,soybean_GCO))
+soybean.inside<-filter(soybean, soybean_GCO == "Inside")
+soybean.outside<-filter(soybean, soybean_GCO == "Outside")
+soybean.m<-melt(soybean)
+
+ggplot(soybean.m, aes(x=soybean.m$soybean_GCO, y=soybean.m$value, color=soybean.m$soybean_GCO)) + 
+  geom_jitter(alpha=0.4) + 
+  geom_boxplot(color="black", fill="transparent", lwd=1)+
+  scale_color_brewer(palette = "Dark2") + 
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+# Permutational T Test
+soybean.perm<-perm.t.test(soybean.inside$soybean_HgHa,soybean.outside$soybean_HgHa, progress=FALSE)
+print(soybean.perm)
+```
+## Sunflower 
+```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Sunflower yield with individual colors"}
+sunflower<-na.omit(yield.mapping %>% select(sunflower_HgHa,sunflower_GCO))
+sunflower.inside<-filter(sunflower, sunflower_GCO == "Inside")
+sunflower.outside<-filter(sunflower, sunflower_GCO == "Outside")
+sunflower.m<-melt(sunflower)
+
+ggplot(sunflower.m, aes(x=sunflower.m$sunflower_GCO, y=sunflower.m$value, color=sunflower.m$sunflower_GCO)) + 
+  geom_jitter(alpha=0.4) + 
+  geom_boxplot(color="black", fill="transparent", lwd=1)+
+  scale_color_brewer(palette = "Dark2") + 
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+# Permutational T Test
+sunflower.perm<-perm.t.test(sunflower.inside$sunflower_HgHa,sunflower.outside$sunflower_HgHa, progress=FALSE)
+print(sunflower.perm)
+```
+## Wheat 
+```{r,fig.align='center',message=FALSE, warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Wheat yield with individual colors"}
+wheat<-na.omit(yield.mapping %>% select(wheat_HgHa,wheat_GCO))
+wheat.inside<-filter(wheat, wheat_GCO == "Inside")
+wheat.outside<-filter(wheat, wheat_GCO == "Outside")
+wheat.m<-melt(wheat)
+
+ggplot(wheat.m, aes(x=wheat.m$wheat_GCO, y=wheat.m$value, color=wheat.m$wheat_GCO)) + 
+  geom_jitter(alpha=0.4) + 
+  geom_boxplot(color="black", fill="transparent", lwd=1)+
+  scale_color_brewer(palette = "Dark2") + 
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+# Permutational T Test
+wheat.perm<-perm.t.test(wheat.inside$wheat_HgHa,wheat.outside$wheat_HgHa, progress=FALSE)
+print(wheat.perm)
+```
+
+
+### Random Forest Regression (RFR)
+
+<div class = "col-md-4">
+<br><br> **What Was Tested:** What are the drivers of variation in crop yields? 
+</div>
+
+<div class = "col-md-4">
+<br><br> **What This Allows Me To Do:** Identify correlation between expected drivers are with the distributiion of global crop yields and quantify error. 
+</div>
+
+<div class = "col-md-4">
+<br><br> **What Are The Model Assumptions:** The sampling is representative of the population; which is not unique and applies to all models. RFR was chosen as it has no formal distributional assumptions, random forests are non-parametric and can thus handle skewed, multimodal, and spatio-temporally autocorrelated data.
+</div>
+```{r, Analysis: Random Forest Trial,eval=FALSE}
+```
+
+Hotspot analyses (Getis-Ord G*) were conducted in ArcMap, ESRI to identify where yields are significantly higher with regards to the global distribution of all neighbors. This tool works by looking at each feature within the context of neighboring features. A feature with a high value is interesting but may not be a statistically significant hot spot. 
+
+To be a statistically significant hot spot, a feature will have a high value and be surrounded by other features with high values as well. The local sum for a feature and its neighbors is compared proportionally to the sum of all features; when the local sum is very different from the expected local sum, and when that difference is too large to be the result of random chance, a statistically significant z-score results. False Discovery Rate (FDR) was applied and statistical significance was adjusted to account for multiple testing and spatial dependency. 
+
+Assumptions: They are flexible depending on the data, one of the most important things is the spatial conceptualization (see Inverse Distance below) where we define how the model will consider spatial neighbors. In theory everything is normally distributed and random; however this method is quite robust to data not following this structure (as is common with spatial data, thus why it is so popular)
+
+An Inverse distance weight spatial conceptualization was used where closer values to the start pixel are assumed to be more similar (as an extension of Tobler's law), likewise the crop yields are continuous across (ranging from  0 - local/global maxima). A distance band was caluclated so that each pixel includes at least 1 neighbor (mean of 2133.641 km)
+
+```{r, Hotspot Analysis - Conducted in ArcMap, ESRI}
+
+
+```
+
+
