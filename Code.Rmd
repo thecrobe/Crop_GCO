@@ -3,14 +3,14 @@
 title: "GCO Crop Pathogens"
 author: "JD Stewart (@thecrobe)"
 output:
-  *html_document: default
-  *pdf_document: default
+  html_document: default
 ---
 # The goal of this study is to answer:
 
 "Are crop yields greater inside or outside the crop's geographic center of origin as a function of escaping pest and pathogen pressure?"
 
 # Reproducibility
+
 This document can be regenerated using Rmarkdown and the associated R-script (Analyses_Figures.R). This R-script, in combination with the supplementary data files (available online at github.com/thecrobe) also allows for full reproducibility of all the the figures and analyses conducted in R. All other analyses are conducted in ArcMap by ESRI. 
 
 ## Focal Crops (n=12) Barley, Cassava, Groundnuts, Maize, Millet, Rapeseed, Rice, Rye, Sorghum, Soybean, Sunflower, Wheat
@@ -31,11 +31,10 @@ List of all sources is available on EarthStat.A major source of data was the fif
 
 The publication contains national-level application rate data by crop for 42 countries, compiled from the following data sources: FAO questionnaires given to member countries; IFA questionnaires given to industry companies, research institutes, and fertilizer associations; IFDC questionnaires sent to experts attending courses, seminars, and professional meetings; and IPI and PPI communications with experts. Most of the application rate data from the FUBC5 dataset are for the years 1999 or 2000, but data for some countries are as old as 1994 and as recent as 2001. 
 
-# Drivers to test
+## Drivers to test
   
-### Climate: Still working on with Google Earth Engine
+### Climate: 
 Resolution: ~4-km (1/24th degree) spatial resolution averaged across 1997-2003. 
-  
 TerraClimate uses climatically aided interpolation, combining high-spatial resolution climatological normals from the WorldClim dataset, with coarser spatial resolution, but time-varying data from CRU Ts4.0 and the Japanese 55-year Reanalysis (JRA55). 
 
 #### Pests: 
@@ -50,7 +49,7 @@ UNEP (2010): The GEO Data Portal, as compiled from FAO, TERRASTAT I Global GIS D
   
 
 
-# Geographic Centers of Origin: 
+## Geographic Centers of Origin: 
 ###These are defined at the country level for each crop with regions being taken from FAOSTAT labels and publications of origins from a mixture of molecular and archaeological studies.
   
 ### Near East
@@ -83,9 +82,9 @@ UNEP (2010): The GEO Data Portal, as compiled from FAO, TERRASTAT I Global GIS D
 ### Central Europe 
   * Rapeseed
   
-***
 
-```{r setup,include=TRUE, cache=FALSE, echo=FALSE}
+
+```{r setup,include=TRUE, cache=FALSE, echo=FALSE,message=FALSE}
 #set working directory and load libraries
 rm(list=ls())
 
@@ -102,6 +101,7 @@ library(caret)
 #plots
 library(RColorBrewer)
 library(ggplot2)
+library(wesanderson)
 
 #data wrangling
 library(reshape2)
@@ -142,9 +142,9 @@ barley.outside<-filter(barley, barley_GCO == "Outside")
 barley.m<-melt(barley)
 
 ggplot(barley.m, aes(x=barley.m$barley_GCO, y=barley.m$value, color=barley.m$barley_GCO)) + 
-  geom_jitter(alpha=0.4) + 
-  geom_boxplot(color="black", fill="transparent", lwd=1)+
-  scale_color_brewer(palette = "Dark2") + 
+  geom_jitter(alpha=0.4, width=0.2) + 
+  geom_boxplot(color="black", fill="transparent", width=0.4)+
+  scale_color_manual(values = wes_palette("Darjeeling1",type = "discrete")) + 
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
     panel.grid.major = element_blank(),
@@ -165,9 +165,9 @@ cassava.outside<-filter(cassava, cassava_GCO == "Outside")
 cassava.m<-melt(cassava)
 
 ggplot(cassava.m, aes(x=cassava.m$cassava_GCO, y=cassava.m$value, color=cassava.m$cassava_GCO)) + 
-  geom_jitter(alpha=0.4) + 
-   geom_boxplot(color="black", fill="transparent", lwd=1)+
-  scale_color_brewer(palette = "Dark2") + 
+  geom_jitter(alpha=0.4, width=0.2) + 
+  geom_boxplot(color="black", fill="transparent", width=0.4)+
+  scale_color_manual(values = wes_palette("Darjeeling1",type = "discrete")) + 
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
     panel.grid.major = element_blank(),
@@ -189,9 +189,9 @@ groundnut.m<-melt(groundnut)
 
 
 ggplot(groundnut.m, aes(x=groundnut.m$groundnut_GCO, y=groundnut.m$value, color=groundnut.m$groundnut_GCO)) + 
-  geom_jitter(alpha=0.4) + 
-  geom_boxplot(color="black", fill="transparent", lwd=1)+
-  scale_color_brewer(palette = "Dark2") + 
+ geom_jitter(alpha=0.4, width=0.2) + 
+  geom_boxplot(color="black", fill="transparent", width=0.4)+
+  scale_color_manual(values = wes_palette("Darjeeling1",type = "discrete")) + 
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
     panel.grid.major = element_blank(),
@@ -213,9 +213,9 @@ maize.outside<-filter(maize, maize_GCO == "Outside")
 maize.m<-melt(maize)
 
 ggplot(maize.m, aes(x=maize.m$maize_GCO, y=maize.m$value, color=maize.m$maize_GCO)) + 
-  geom_jitter(alpha=0.4) + 
-  geom_boxplot(color="black", fill="transparent", lwd=1)+
-  scale_color_brewer(palette = "Dark2") + 
+ geom_jitter(alpha=0.4, width=0.2) + 
+  geom_boxplot(color="black", fill="transparent", width=0.4)+
+  scale_color_manual(values = wes_palette("Darjeeling1",type = "discrete")) + 
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
     panel.grid.major = element_blank(),
@@ -236,10 +236,10 @@ millet.inside<-filter(millet, millet_GCO == "Inside")
 millet.outside<-filter(millet, millet_GCO == "Outside")
 millet.m<-melt(millet)
 
-ggplot(millet.m, aes(x=millet.m$millet_GCO, y=millet.m$value, color=millet.m$millet_GCO)) + 
-  geom_jitter(alpha=0.4) + 
-  geom_boxplot(color="black", fill="transparent", lwd=1)+
-  scale_color_brewer(palette = "Dark2") + 
+ggplot(millet.m, aes(x=millet.m$millet_GCO, y=millet.m$value, color=millet.m$millet_GCO)) +   
+  geom_jitter(alpha=0.4, width=0.2) + 
+  geom_boxplot(color="black", fill="transparent", width=0.4)+
+  scale_color_manual(values = wes_palette("Darjeeling1",type = "discrete")) + 
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
     panel.grid.major = element_blank(),
@@ -260,9 +260,9 @@ rapeseed.outside<-filter(rapeseed, rapeseed_GCO == "Outside")
 rapeseed.m<-melt(rapeseed)
 
 ggplot(rapeseed.m, aes(x=rapeseed.m$rapeseed_GCO, y=rapeseed.m$value, color=rapeseed.m$rapeseed_GCO)) + 
-  geom_jitter(alpha=0.4) + 
-  geom_boxplot(color="black", fill="transparent", lwd=1)+
-  scale_color_brewer(palette = "Dark2") + 
+   geom_jitter(alpha=0.4, width=0.2) + 
+  geom_boxplot(color="black", fill="transparent", width=0.4)+
+  scale_color_manual(values = wes_palette("Darjeeling1",type = "discrete")) + 
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
     panel.grid.major = element_blank(),
@@ -282,9 +282,9 @@ rice.inside<-filter(rice, rice_GCO == "Inside")
 rice.outside<-filter(rice, rice_GCO == "Outside")
 rice.m<-melt(rice)
 
-ggplot(rice.m, aes(x=rice.m$rice_GCO, y=rice.m$value, color=rice.m$rice_GCO)) + geom_jitter(alpha=0.4) + 
-  geom_boxplot(color="black", fill="transparent", lwd=1)+
-  scale_color_brewer(palette = "Dark2") + 
+ggplot(rice.m, aes(x=rice.m$rice_GCO, y=rice.m$value, color=rice.m$rice_GCO)) +   geom_jitter(alpha=0.4, width=0.2) + 
+  geom_boxplot(color="black", fill="transparent", width=0.4)+
+  scale_color_manual(values = wes_palette("Darjeeling1",type = "discrete")) + 
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
     panel.grid.major = element_blank(),
@@ -305,9 +305,9 @@ rye.outside<-filter(rye, rye_GCO == "Outside")
 rye.m<-melt(rye)
 
 ggplot(rye.m, aes(x=rye.m$rye_GCO, y=rye.m$value, color=rye.m$rye_GCO)) + 
-  geom_jitter(alpha=0.4) + 
-  geom_boxplot(color="black", fill="transparent", lwd=1)+
-  scale_color_brewer(palette = "Dark2") + 
+  geom_jitter(alpha=0.4, width=0.2) + 
+  geom_boxplot(color="black", fill="transparent", width=0.4)+
+  scale_color_manual(values = wes_palette("Darjeeling1",type = "discrete")) + 
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
     panel.grid.major = element_blank(),
@@ -315,7 +315,6 @@ ggplot(rye.m, aes(x=rye.m$rye_GCO, y=rye.m$value, color=rye.m$rye_GCO)) +
     panel.border = element_blank(),
     panel.background = element_blank()) + 
   ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
-
 # Permutational T Test
 rye.perm<-perm.t.test(rye.inside$rye_HgHa,rye.outside$rye_HgHa,progress=FALSE)
 print(rye.perm)
@@ -328,9 +327,9 @@ sorghum.outside<-filter(sorghum, sorghum_GCO == "Outside")
 sorghum.m<-melt(sorghum)
 
 ggplot(sorghum.m, aes(x=sorghum.m$sorghum_GCO, y=sorghum.m$value, color=sorghum.m$sorghum_GCO)) + 
-  geom_jitter(alpha=0.4) + 
-  geom_boxplot(color="black", fill="transparent", lwd=1)+
-  scale_color_brewer(palette = "Dark2") + 
+  geom_jitter(alpha=0.4, width=0.2) + 
+  geom_boxplot(color="black", fill="transparent", width=0.4)+
+  scale_color_manual(values = wes_palette("Darjeeling1",type = "discrete")) + 
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
     panel.grid.major = element_blank(),
@@ -351,9 +350,9 @@ soybean.outside<-filter(soybean, soybean_GCO == "Outside")
 soybean.m<-melt(soybean)
 
 ggplot(soybean.m, aes(x=soybean.m$soybean_GCO, y=soybean.m$value, color=soybean.m$soybean_GCO)) + 
-  geom_jitter(alpha=0.4) + 
-  geom_boxplot(color="black", fill="transparent", lwd=1)+
-  scale_color_brewer(palette = "Dark2") + 
+ geom_jitter(alpha=0.4, width=0.2) + 
+  geom_boxplot(color="black", fill="transparent", width=0.4)+
+  scale_color_manual(values = wes_palette("Darjeeling1",type = "discrete")) + 
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
     panel.grid.major = element_blank(),
@@ -374,9 +373,9 @@ sunflower.outside<-filter(sunflower, sunflower_GCO == "Outside")
 sunflower.m<-melt(sunflower)
 
 ggplot(sunflower.m, aes(x=sunflower.m$sunflower_GCO, y=sunflower.m$value, color=sunflower.m$sunflower_GCO)) + 
-  geom_jitter(alpha=0.4) + 
-  geom_boxplot(color="black", fill="transparent", lwd=1)+
-  scale_color_brewer(palette = "Dark2") + 
+  geom_jitter(alpha=0.4, width=0.2) + 
+  geom_boxplot(color="black", fill="transparent", width=0.4)+
+  scale_color_manual(values = wes_palette("Darjeeling1",type = "discrete")) + 
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
     panel.grid.major = element_blank(),
@@ -397,9 +396,9 @@ wheat.outside<-filter(wheat, wheat_GCO == "Outside")
 wheat.m<-melt(wheat)
 
 ggplot(wheat.m, aes(x=wheat.m$wheat_GCO, y=wheat.m$value, color=wheat.m$wheat_GCO)) + 
-  geom_jitter(alpha=0.4) + 
-  geom_boxplot(color="black", fill="transparent", lwd=1)+
-  scale_color_brewer(palette = "Dark2") + 
+  geom_jitter(alpha=0.4, width=0.2) + 
+  geom_boxplot(color="black", fill="transparent", width=0.4)+
+  scale_color_manual(values = wes_palette("Darjeeling1",type = "discrete")) + 
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
     panel.grid.major = element_blank(),
@@ -429,6 +428,8 @@ print(wheat.perm)
 </div>
 ```{r, Analysis: Random Forest Trial,eval=FALSE}
 ```
+
+
 
 Hotspot analyses (Getis-Ord G*) were conducted in ArcMap, ESRI to identify where yields are significantly higher with regards to the global distribution of all neighbors. This tool works by looking at each feature within the context of neighboring features. A feature with a high value is interesting but may not be a statistically significant hot spot. 
 
