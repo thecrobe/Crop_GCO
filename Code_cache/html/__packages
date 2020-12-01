@@ -1,0 +1,16 @@
+base
+sp
+raster
+spatialEco
+rgdal
+RVAideMemoire
+lattice
+ggplot2
+caret
+RColorBrewer
+wesanderson
+reshape2
+dplyr
+survival
+Formula
+Hmisc
