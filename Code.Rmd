@@ -441,9 +441,4 @@ Assumptions: They are flexible depending on the data, one of the most important 
 
 An Inverse distance weight spatial conceptualization was used where closer values to the start pixel are assumed to be more similar (as an extension of Tobler's law), likewise the crop yields are continuous across (ranging from  0 - local/global maxima). A distance band was caluclated so that each pixel includes at least 1 neighbor (mean of 2133.641 km)
 
-```{r, Hotspot Analysis - Conducted in ArcMap, ESRI}
-
-
-```
-
 
