@@ -129,7 +129,7 @@ library(Hmisc)
 </div>
 
 ```{r, Merge Mapping,echo=FALSE}
-mapping<-read.csv("mapping_GCOfishnet.csv", header=T)
+mapping<-read.csv("mapping_GCOfishnet.csv", header=T, fileEncoding = "UTF-8-BOM")
 yield<-read.csv("yield_fishnet.csv", header=T)
 yield.mapping<-merge(yield,mapping, by="Fishnet_ID")
 ```
