@@ -135,7 +135,7 @@ yield.mapping<-merge(yield,mapping, by="Fishnet_ID")
 ```
 
 ## Barley 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Barley yield with individual colors"}
+```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Barley yield with individual colors",eval=FALSE}
 barley<-na.omit(yield.mapping %>% select(barley_HgHa,barley_GCO))
 barley.inside<-filter(barley, barley_GCO == "Inside")
 barley.outside<-filter(barley, barley_GCO == "Outside")
