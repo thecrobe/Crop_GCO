@@ -83,18 +83,8 @@ UNEP (2010): The GEO Data Portal, as compiled from FAO, TERRASTAT I Global GIS D
   * Rapeseed
   
 
-
-```{r setup,include=TRUE, cache=TRUE, echo=FALSE,message=FALSE,eval=TRUE,warning=FALSE}
-rm(list=ls())
-```
-
 ```{r, Packages, include=TRUE, echo=FALSE, message=FALSE, eval=TRUE, warning=FALSE}
 
-#spatial
-library(raster)
-library(sp)
-library(spatialEco)
-library(rgdal)
 
 #models
 library(RVAideMemoire)
@@ -136,7 +126,7 @@ yield.mapping<-merge(yield,mapping, by="Fishnet_ID")
 ```
 
 ## Barley 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Barley yield with individual colors"}
+```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Barley yield with individual colors", cache=TRUE}
 barley<-na.omit(yield.mapping %>% select(barley_HgHa,barley_GCO))
 barley.inside<-filter(barley, barley_GCO == "Inside")
 barley.outside<-filter(barley, barley_GCO == "Outside")
@@ -160,7 +150,7 @@ print(barley.perm)
 ```
 
 ## Cassava 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Cassava yield with individual colors,"}
+```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Cassava yield with individual colors,", cache=TRUE}
 cassava<-na.omit(yield.mapping %>% select(cassava_HgHa,cassava_GCO))
 cassava.inside<-filter(cassava, cassava_GCO == "Inside")
 cassava.outside<-filter(cassava, cassava_GCO == "Outside")
@@ -183,7 +173,7 @@ cassava.perm<-perm.t.test(cassava.inside$cassava_HgHa,cassava.outside$cassava_Hg
 print(cassava.perm)
 ```
 ## Groundnut 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Groundnut yield with individual colors"}
+```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Groundnut yield with individual colors", cache=TRUE}
 groundnut<-na.omit(yield.mapping %>% select(groundnut_HgHa,groundnut_GCO))
 groundnut.inside<-filter(groundnut, groundnut_GCO == "Inside")
 groundnut.outside<-filter(groundnut, groundnut_GCO == "Outside")
@@ -208,7 +198,7 @@ print(groundnut.perm)
 
 ```
 ## Maize 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Maize yield with individual colors"}
+```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Maize yield with individual colors", cache=TRUE}
 maize<-na.omit(yield.mapping %>% select(maize_HgHa,maize_GCO))
 maize.inside<-filter(maize, maize_GCO == "Inside")
 maize.outside<-filter(maize, maize_GCO == "Outside")
@@ -232,7 +222,7 @@ print(maize.perm)
 
 ```
 ## Millet 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Millet yield with individual colors"}
+```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Millet yield with individual colors", cache=TRUE}
 millet<-na.omit(yield.mapping %>% select(millet_HgHa,millet_GCO))
 millet.inside<-filter(millet, millet_GCO == "Inside")
 millet.outside<-filter(millet, millet_GCO == "Outside")
@@ -255,7 +245,7 @@ millet.perm<-perm.t.test(millet.inside$millet_HgHa,millet.outside$millet_HgHa, p
 print(millet.perm)
 ```
 ## Rapeseed 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Rapeseed yield with individual colors"}
+```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Rapeseed yield with individual colors", cache=TRUE}
 rapeseed<-na.omit(yield.mapping %>% select(rapeseed_HgHa,rapeseed_GCO))
 rapeseed.inside<-filter(rapeseed, rapeseed_GCO == "Inside")
 rapeseed.outside<-filter(rapeseed, rapeseed_GCO == "Outside")
@@ -278,7 +268,7 @@ rapeseed.perm<-perm.t.test(rapeseed.inside$rapeseed_HgHa,rapeseed.outside$rapese
 print(rapeseed.perm)
 ```
 ## Rice 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Rice yield with individual colors"}
+```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Rice yield with individual colors", cache=TRUE}
 rice<-na.omit(yield.mapping %>% select(rice_HgHa,rice_GCO))
 rice.inside<-filter(rice, rice_GCO == "Inside")
 rice.outside<-filter(rice, rice_GCO == "Outside")
@@ -300,7 +290,7 @@ rice.perm<-perm.t.test(rice.inside$rice_HgHa,rice.outside$rice_HgHa, progress=FA
 print(rice.perm)
 ```
 ## Rye 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Rye yield with individual colors"}
+```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Rye yield with individual colors", cache=TRUE}
 rye<-na.omit(yield.mapping %>% select(rye_HgHa,rye_GCO))
 rye.inside<-filter(rye, rye_GCO == "Inside")
 rye.outside<-filter(rye, rye_GCO == "Outside")
@@ -322,7 +312,7 @@ rye.perm<-perm.t.test(rye.inside$rye_HgHa,rye.outside$rye_HgHa,progress=FALSE)
 print(rye.perm)
 ```
 ## Sorghum 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Sorghum yield with individual colors"}
+```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Sorghum yield with individual colors", cache=TRUE}
 sorghum<-na.omit(yield.mapping %>% select(sorghum_HgHa,sorghum_GCO))
 sorghum.inside<-filter(sorghum, sorghum_GCO == "Inside")
 sorghum.outside<-filter(sorghum, sorghum_GCO == "Outside")
@@ -345,7 +335,7 @@ sorghum.perm<-perm.t.test(sorghum.inside$sorghum_HgHa,sorghum.outside$sorghum_Hg
 print(sorghum.perm)
 ```
 ## Soybean 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Soybean yield with individual colors"}
+```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Soybean yield with individual colors", cache=TRUE}
 soybean<-na.omit(yield.mapping %>% select(soybean_HgHa,soybean_GCO))
 soybean.inside<-filter(soybean, soybean_GCO == "Inside")
 soybean.outside<-filter(soybean, soybean_GCO == "Outside")
@@ -368,7 +358,7 @@ soybean.perm<-perm.t.test(soybean.inside$soybean_HgHa,soybean.outside$soybean_Hg
 print(soybean.perm)
 ```
 ## Sunflower 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Sunflower yield with individual colors"}
+```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Sunflower yield with individual colors", cache=TRUE}
 sunflower<-na.omit(yield.mapping %>% select(sunflower_HgHa,sunflower_GCO))
 sunflower.inside<-filter(sunflower, sunflower_GCO == "Inside")
 sunflower.outside<-filter(sunflower, sunflower_GCO == "Outside")
@@ -391,7 +381,7 @@ sunflower.perm<-perm.t.test(sunflower.inside$sunflower_HgHa,sunflower.outside$su
 print(sunflower.perm)
 ```
 ## Wheat 
-```{r,fig.align='center',message=FALSE, warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Wheat yield with individual colors"}
+```{r,fig.align='center',message=FALSE, warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Wheat yield with individual colors", cache=TRUE}
 wheat<-na.omit(yield.mapping %>% select(wheat_HgHa,wheat_GCO))
 wheat.inside<-filter(wheat, wheat_GCO == "Inside")
 wheat.outside<-filter(wheat, wheat_GCO == "Outside")
@@ -429,7 +419,7 @@ print(wheat.perm)
 <div class = "col-md-4">
 <br><br> **What Are The Model Assumptions:** The sampling is representative of the population; which is not unique and applies to all models. RFR was chosen as it has no formal distributional assumptions, random forests are non-parametric and can thus handle skewed, multimodal, and spatio-temporally autocorrelated data.
 </div>
-```{r, Analysis: Random Forest Trial}
+```{r, Analysis: Random Forest Trial, cache=TRUE}
 
 rf.sorghum<-read.csv(file="Models/Sorghum_RF.csv", header = T, row.names = 1)
 rf.sorghum$Growing.Season<-as.numeric(rf.sorghum$Growing.Season)
@@ -448,10 +438,18 @@ dataset <- rf[validation_index,]
 control <- trainControl(method="cv", repeats = 10)  
 metric <- "RMSE" 
 
+# set up clusters
+
+library(doParallel)
+cl <- makePSOCKcluster(max(1,detectCores()-5))
+registerDoParallel(cl)
+
 # Random Forest
 set.seed(7)
 fit.rf.sorghum <- train(Yield~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.sorghum) #print results
+
+stopCluster(cl)
 
 sorghum.varIMP<-(varImp(fit.rf.sorghum)) #identify variable importance
 plot(sorghum.varIMP)
@@ -467,7 +465,7 @@ write.csv(exp(modelerror),file="Models/Predictions/sorghum_predictions.csv") # e
 ```
 
 ### RFR - Fertilizer AVERAGE
-```{r}
+```{r,Second Random Forest, cache=TRUE}
 rf.sorghum<-read.csv(file="Models/Sorghum_RF_Average.csv", header = T, row.names = 1)
 rf.sorghum$Growing.Season<-as.numeric(rf.sorghum$Growing.Season)
 rf<-na.omit(rf.sorghum)
@@ -487,7 +485,11 @@ metric <- "RMSE"
 
 # Random Forest
 set.seed(7)
+cl <- makePSOCKcluster(max(1,detectCores()-5))
+registerDoParallel(cl)
 fit.rf.sorghum <- train(Yield~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+stopCluster(cl)
+
 print(fit.rf.sorghum) #print results
 
 sorghum.varIMP<-(varImp(fit.rf.sorghum)) #identify variable importance
