@@ -4,3 +4,5 @@
 .Ruserdata
 Code.html
 .DS_Store
+Code_cache/*
+Code_files/*
