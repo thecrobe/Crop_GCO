@@ -141,6 +141,8 @@ barley<-na.omit(yield.mapping %>% select(barley_HgHa,barley_GCO))
 barley.inside<-filter(barley, barley_GCO == "Inside")
 barley.outside<-filter(barley, barley_GCO == "Outside")
 barley.m<-melt(barley)
+summary(barley.inside)
+summary(barley.outside)
 
 ggplot(barley.m, aes(x=barley.m$barley_GCO, y=barley.m$value, color=barley.m$barley_GCO)) + 
   geom_jitter(alpha=0.4, width=0.2) + 
@@ -165,6 +167,8 @@ cassava<-na.omit(yield.mapping %>% select(cassava_HgHa,cassava_GCO))
 cassava.inside<-filter(cassava, cassava_GCO == "Inside")
 cassava.outside<-filter(cassava, cassava_GCO == "Outside")
 cassava.m<-melt(cassava)
+summary(cassava.inside)
+summary(cassava.outside)
 
 ggplot(cassava.m, aes(x=cassava.m$cassava_GCO, y=cassava.m$value, color=cassava.m$cassava_GCO)) + 
   geom_jitter(alpha=0.4, width=0.2) + 
@@ -188,6 +192,8 @@ groundnut<-na.omit(yield.mapping %>% select(groundnut_HgHa,groundnut_GCO))
 groundnut.inside<-filter(groundnut, groundnut_GCO == "Inside")
 groundnut.outside<-filter(groundnut, groundnut_GCO == "Outside")
 groundnut.m<-melt(groundnut)
+summary(groundnut.inside)
+summary(groundnut.outside)
 
 
 ggplot(groundnut.m, aes(x=groundnut.m$groundnut_GCO, y=groundnut.m$value, color=groundnut.m$groundnut_GCO)) + 
@@ -213,6 +219,8 @@ maize<-na.omit(yield.mapping %>% select(maize_HgHa,maize_GCO))
 maize.inside<-filter(maize, maize_GCO == "Inside")
 maize.outside<-filter(maize, maize_GCO == "Outside")
 maize.m<-melt(maize)
+summary(maize.inside)
+summary(maize.outside)
 
 ggplot(maize.m, aes(x=maize.m$maize_GCO, y=maize.m$value, color=maize.m$maize_GCO)) + 
  geom_jitter(alpha=0.4, width=0.2) + 
@@ -237,6 +245,8 @@ millet<-na.omit(yield.mapping %>% select(millet_HgHa,millet_GCO))
 millet.inside<-filter(millet, millet_GCO == "Inside")
 millet.outside<-filter(millet, millet_GCO == "Outside")
 millet.m<-melt(millet)
+summary(millet.inside)
+summary(millet.outside)
 
 ggplot(millet.m, aes(x=millet.m$millet_GCO, y=millet.m$value, color=millet.m$millet_GCO)) +   
   geom_jitter(alpha=0.4, width=0.2) + 
@@ -260,6 +270,8 @@ rapeseed<-na.omit(yield.mapping %>% select(rapeseed_HgHa,rapeseed_GCO))
 rapeseed.inside<-filter(rapeseed, rapeseed_GCO == "Inside")
 rapeseed.outside<-filter(rapeseed, rapeseed_GCO == "Outside")
 rapeseed.m<-melt(rapeseed)
+summary(rapeseed.inside)
+summary(rapeseed.outside)
 
 ggplot(rapeseed.m, aes(x=rapeseed.m$rapeseed_GCO, y=rapeseed.m$value, color=rapeseed.m$rapeseed_GCO)) + 
    geom_jitter(alpha=0.4, width=0.2) + 
@@ -283,6 +295,8 @@ rice<-na.omit(yield.mapping %>% select(rice_HgHa,rice_GCO))
 rice.inside<-filter(rice, rice_GCO == "Inside")
 rice.outside<-filter(rice, rice_GCO == "Outside")
 rice.m<-melt(rice)
+summary(rice.inside)
+summary(rice.outside)
 
 ggplot(rice.m, aes(x=rice.m$rice_GCO, y=rice.m$value, color=rice.m$rice_GCO)) +   geom_jitter(alpha=0.4, width=0.2) + 
   geom_boxplot(color="black", fill="transparent", width=0.4)+
@@ -305,6 +319,8 @@ rye<-na.omit(yield.mapping %>% select(rye_HgHa,rye_GCO))
 rye.inside<-filter(rye, rye_GCO == "Inside")
 rye.outside<-filter(rye, rye_GCO == "Outside")
 rye.m<-melt(rye)
+summary(rye.inside)
+summary(rye.outside)
 
 ggplot(rye.m, aes(x=rye.m$rye_GCO, y=rye.m$value, color=rye.m$rye_GCO)) + 
   geom_jitter(alpha=0.4, width=0.2) + 
@@ -327,6 +343,8 @@ sorghum<-na.omit(yield.mapping %>% select(sorghum_HgHa,sorghum_GCO))
 sorghum.inside<-filter(sorghum, sorghum_GCO == "Inside")
 sorghum.outside<-filter(sorghum, sorghum_GCO == "Outside")
 sorghum.m<-melt(sorghum)
+summary(sorghum.inside)
+summary(sorghum.outside)
 
 ggplot(sorghum.m, aes(x=sorghum.m$sorghum_GCO, y=sorghum.m$value, color=sorghum.m$sorghum_GCO)) + 
   geom_jitter(alpha=0.4, width=0.2) + 
@@ -350,6 +368,8 @@ soybean<-na.omit(yield.mapping %>% select(soybean_HgHa,soybean_GCO))
 soybean.inside<-filter(soybean, soybean_GCO == "Inside")
 soybean.outside<-filter(soybean, soybean_GCO == "Outside")
 soybean.m<-melt(soybean)
+summary(soybean.inside)
+summary(soybean.outside)
 
 ggplot(soybean.m, aes(x=soybean.m$soybean_GCO, y=soybean.m$value, color=soybean.m$soybean_GCO)) + 
  geom_jitter(alpha=0.4, width=0.2) + 
@@ -373,6 +393,8 @@ sunflower<-na.omit(yield.mapping %>% select(sunflower_HgHa,sunflower_GCO))
 sunflower.inside<-filter(sunflower, sunflower_GCO == "Inside")
 sunflower.outside<-filter(sunflower, sunflower_GCO == "Outside")
 sunflower.m<-melt(sunflower)
+summary(sunflower.inside)
+summary(sunflower.outside)
 
 ggplot(sunflower.m, aes(x=sunflower.m$sunflower_GCO, y=sunflower.m$value, color=sunflower.m$sunflower_GCO)) + 
   geom_jitter(alpha=0.4, width=0.2) + 
@@ -396,6 +418,8 @@ wheat<-na.omit(yield.mapping %>% select(wheat_HgHa,wheat_GCO))
 wheat.inside<-filter(wheat, wheat_GCO == "Inside")
 wheat.outside<-filter(wheat, wheat_GCO == "Outside")
 wheat.m<-melt(wheat)
+summary(wheat.inside)
+summary(wheat.outside)
 
 ggplot(wheat.m, aes(x=wheat.m$wheat_GCO, y=wheat.m$value, color=wheat.m$wheat_GCO)) + 
   geom_jitter(alpha=0.4, width=0.2) + 
@@ -502,4 +526,6 @@ head(modelerror) #make sure it worked honeyyyy
 write.csv(exp(modelerror),file="Models/Predictions/sorghum_predictions_averageFert.csv") # export for mapping
 
 ```
+
+dim(rf. )
 
