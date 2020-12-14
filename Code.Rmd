@@ -443,17 +443,19 @@ print(wheat.perm)
 <div class = "col-md-4">
 <br><br> **What Are The Model Assumptions:** The sampling is representative of the population; which is not unique and applies to all models. RFR was chosen as it has no formal distributional assumptions, random forests are non-parametric and can thus handle skewed, multimodal, and spatio-temporally autocorrelated data.
 </div>
+
+### Barley RFR 
 ```{r, Analysis: Random Forest Trial, cache=TRUE}
 
-rf.sorghum<-read.csv(file="Models/Sorghum_RF.csv", header = T, row.names = 1)
-rf.sorghum$Growing.Season<-as.numeric(rf.sorghum$Growing.Season)
-rf<-na.omit(rf.sorghum)
+rf.barley<-read.csv(file="Models/Barley_RF.csv", header = T, row.names = 1)
+rf.barley$Growing_Mean<-as.numeric(rf.barley$Growing_Mean)
+rf<-na.omit(rf.barley)
 rf<-log10(rf+1)
 summary(rf)
-sapply(rf.sorghum, "class")
+sapply(rf.barley, "class")
 
 # create a list of 60% of the rows in the original dataset we can use for training
-validation_index <- createDataPartition(rf$Yield, p=0.60, list=FALSE)
+validation_index <- createDataPartition(rf$barley_HgHa, p=0.60, list=FALSE)
 # select 20% of the data for validation
 validation <- rf[-validation_index,]
 # use the remaining 60% of data to training and testing the models
@@ -470,35 +472,37 @@ registerDoParallel(cl)
 
 # Random Forest
 set.seed(7)
-fit.rf.sorghum <- train(Yield~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
-print(fit.rf.sorghum) #print results
+fit.rf.barley <- train(dataset$barley_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+print(fit.rf.barley) #print results
 
 stopCluster(cl)
 
-sorghum.varIMP<-(varImp(fit.rf.sorghum)) #identify variable importance
-plot(sorghum.varIMP)
+sorghum.varIMP<-(varImp(fit.rf.barley)) #identify variable importance
+plot(barley.varIMP)
+write.csv(barley.varIMP, file = "Models/Variable_Importance/barley_varIMP.csv")
 # Model Performance
-predictions <- predict(fit.rf.sorghum, validation) #predict 
-pred.error<-RMSE(predictions,validation$Yield) #get the Root Mean Standard Error of predicted values
+predictions <- predict(fit.rf.barley, validation) #predict 
+pred.error<-RMSE(predictions,validation$barley_HgHa) #get the Root Mean Standard Error of predicted values
 exp(pred.error) #put in yield values
 
-modelerror <- predict(fit.rf.sorghum, rf ) #predict on whole dataset
+modelerror <- predict(fit.rf.barley, rf ) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(exp(modelerror),file="Models/Predictions/sorghum_predictions.csv") # export for mapping
+write.csv(exp(modelerror),file="Models/Predictions/barley_predictions.csv") # export for mapping
 
 ```
 
-### RFR - Fertilizer AVERAGE
-```{r,Second Random Forest, cache=TRUE}
-rf.sorghum<-read.csv(file="Models/Sorghum_RF_Average.csv", header = T, row.names = 1)
-rf.sorghum$Growing.Season<-as.numeric(rf.sorghum$Growing.Season)
-rf<-na.omit(rf.sorghum)
+### Cassava RFR
+```{r, Analysis: Random Forest Trial, cache=TRUE}
+
+rf.cassava<-read.csv(file="Models/Cassava_RF.csv", header = T, row.names = 1)
+rf.cassava$Growing_Mean<-as.numeric(rf.cassava$Growing_Mean)
+rf<-na.omit(rf.cassava)
 rf<-log10(rf+1)
 summary(rf)
-sapply(rf.sorghum, "class")
+sapply(rf.cassava, "class")
 
 # create a list of 60% of the rows in the original dataset we can use for training
-validation_index <- createDataPartition(rf$Yield, p=0.60, list=FALSE)
+validation_index <- createDataPartition(rf$cassava_HgHa, p=0.60, list=FALSE)
 # select 20% of the data for validation
 validation <- rf[-validation_index,]
 # use the remaining 60% of data to training and testing the models
@@ -507,27 +511,499 @@ dataset <- rf[validation_index,]
 control <- trainControl(method="cv", repeats = 10)  
 metric <- "RMSE" 
 
-# Random Forest
-set.seed(7)
+# set up clusters
+
+library(doParallel)
 cl <- makePSOCKcluster(max(1,detectCores()-5))
 registerDoParallel(cl)
-fit.rf.sorghum <- train(Yield~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+
+# Random Forest
+set.seed(7)
+fit.rf.cassava <- train(dataset$cassava_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+print(fit.rf.cassava) #print results
+
 stopCluster(cl)
 
-print(fit.rf.sorghum) #print results
-
-sorghum.varIMP<-(varImp(fit.rf.sorghum)) #identify variable importance
-plot(sorghum.varIMP)
+sorghum.varIMP<-(varImp(fit.rf.cassava)) #identify variable importance
+plot(cassava.varIMP)
+write.csv(cassava.varIMP, file = "Models/Variable_Importance/cassava_varIMP.csv")
 # Model Performance
-predictions <- predict(fit.rf.sorghum, validation) #predict 
-pred.error<-RMSE(predictions,validation$Yield) #get the Root Mean Standard Error of predicted values
+predictions <- predict(fit.rf.cassava, validation) #predict 
+pred.error<-RMSE(predictions,validation$cassava_HgHa) #get the Root Mean Standard Error of predicted values
+exp(pred.error) #put in yield values
+
+modelerror <- predict(fit.rf.cassava, rf ) #predict on whole dataset
+head(modelerror) #make sure it worked honeyyyy
+write.csv(exp(modelerror),file="Models/Predictions/cassava_predictions.csv") # export for mapping
+
+```
+
+### Groundnut RFR
+```{r, Analysis: Random Forest Trial, cache=TRUE}
+
+rf.groundnut<-read.csv(file="Models/Groundnut_RF.csv", header = T, row.names = 1)
+rf.groundnut$Growing_Mean<-as.numeric(rf.groundnut$Growing_Mean)
+rf<-na.omit(rf.groundnut)
+rf<-log10(rf+1)
+summary(rf)
+sapply(rf.groundnut, "class")
+
+# create a list of 60% of the rows in the original dataset we can use for training
+validation_index <- createDataPartition(rf$groundnut_HgHa, p=0.60, list=FALSE)
+# select 20% of the data for validation
+validation <- rf[-validation_index,]
+# use the remaining 60% of data to training and testing the models
+dataset <- rf[validation_index,]     
+# Run algorithms using 10-fold cross validation
+control <- trainControl(method="cv", repeats = 10)  
+metric <- "RMSE" 
+
+# set up clusters
+
+library(doParallel)
+cl <- makePSOCKcluster(max(1,detectCores()-5))
+registerDoParallel(cl)
+
+# Random Forest
+set.seed(7)
+fit.rf.groundnut <- train(dataset$groundnut_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+print(fit.rf.groundnut) #print results
+
+stopCluster(cl)
+
+sorghum.varIMP<-(varImp(fit.rf.groundnut)) #identify variable importance
+plot(groundnut.varIMP)
+write.csv(groundnut.varIMP, file = "Models/Variable_Importance/groundnut_varIMP.csv")
+# Model Performance
+predictions <- predict(fit.rf.groundnut, validation) #predict 
+pred.error<-RMSE(predictions,validation$groundnut_HgHa) #get the Root Mean Standard Error of predicted values
+exp(pred.error) #put in yield values
+
+modelerror <- predict(fit.rf.groundnut, rf ) #predict on whole dataset
+head(modelerror) #make sure it worked honeyyyy
+write.csv(exp(modelerror),file="Models/Predictions/groundnut_predictions.csv") # export for mapping
+
+```
+
+### Maize RFR
+```{r, Analysis: Random Forest Trial, cache=TRUE}
+
+rf.maize<-read.csv(file="Models/Maize_RF.csv", header = T, row.names = 1)
+rf.maize$Growing_Mean<-as.numeric(rf.maize$Growing_Mean)
+rf<-na.omit(rf.maize)
+rf<-log10(rf+1)
+summary(rf)
+sapply(rf.maize, "class")
+
+# create a list of 60% of the rows in the original dataset we can use for training
+validation_index <- createDataPartition(rf$maize_HgHa, p=0.60, list=FALSE)
+# select 20% of the data for validation
+validation <- rf[-validation_index,]
+# use the remaining 60% of data to training and testing the models
+dataset <- rf[validation_index,]     
+# Run algorithms using 10-fold cross validation
+control <- trainControl(method="cv", repeats = 10)  
+metric <- "RMSE" 
+
+# set up clusters
+
+library(doParallel)
+cl <- makePSOCKcluster(max(1,detectCores()-5))
+registerDoParallel(cl)
+
+# Random Forest
+set.seed(7)
+fit.rf.maize <- train(dataset$maize_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+print(fit.rf.maize) #print results
+
+stopCluster(cl)
+
+sorghum.varIMP<-(varImp(fit.rf.maize)) #identify variable importance
+plot(maize.varIMP)
+write.csv(maize.varIMP, file = "Models/Variable_Importance/maize_varIMP.csv")
+# Model Performance
+predictions <- predict(fit.rf.maize, validation) #predict 
+pred.error<-RMSE(predictions,validation$maize_HgHa) #get the Root Mean Standard Error of predicted values
+exp(pred.error) #put in yield values
+
+modelerror <- predict(fit.rf.maize, rf ) #predict on whole dataset
+head(modelerror) #make sure it worked honeyyyy
+write.csv(exp(modelerror),file="Models/Predictions/maize_predictions.csv") # export for mapping
+
+```
+
+### Millet RFR 
+```{r, Analysis: Random Forest Trial, cache=TRUE}
+
+rf.millet<-read.csv(file="Models/Millet_RF.csv", header = T, row.names = 1)
+rf.millet$Growing_Mean<-as.numeric(rf.millet$Growing_Mean)
+rf<-na.omit(rf.millet)
+rf<-log10(rf+1)
+summary(rf)
+sapply(rf.millet, "class")
+
+# create a list of 60% of the rows in the original dataset we can use for training
+validation_index <- createDataPartition(rf$millet_HgHa, p=0.60, list=FALSE)
+# select 20% of the data for validation
+validation <- rf[-validation_index,]
+# use the remaining 60% of data to training and testing the models
+dataset <- rf[validation_index,]     
+# Run algorithms using 10-fold cross validation
+control <- trainControl(method="cv", repeats = 10)  
+metric <- "RMSE" 
+
+# set up clusters
+
+library(doParallel)
+cl <- makePSOCKcluster(max(1,detectCores()-5))
+registerDoParallel(cl)
+
+# Random Forest
+set.seed(7)
+fit.rf.millet <- train(dataset$millet_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+print(fit.rf.millet) #print results
+
+stopCluster(cl)
+
+sorghum.varIMP<-(varImp(fit.rf.millet)) #identify variable importance
+plot(millet.varIMP)
+write.csv(millet.varIMP, file = "Models/Variable_Importance/millet_varIMP.csv")
+# Model Performance
+predictions <- predict(fit.rf.millet, validation) #predict 
+pred.error<-RMSE(predictions,validation$millet_HgHa) #get the Root Mean Standard Error of predicted values
+exp(pred.error) #put in yield values
+
+modelerror <- predict(fit.rf.millet, rf ) #predict on whole dataset
+head(modelerror) #make sure it worked honeyyyy
+write.csv(exp(modelerror),file="Models/Predictions/millet_predictions.csv") # export for mapping
+
+```
+
+### Rapeseed RFR
+```{r, Analysis: Random Forest Trial, cache=TRUE}
+
+rf.rapeseed<-read.csv(file="Models/Rapeseed_RF.csv", header = T, row.names = 1)
+rf.rapeseed$Growing_Mean<-as.numeric(rf.rapeseed$Growing_Mean)
+rf<-na.omit(rf.rapeseed)
+rf<-log10(rf+1)
+summary(rf)
+sapply(rf.rapeseed, "class")
+
+# create a list of 60% of the rows in the original dataset we can use for training
+validation_index <- createDataPartition(rf$rapeseed_HgHa, p=0.60, list=FALSE)
+# select 20% of the data for validation
+validation <- rf[-validation_index,]
+# use the remaining 60% of data to training and testing the models
+dataset <- rf[validation_index,]     
+# Run algorithms using 10-fold cross validation
+control <- trainControl(method="cv", repeats = 10)  
+metric <- "RMSE" 
+
+# set up clusters
+
+library(doParallel)
+cl <- makePSOCKcluster(max(1,detectCores()-5))
+registerDoParallel(cl)
+
+# Random Forest
+set.seed(7)
+fit.rf.rapeseed <- train(dataset$rapeseed_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+print(fit.rf.rapeseed) #print results
+
+stopCluster(cl)
+
+sorghum.varIMP<-(varImp(fit.rf.rapeseed)) #identify variable importance
+plot(rapeseed.varIMP)
+write.csv(rapeseed.varIMP, file = "Models/Variable_Importance/rapeseed_varIMP.csv")
+# Model Performance
+predictions <- predict(fit.rf.rapeseed, validation) #predict 
+pred.error<-RMSE(predictions,validation$rapeseed_HgHa) #get the Root Mean Standard Error of predicted values
+exp(pred.error) #put in yield values
+
+modelerror <- predict(fit.rf.rapeseed, rf ) #predict on whole dataset
+head(modelerror) #make sure it worked honeyyyy
+write.csv(exp(modelerror),file="Models/Predictions/rapeseed_predictions.csv") # export for mapping
+
+```
+
+### Rice RFR 
+```{r, Analysis: Random Forest Trial, cache=TRUE}
+
+rf.rice<-read.csv(file="Models/Rice_RF.csv", header = T, row.names = 1)
+rf.rice$Growing_Mean<-as.numeric(rf.rice$Growing_Mean)
+rf<-na.omit(rf.rice)
+rf<-log10(rf+1)
+summary(rf)
+sapply(rf.rice, "class")
+
+# create a list of 60% of the rows in the original dataset we can use for training
+validation_index <- createDataPartition(rf$rice_HgHa, p=0.60, list=FALSE)
+# select 20% of the data for validation
+validation <- rf[-validation_index,]
+# use the remaining 60% of data to training and testing the models
+dataset <- rf[validation_index,]     
+# Run algorithms using 10-fold cross validation
+control <- trainControl(method="cv", repeats = 10)  
+metric <- "RMSE" 
+
+# set up clusters
+
+library(doParallel)
+cl <- makePSOCKcluster(max(1,detectCores()-5))
+registerDoParallel(cl)
+
+# Random Forest
+set.seed(7)
+fit.rf.rice <- train(dataset$rice_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+print(fit.rf.rice) #print results
+
+stopCluster(cl)
+
+sorghum.varIMP<-(varImp(fit.rf.rice)) #identify variable importance
+plot(rice.varIMP)
+write.csv(rice.varIMP, file = "Models/Variable_Importance/rice_varIMP.csv")
+# Model Performance
+predictions <- predict(fit.rf.rice, validation) #predict 
+pred.error<-RMSE(predictions,validation$rice_HgHa) #get the Root Mean Standard Error of predicted values
+exp(pred.error) #put in yield values
+
+modelerror <- predict(fit.rf.rice, rf ) #predict on whole dataset
+head(modelerror) #make sure it worked honeyyyy
+write.csv(exp(modelerror),file="Models/Predictions/rice_predictions.csv") # export for mapping
+
+```
+
+### Rye RFR
+```{r, Analysis: Random Forest Trial, cache=TRUE}
+
+rf.rye<-read.csv(file="Models/Rye_RF.csv", header = T, row.names = 1)
+rf.rye$Growing_Mean<-as.numeric(rf.rye$Growing_Mean)
+rf<-na.omit(rf.rye)
+rf<-log10(rf+1)
+summary(rf)
+sapply(rf.rye, "class")
+
+# create a list of 60% of the rows in the original dataset we can use for training
+validation_index <- createDataPartition(rf$rye_HgHa, p=0.60, list=FALSE)
+# select 20% of the data for validation
+validation <- rf[-validation_index,]
+# use the remaining 60% of data to training and testing the models
+dataset <- rf[validation_index,]     
+# Run algorithms using 10-fold cross validation
+control <- trainControl(method="cv", repeats = 10)  
+metric <- "RMSE" 
+
+# set up clusters
+
+library(doParallel)
+cl <- makePSOCKcluster(max(1,detectCores()-5))
+registerDoParallel(cl)
+
+# Random Forest
+set.seed(7)
+fit.rf.rye <- train(dataset$rye_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+print(fit.rf.rye) #print results
+
+stopCluster(cl)
+
+sorghum.varIMP<-(varImp(fit.rf.rye)) #identify variable importance
+plot(rye.varIMP)
+write.csv(rye.varIMP, file = "Models/Variable_Importance/rye_varIMP.csv")
+# Model Performance
+predictions <- predict(fit.rf.rye, validation) #predict 
+pred.error<-RMSE(predictions,validation$rye_HgHa) #get the Root Mean Standard Error of predicted values
+exp(pred.error) #put in yield values
+
+modelerror <- predict(fit.rf.rye, rf ) #predict on whole dataset
+head(modelerror) #make sure it worked honeyyyy
+write.csv(exp(modelerror),file="Models/Predictions/rye_predictions.csv") # export for mapping
+
+```
+
+### Sorghum RFR
+```{r, Analysis: Random Forest Trial, cache=TRUE}
+
+rf.Sorghum<-read.csv(file="Models/Sorghum_RF.csv", header = T, row.names = 1)
+rf.Sorghum$Growing.Season<-as.numeric(rf.Sorghum$Growing.Season)
+rf<-na.omit(rf.Sorghum)
+rf<-log10(rf+1)
+summary(rf)
+sapply(rf.Sorghum, "class")
+
+# create a list of 60% of the rows in the original dataset we can use for training
+validation_index <- createDataPartition(rf$Sorghum_HgHa, p=0.60, list=FALSE)
+# select 20% of the data for validation
+validation <- rf[-validation_index,]
+# use the remaining 60% of data to training and testing the models
+dataset <- rf[validation_index,]     
+# Run algorithms using 10-fold cross validation
+control <- trainControl(method="cv", repeats = 10)  
+metric <- "RMSE" 
+
+# set up clusters
+
+library(doParallel)
+cl <- makePSOCKcluster(max(1,detectCores()-5))
+registerDoParallel(cl)
+
+# Random Forest
+set.seed(7)
+fit.rf.Sorghum <- train(dataset$Sorghum_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+print(fit.rf.Sorghum) #print results
+
+stopCluster(cl)
+
+sorghum.varIMP<-(varImp(fit.rf.Sorghum)) #identify variable importance
+plot(Sorghum.varIMP)
+write.csv(Sorghum.varIMP, file = "Models/Variable_Importance/Sorghum_varIMP.csv")
+# Model Performance
+predictions <- predict(fit.rf.Sorghum, validation) #predict 
+pred.error<-RMSE(predictions,validation$Sorghum_HgHa) #get the Root Mean Standard Error of predicted values
 exp(pred.error) #put in yield values
 
 modelerror <- predict(fit.rf.sorghum, rf ) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(exp(modelerror),file="Models/Predictions/sorghum_predictions_averageFert.csv") # export for mapping
+write.csv(exp(modelerror),file="Models/Predictions/Sorghum_predictions.csv") # export for mapping
 
 ```
 
-dim(rf. )
+### Soybean RFR
+```{r, Analysis: Random Forest Trial, cache=TRUE}
 
+rf.Soybean<-read.csv(file="Models/Soybean_RF.csv", header = T, row.names = 1)
+rf.Soybean$Growing_Mean<-as.numeric(rf.Soybean$Growing_Mean)
+rf<-na.omit(rf.Soybean)
+rf<-log10(rf+1)
+summary(rf)
+sapply(rf.Soybean, "class")
+
+# create a list of 60% of the rows in the original dataset we can use for training
+validation_index <- createDataPartition(rf$Soybean_HgHa, p=0.60, list=FALSE)
+# select 20% of the data for validation
+validation <- rf[-validation_index,]
+# use the remaining 60% of data to training and testing the models
+dataset <- rf[validation_index,]     
+# Run algorithms using 10-fold cross validation
+control <- trainControl(method="cv", repeats = 10)  
+metric <- "RMSE" 
+
+# set up clusters
+
+library(doParallel)
+cl <- makePSOCKcluster(max(1,detectCores()-5))
+registerDoParallel(cl)
+
+# Random Forest
+set.seed(7)
+fit.rf.Soybean <- train(dataset$Soybean_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+print(fit.rf.Soybean) #print results
+
+stopCluster(cl)
+
+soybean.varIMP<-(varImp(fit.rf.Soybean)) #identify variable importance
+plot(Soybean.varIMP)
+write.csv(Soybean.varIMP, file = "Models/Variable_Importance/Soybean_varIMP.csv")
+# Model Performance
+predictions <- predict(fit.rf.Soybean, validation) #predict 
+pred.error<-RMSE(predictions,validation$Soybean_HgHa) #get the Root Mean Standard Error of predicted values
+exp(pred.error) #put in yield values
+
+modelerror <- predict(fit.rf.soybean, rf ) #predict on whole dataset
+head(modelerror) #make sure it worked honeyyyy
+write.csv(exp(modelerror),file="Models/Predictions/Soybean_predictions.csv") # export for mapping
+
+```
+
+### Sunflower RFR
+```{r, Analysis: Random Forest Trial, cache=TRUE}
+
+rf.Sunflower<-read.csv(file="Models/Sunflower_RF.csv", header = T, row.names = 1)
+rf.Sunflower$Growing_Mean<-as.numeric(rf.Sunflower$Growing_Mean)
+rf<-na.omit(rf.Sunflower)
+rf<-log10(rf+1)
+summary(rf)
+sapply(rf.Sunflower, "class")
+
+# create a list of 60% of the rows in the original dataset we can use for training
+validation_index <- createDataPartition(rf$Sunflower_HgHa, p=0.60, list=FALSE)
+# select 20% of the data for validation
+validation <- rf[-validation_index,]
+# use the remaining 60% of data to training and testing the models
+dataset <- rf[validation_index,]     
+# Run algorithms using 10-fold cross validation
+control <- trainControl(method="cv", repeats = 10)  
+metric <- "RMSE" 
+
+# set up clusters
+
+library(doParallel)
+cl <- makePSOCKcluster(max(1,detectCores()-5))
+registerDoParallel(cl)
+
+# Random Forest
+set.seed(7)
+fit.rf.Sunflower <- train(dataset$Sunflower_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+print(fit.rf.Sunflower) #print results
+
+stopCluster(cl)
+
+sunflower.varIMP<-(varImp(fit.rf.Sunflower)) #identify variable importance
+plot(Sunflower.varIMP)
+write.csv(Sunflower.varIMP, file = "Models/Variable_Importance/Sunflower_varIMP.csv")
+# Model Performance
+predictions <- predict(fit.rf.Sunflower, validation) #predict 
+pred.error<-RMSE(predictions,validation$Sunflower_HgHa) #get the Root Mean Standard Error of predicted values
+exp(pred.error) #put in yield values
+
+modelerror <- predict(fit.rf.sunflower, rf ) #predict on whole dataset
+head(modelerror) #make sure it worked honeyyyy
+write.csv(exp(modelerror),file="Models/Predictions/Sunflower_predictions.csv") # export for mapping
+
+```
+
+### Wheat
+```{r, Analysis: Random Forest Trial, cache=TRUE}
+
+rf.Wheat<-read.csv(file="Models/Wheat_RF.csv", header = T, row.names = 1)
+rf.Wheat$Growing_Mean<-as.numeric(rf.Wheat$Growing_Mean)
+rf<-na.omit(rf.Wheat)
+rf<-log10(rf+1)
+summary(rf)
+sapply(rf.Wheat, "class")
+
+# create a list of 60% of the rows in the original dataset we can use for training
+validation_index <- createDataPartition(rf$Wheat_HgHa, p=0.60, list=FALSE)
+# select 20% of the data for validation
+validation <- rf[-validation_index,]
+# use the remaining 60% of data to training and testing the models
+dataset <- rf[validation_index,]     
+# Run algorithms using 10-fold cross validation
+control <- trainControl(method="cv", repeats = 10)  
+metric <- "RMSE" 
+
+# set up clusters
+
+library(doParallel)
+cl <- makePSOCKcluster(max(1,detectCores()-5))
+registerDoParallel(cl)
+
+# Random Forest
+set.seed(7)
+fit.rf.Wheat <- train(dataset$Wheat_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+print(fit.rf.Wheat) #print results
+
+stopCluster(cl)
+
+wheat.varIMP<-(varImp(fit.rf.Wheat)) #identify variable importance
+plot(Wheat.varIMP)
+write.csv(Wheat.varIMP, file = "Models/Variable_Importance/Wheat_varIMP.csv")
+# Model Performance
+predictions <- predict(fit.rf.Wheat, validation) #predict 
+pred.error<-RMSE(predictions,validation$Wheat_HgHa) #get the Root Mean Standard Error of predicted values
+exp(pred.error) #put in yield values
+
+modelerror <- predict(fit.rf.wheat, rf ) #predict on whole dataset
+head(modelerror) #make sure it worked honeyyyy
+write.csv(exp(modelerror),file="Models/Predictions/Wheat_predictions.csv") # export for mapping
+
+```
