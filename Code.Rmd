@@ -86,10 +86,11 @@ UNEP (2010): The GEO Data Portal, as compiled from FAO, TERRASTAT I Global GIS D
 ```{r, Packages, include=TRUE, echo=FALSE, message=FALSE, eval=TRUE, warning=FALSE}
 
 #models
-library(RVAideMemoire)
+library(wPerm)
 library(caret)
 library(spatialEco)
 library(rgdal)
+library(wPerm)
 
 #plots
 library(RColorBrewer)
@@ -148,7 +149,7 @@ ggplot(barley.m, aes(x=barley.m$barley_GCO, y=barley.m$value, color=barley.m$bar
   ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
 
 # Permutational T Test
-barley.perm<-perm.t.test(barley.inside$barley_HgHa,barley.outside$barley_HgHa,progress=FALSE)
+barley.perm<-(barley.inside$barley_HgHa,barley.outside$barley_HgHa,progress=FALSE)
 print(barley.perm)
 ```
 
@@ -1008,3 +1009,227 @@ head(modelerror) #make sure it worked honeyyyy
 write.csv(exp(modelerror),file="Models/Predictions/Wheat_predictions.csv") # export for mapping
 
 ```
+
+## Variable Direction Estimation
+
+<div class = "col-md-4">
+<br><br> **What Was Tested:** How do crop yields increase or decrease with each single explantory variable in the RFR models? 
+</div>
+
+<div class = "col-md-4">
+<br><br> **What This Allows Me To Do:** Identify how the emergent correlations from RFR are driven by individual variables. 
+</div>
+
+<div class = "col-md-4">
+<br><br> **What Are The Model Assumptions:** Spearman rank-order correlations are used and have the s
+</div>
+
+```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
+## Barley
+rf.barley<-read.csv(file="Models/Barley_RF.csv", header = T, row.names = 1)
+rf.barley$Growing_Mean<-as.numeric(rf.barley$Growing_Mean)
+rf.barley<-na.omit(rf.barley)
+rf.barley<-log10(rf.barley+1)
+
+#AET
+barely.aet<-perm.relation(rf.barley$barley_HgHa,rf.barley$AET_mean,method = "spearman") 
+#Growing
+barely.growing<-perm.relation(rf.barley$barley_HgHa,rf.barley$Growing_Mean,method = "spearman") 
+#GDP
+barely.gdp<-perm.relation(rf.barley$barley_HgHa,rf.barley$GDP_Mean,method = "spearman") 
+#Pest
+barely.pest<-perm.relation(rf.barley$barley_HgHa,rf.barley$Pesticide,method = "spearman") 
+#Fertilizer
+barely.fert<-perm.relation(rf.barley$barley_HgHa,rf.barley$Barley_Fertilizer,method = "spearman") 
+
+##Cassava
+rf.cassava<-read.csv(file="Models/Cassava_RF.csv", header = T, row.names = 1)
+rf.cassava$Growing_Mean<-as.numeric(rf.cassava$Growing_Mean)
+rf.cassava<-na.omit(rf.cassava)
+rf.cassava<-log10(rf.cassava+1)
+
+#AET
+cassava.aet<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$AET_mean,method = "spearman") 
+#Growing
+cassava.growing<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$Growing_Mean,method = "spearman") 
+#GDP
+cassava.gdp<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$GDP_Mean,method = "spearman") 
+#Pest
+cassava.pest<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$Pesticide,method = "spearman") 
+#Fertilizer
+cassava.fert<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$Cassava_Fertilizer,method = "spearman")
+
+##Groundnut
+rf.groundnut<-read.csv(file="Models/Groundnut_RF.csv", header = T, row.names = 1)
+rf.groundnut$Growing_Mean<-as.numeric(rf.groundnut$Growing_Mean)
+rf.groundnut<-na.omit(rf.groundnut)
+rf.groundnut<-log10(rf.groundnut+1)
+
+#AET
+groundnut.aet<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$AET_mean,method = "spearman") 
+#Growing
+groundnut.growing<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$Growing_Mean,method = "spearman") 
+#GDP
+groundnut.gdp<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$GDP_Mean,method = "spearman") 
+#Pest
+groundnut.pest<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$Pesticide,method = "spearman") 
+#Fertilizer
+groundnut.fert<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$Groundnut_Fertilizer,method = "spearman")
+
+##Maize
+rf.maize<-read.csv(file="Models/Maize_RF.csv", header = T, row.names = 1)
+rf.maize$Growing_Mean<-as.numeric(rf.maize$Growing_Mean)
+rf.maize<-na.omit(rf.maize)
+rf.maize<-log10(rf.maize+1)
+
+#AET
+maize.aet<-perm.relation(rf.maize$maize_HgHa,rf.maize$AET_mean,method = "spearman") 
+#Growing
+maize.growing<-perm.relation(rf.maize$maize_HgHa,rf.maize$Growing_Mean,method = "spearman") 
+#GDP
+maize.gdp<-perm.relation(rf.maize$maize_HgHa,rf.maize$GDP_Mean,method = "spearman") 
+#Pest
+maize.pest<-perm.relation(rf.maize$maize_HgHa,rf.maize$Pesticide,method = "spearman") 
+#Fertilizer
+maize.fert<-perm.relation(rf.maize$maize_HgHa,rf.maize$Maize_Fertilizer,method = "spearman")
+
+##Millet
+
+rf.millet<-read.csv(file="Models/Millet_RF.csv", header = T, row.names = 1)
+rf.millet$Growing_Mean<-as.numeric(rf.millet$Growing_Mean)
+rf.millet<-na.omit(rf.millet)
+rf.millet<-log10(rf.millet+1)
+
+#AET
+millet.aet<-perm.relation(rf.millet$millet_HgHa,rf.millet$AET_mean,method = "spearman") 
+#Growing
+millet.growing<-perm.relation(rf.millet$millet_HgHa,rf.millet$Growing_Mean,method = "spearman") 
+#GDP
+millet.gdp<-perm.relation(rf.millet$millet_HgHa,rf.millet$GDP_Mean,method = "spearman") 
+#Pest
+millet.pest<-perm.relation(rf.millet$millet_HgHa,rf.millet$Pesticide,method = "spearman") 
+#Fertilizer
+millet.fert<-perm.relation(rf.millet$millet_HgHa,rf.millet$Millet_Fertilizer,method = "spearman")
+
+##Rapeseed
+rf.rapeseed<-read.csv(file="Models/Rapeseed_RF.csv", header = T, row.names = 1)
+rf.rapeseed$Growing_Mean<-as.numeric(rf.rapeseed$Growing_Mean)
+rf.rapeseed<-na.omit(rf.rapeseed)
+rf.rapeseed<-log10(rf.rapeseed+1)
+
+#AET
+rapeseed.aet<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$AET_mean,method = "spearman") 
+#Growing
+rapeseed.growing<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$Growing_Mean,method = "spearman") 
+#GDP
+rapeseed.gdp<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$GDP_Mean,method = "spearman") 
+#Pest
+rapeseed.pest<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$Pesticide,method = "spearman") 
+#Fertilizer
+rapeseed.fert<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$Rapeseed_Fertilizer,method = "spearman")
+
+##Rice
+rf.rice<-read.csv(file="Models/Rice_RF.csv", header = T, row.names = 1)
+rf.rice$Growing_Mean<-as.numeric(rf.rice$Growing_Mean)
+rf.rice<-na.omit(rf.rice)
+rf.rice<-log10(rf.rice+1)
+
+#AET
+rice.aet<-perm.relation(rf.rice$rice_HgHa,rf.rice$AET_mean,method = "spearman") 
+#Growing
+rice.growing<-perm.relation(rf.rice$rice_HgHa,rf.rice$Growing_Mean,method = "spearman") 
+#GDP
+rice.gdp<-perm.relation(rf.rice$rice_HgHa,rf.rice$GDP_Mean,method = "spearman") 
+#Pest
+rice.pest<-perm.relation(rf.rice$rice_HgHa,rf.rice$Pesticide,method = "spearman") 
+#Fertilizer
+rice.fert<-perm.relation(rf.rice$rice_HgHa,rf.rice$Rice_Fertilizer,method = "spearman")
+
+##Rye
+rf.rye<-read.csv(file="Models/Rye_RF.csv", header = T, row.names = 1)
+rf.rye$Growing_Mean<-as.numeric(rf.rye$Growing_Mean)
+rf.rye<-na.omit(rf.rye)
+rf.rye<-log10(rf.rye+1)
+
+#AET
+rye.aet<-perm.relation(rf.rye$rye_HgHa,rf.rye$AET_mean,method = "spearman") 
+#Growing
+rye.growing<-perm.relation(rf.rye$rye_HgHa,rf.rye$Growing_Mean,method = "spearman") 
+#GDP
+rye.gdp<-perm.relation(rf.rye$rye_HgHa,rf.rye$GDP_Mean,method = "spearman") 
+#Pest
+rye.pest<-perm.relation(rf.rye$rye_HgHa,rf.rye$Pesticide,method = "spearman") 
+#Fertilizer
+rye.fert<-perm.relation(rf.rye$rye_HgHa,rf.rye$Rye_Fertilizer,method = "spearman")
+
+##Sorghum
+rf.sorghum<-read.csv(file="Models/Sorghum_RF.csv", header = T, row.names = 1)
+rf.sorghum$Growing.Season<-as.numeric(rf.sorghum$Growing.Season)
+rf.sorghum<-na.omit(rf.sorghum)
+rf.sorghum<-log10(rf.sorghum+1)
+
+#AET
+sorghum.aet<-perm.relation(rf.sorghum$Yieldrf.sorghum$AET_mean,method = "spearman") 
+#Growing
+sorghum.growing<-perm.relation(rf.sorghum$Yield,rf.sorghum$Growing.Season,method = "spearman") 
+#GDP
+sorghum.gdp<-perm.relation(rf.sorghum$Yield,rf.sorghum$GDP_Mean,method = "spearman") 
+#Pest
+sorghum.pest<-perm.relation(rf.sorghum$Yield,rf.sorghum$Pesticide,method = "spearman") 
+#Fertilizer
+sorghum.fert<-perm.relation(rf.sorghum$Yield,rf.sorghum$Sorghum_Fertilizer,method = "spearman")
+
+##Soybean
+rf.soybean<-read.csv(file="Models/Soybean_RF.csv", header = T, row.names = 1)
+rf.soybean$Growing_Mean<-as.numeric(rf.soybean$Growing_Mean)
+rf.soybean<-na.omit(rf.soybean)
+rf.soybean<-log10(rf.soybean+1)
+
+#AET
+soybean.aet<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$AET_mean,method = "spearman") 
+#Growing
+soybean.growing<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$Growing_Mean,method = "spearman") 
+#GDP
+soybean.gdp<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$GDP_Mean,method = "spearman") 
+#Pest
+soybean.pest<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$Pesticide,method = "spearman") 
+#Fertilizer
+soybean.fert<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$Soybean_Fertilizer,method = "spearman")
+
+##Sunflower
+rf.sunflower<-read.csv(file="Models/Sunflower_RF.csv", header = T, row.names = 1)
+rf.sunflower$Growing_Mean<-as.numeric(rf.sunflower$Growing_Mean)
+rf.sunflower<-na.omit(rf.sunflower)
+rf.sunflower<-log10(rf.sunflower+1)
+
+#AET
+sunflower.aet<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$AET_mean,method = "spearman") 
+#Growing
+sunflower.growing<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$Growing_Mean,method = "spearman") 
+#GDP
+sunflower.gdp<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$GDP_Mean,method = "spearman") 
+#Pest
+sunflower.pest<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$Pesticide,method = "spearman") 
+#Fertilizer
+sunflower.fert<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$Sunflower_Fertilizer,method = "spearman")
+
+##Wheat
+rf.wheat<-read.csv(file="Models/Wheat_RF.csv", header = T, row.names = 1)
+rf.wheat$Growing_Mean<-as.numeric(rf.wheat$Growing_Mean)
+rf.wheat<-na.omit(rf.wheat)
+rf.wheat<-log10(rf.wheat+1)
+
+#AET
+wheat.aet<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$AET_mean,method = "spearman") 
+#Growing
+wheat.growing<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$Growing_Mean,method = "spearman") 
+#GDP
+wheat.gdp<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$GDP_Mean,method = "spearman") 
+#Pest
+wheat.pest<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$Pesticide,method = "spearman")
+#Fertilizer
+wheat.fert<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$Wheat_Fertilizer,method = "spearman")
+
+```
+
+
