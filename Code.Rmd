@@ -85,10 +85,11 @@ UNEP (2010): The GEO Data Portal, as compiled from FAO, TERRASTAT I Global GIS D
 
 ```{r, Packages, include=TRUE, echo=FALSE, message=FALSE, eval=TRUE, warning=FALSE}
 
-
 #models
 library(RVAideMemoire)
 library(caret)
+library(spatialEco)
+library(rgdal)
 
 #plots
 library(RColorBrewer)
@@ -445,7 +446,7 @@ print(wheat.perm)
 </div>
 
 ### Barley RFR 
-```{r, Analysis: Random Forest Trial, cache=TRUE}
+```{r, Analysis: Barley RFR, cache=TRUE}
 
 rf.barley<-read.csv(file="Models/Barley_RF.csv", header = T, row.names = 1)
 rf.barley$Growing_Mean<-as.numeric(rf.barley$Growing_Mean)
@@ -461,7 +462,7 @@ validation <- rf[-validation_index,]
 # use the remaining 60% of data to training and testing the models
 dataset <- rf[validation_index,]     
 # Run algorithms using 10-fold cross validation
-control <- trainControl(method="cv", repeats = 10)  
+control <- trainControl(method="repeatedcv", repeats = 10)  
 metric <- "RMSE" 
 
 # set up clusters
@@ -472,12 +473,12 @@ registerDoParallel(cl)
 
 # Random Forest
 set.seed(7)
-fit.rf.barley <- train(dataset$barley_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+fit.rf.barley <- train(barley_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.barley) #print results
 
 stopCluster(cl)
 
-sorghum.varIMP<-(varImp(fit.rf.barley)) #identify variable importance
+barley.varIMP<-(varImp(fit.rf.barley)) #identify variable importance
 plot(barley.varIMP)
 write.csv(barley.varIMP, file = "Models/Variable_Importance/barley_varIMP.csv")
 # Model Performance
@@ -492,7 +493,7 @@ write.csv(exp(modelerror),file="Models/Predictions/barley_predictions.csv") # ex
 ```
 
 ### Cassava RFR
-```{r, Analysis: Random Forest Trial, cache=TRUE}
+```{r, Analysis: Cassava RFR, cache=TRUE}
 
 rf.cassava<-read.csv(file="Models/Cassava_RF.csv", header = T, row.names = 1)
 rf.cassava$Growing_Mean<-as.numeric(rf.cassava$Growing_Mean)
@@ -508,7 +509,7 @@ validation <- rf[-validation_index,]
 # use the remaining 60% of data to training and testing the models
 dataset <- rf[validation_index,]     
 # Run algorithms using 10-fold cross validation
-control <- trainControl(method="cv", repeats = 10)  
+control <- trainControl(method="repeatedcv", repeats = 10)  
 metric <- "RMSE" 
 
 # set up clusters
@@ -519,12 +520,12 @@ registerDoParallel(cl)
 
 # Random Forest
 set.seed(7)
-fit.rf.cassava <- train(dataset$cassava_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+fit.rf.cassava <- train(cassava_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.cassava) #print results
 
 stopCluster(cl)
 
-sorghum.varIMP<-(varImp(fit.rf.cassava)) #identify variable importance
+cassava.varIMP<-(varImp(fit.rf.cassava)) #identify variable importance
 plot(cassava.varIMP)
 write.csv(cassava.varIMP, file = "Models/Variable_Importance/cassava_varIMP.csv")
 # Model Performance
@@ -539,7 +540,7 @@ write.csv(exp(modelerror),file="Models/Predictions/cassava_predictions.csv") # e
 ```
 
 ### Groundnut RFR
-```{r, Analysis: Random Forest Trial, cache=TRUE}
+```{r, Analysis: Groundnut RFR, cache=TRUE}
 
 rf.groundnut<-read.csv(file="Models/Groundnut_RF.csv", header = T, row.names = 1)
 rf.groundnut$Growing_Mean<-as.numeric(rf.groundnut$Growing_Mean)
@@ -555,7 +556,7 @@ validation <- rf[-validation_index,]
 # use the remaining 60% of data to training and testing the models
 dataset <- rf[validation_index,]     
 # Run algorithms using 10-fold cross validation
-control <- trainControl(method="cv", repeats = 10)  
+control <- trainControl(method="repeatedcv", repeats = 10)  
 metric <- "RMSE" 
 
 # set up clusters
@@ -566,12 +567,12 @@ registerDoParallel(cl)
 
 # Random Forest
 set.seed(7)
-fit.rf.groundnut <- train(dataset$groundnut_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+fit.rf.groundnut <- train(groundnut_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.groundnut) #print results
 
 stopCluster(cl)
 
-sorghum.varIMP<-(varImp(fit.rf.groundnut)) #identify variable importance
+groundnut.varIMP<-(varImp(fit.rf.groundnut)) #identify variable importance
 plot(groundnut.varIMP)
 write.csv(groundnut.varIMP, file = "Models/Variable_Importance/groundnut_varIMP.csv")
 # Model Performance
@@ -586,7 +587,7 @@ write.csv(exp(modelerror),file="Models/Predictions/groundnut_predictions.csv") #
 ```
 
 ### Maize RFR
-```{r, Analysis: Random Forest Trial, cache=TRUE}
+```{r, Analysis: Maize RFR, cache=TRUE}
 
 rf.maize<-read.csv(file="Models/Maize_RF.csv", header = T, row.names = 1)
 rf.maize$Growing_Mean<-as.numeric(rf.maize$Growing_Mean)
@@ -602,7 +603,7 @@ validation <- rf[-validation_index,]
 # use the remaining 60% of data to training and testing the models
 dataset <- rf[validation_index,]     
 # Run algorithms using 10-fold cross validation
-control <- trainControl(method="cv", repeats = 10)  
+control <- trainControl(method="repeatedcv", repeats = 10)  
 metric <- "RMSE" 
 
 # set up clusters
@@ -613,12 +614,12 @@ registerDoParallel(cl)
 
 # Random Forest
 set.seed(7)
-fit.rf.maize <- train(dataset$maize_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+fit.rf.maize <- train(maize_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.maize) #print results
 
 stopCluster(cl)
 
-sorghum.varIMP<-(varImp(fit.rf.maize)) #identify variable importance
+maize.varIMP<-(varImp(fit.rf.maize)) #identify variable importance
 plot(maize.varIMP)
 write.csv(maize.varIMP, file = "Models/Variable_Importance/maize_varIMP.csv")
 # Model Performance
@@ -633,7 +634,7 @@ write.csv(exp(modelerror),file="Models/Predictions/maize_predictions.csv") # exp
 ```
 
 ### Millet RFR 
-```{r, Analysis: Random Forest Trial, cache=TRUE}
+```{r, Analysis: Millet RFR, cache=TRUE}
 
 rf.millet<-read.csv(file="Models/Millet_RF.csv", header = T, row.names = 1)
 rf.millet$Growing_Mean<-as.numeric(rf.millet$Growing_Mean)
@@ -649,7 +650,7 @@ validation <- rf[-validation_index,]
 # use the remaining 60% of data to training and testing the models
 dataset <- rf[validation_index,]     
 # Run algorithms using 10-fold cross validation
-control <- trainControl(method="cv", repeats = 10)  
+control <- trainControl(method="repeatedcv", repeats = 10)  
 metric <- "RMSE" 
 
 # set up clusters
@@ -660,12 +661,12 @@ registerDoParallel(cl)
 
 # Random Forest
 set.seed(7)
-fit.rf.millet <- train(dataset$millet_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+fit.rf.millet <- train(millet_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.millet) #print results
 
 stopCluster(cl)
 
-sorghum.varIMP<-(varImp(fit.rf.millet)) #identify variable importance
+millet.varIMP<-(varImp(fit.rf.millet)) #identify variable importance
 plot(millet.varIMP)
 write.csv(millet.varIMP, file = "Models/Variable_Importance/millet_varIMP.csv")
 # Model Performance
@@ -680,7 +681,7 @@ write.csv(exp(modelerror),file="Models/Predictions/millet_predictions.csv") # ex
 ```
 
 ### Rapeseed RFR
-```{r, Analysis: Random Forest Trial, cache=TRUE}
+```{r, Analysis: Rapeseed RFR, cache=TRUE}
 
 rf.rapeseed<-read.csv(file="Models/Rapeseed_RF.csv", header = T, row.names = 1)
 rf.rapeseed$Growing_Mean<-as.numeric(rf.rapeseed$Growing_Mean)
@@ -696,7 +697,7 @@ validation <- rf[-validation_index,]
 # use the remaining 60% of data to training and testing the models
 dataset <- rf[validation_index,]     
 # Run algorithms using 10-fold cross validation
-control <- trainControl(method="cv", repeats = 10)  
+control <- trainControl(method="repeatedcv", repeats = 10)  
 metric <- "RMSE" 
 
 # set up clusters
@@ -707,12 +708,12 @@ registerDoParallel(cl)
 
 # Random Forest
 set.seed(7)
-fit.rf.rapeseed <- train(dataset$rapeseed_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+fit.rf.rapeseed <- train(rapeseed_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.rapeseed) #print results
 
 stopCluster(cl)
 
-sorghum.varIMP<-(varImp(fit.rf.rapeseed)) #identify variable importance
+rapeseed.varIMP<-(varImp(fit.rf.rapeseed)) #identify variable importance
 plot(rapeseed.varIMP)
 write.csv(rapeseed.varIMP, file = "Models/Variable_Importance/rapeseed_varIMP.csv")
 # Model Performance
@@ -727,7 +728,7 @@ write.csv(exp(modelerror),file="Models/Predictions/rapeseed_predictions.csv") # 
 ```
 
 ### Rice RFR 
-```{r, Analysis: Random Forest Trial, cache=TRUE}
+```{r, Analysis: Rice RFR, cache=TRUE}
 
 rf.rice<-read.csv(file="Models/Rice_RF.csv", header = T, row.names = 1)
 rf.rice$Growing_Mean<-as.numeric(rf.rice$Growing_Mean)
@@ -743,7 +744,7 @@ validation <- rf[-validation_index,]
 # use the remaining 60% of data to training and testing the models
 dataset <- rf[validation_index,]     
 # Run algorithms using 10-fold cross validation
-control <- trainControl(method="cv", repeats = 10)  
+control <- trainControl(method="repeatedcv", repeats = 10)  
 metric <- "RMSE" 
 
 # set up clusters
@@ -754,12 +755,12 @@ registerDoParallel(cl)
 
 # Random Forest
 set.seed(7)
-fit.rf.rice <- train(dataset$rice_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+fit.rf.rice <- train(rice_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.rice) #print results
 
 stopCluster(cl)
 
-sorghum.varIMP<-(varImp(fit.rf.rice)) #identify variable importance
+rice.varIMP<-(varImp(fit.rf.rice)) #identify variable importance
 plot(rice.varIMP)
 write.csv(rice.varIMP, file = "Models/Variable_Importance/rice_varIMP.csv")
 # Model Performance
@@ -774,7 +775,7 @@ write.csv(exp(modelerror),file="Models/Predictions/rice_predictions.csv") # expo
 ```
 
 ### Rye RFR
-```{r, Analysis: Random Forest Trial, cache=TRUE}
+```{r, Analysis: Rye RFR, cache=TRUE}
 
 rf.rye<-read.csv(file="Models/Rye_RF.csv", header = T, row.names = 1)
 rf.rye$Growing_Mean<-as.numeric(rf.rye$Growing_Mean)
@@ -790,7 +791,7 @@ validation <- rf[-validation_index,]
 # use the remaining 60% of data to training and testing the models
 dataset <- rf[validation_index,]     
 # Run algorithms using 10-fold cross validation
-control <- trainControl(method="cv", repeats = 10)  
+control <- trainControl(method="repeatedcv", repeats = 10)  
 metric <- "RMSE" 
 
 # set up clusters
@@ -801,12 +802,12 @@ registerDoParallel(cl)
 
 # Random Forest
 set.seed(7)
-fit.rf.rye <- train(dataset$rye_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+fit.rf.rye <- train(rye_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.rye) #print results
 
 stopCluster(cl)
 
-sorghum.varIMP<-(varImp(fit.rf.rye)) #identify variable importance
+rye.varIMP<-(varImp(fit.rf.rye)) #identify variable importance
 plot(rye.varIMP)
 write.csv(rye.varIMP, file = "Models/Variable_Importance/rye_varIMP.csv")
 # Model Performance
@@ -837,7 +838,7 @@ validation <- rf[-validation_index,]
 # use the remaining 60% of data to training and testing the models
 dataset <- rf[validation_index,]     
 # Run algorithms using 10-fold cross validation
-control <- trainControl(method="cv", repeats = 10)  
+control <- trainControl(method="repeatedcv", repeats = 10)  
 metric <- "RMSE" 
 
 # set up clusters
@@ -848,7 +849,7 @@ registerDoParallel(cl)
 
 # Random Forest
 set.seed(7)
-fit.rf.Sorghum <- train(dataset$Sorghum_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+fit.rf.Sorghum <- train(Sorghum_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.Sorghum) #print results
 
 stopCluster(cl)
@@ -868,7 +869,7 @@ write.csv(exp(modelerror),file="Models/Predictions/Sorghum_predictions.csv") # e
 ```
 
 ### Soybean RFR
-```{r, Analysis: Random Forest Trial, cache=TRUE}
+```{r, Analysis: Soybean RFR, cache=TRUE}
 
 rf.Soybean<-read.csv(file="Models/Soybean_RF.csv", header = T, row.names = 1)
 rf.Soybean$Growing_Mean<-as.numeric(rf.Soybean$Growing_Mean)
@@ -884,7 +885,7 @@ validation <- rf[-validation_index,]
 # use the remaining 60% of data to training and testing the models
 dataset <- rf[validation_index,]     
 # Run algorithms using 10-fold cross validation
-control <- trainControl(method="cv", repeats = 10)  
+control <- trainControl(method="repeatedcv", repeats = 10)  
 metric <- "RMSE" 
 
 # set up clusters
@@ -895,7 +896,7 @@ registerDoParallel(cl)
 
 # Random Forest
 set.seed(7)
-fit.rf.Soybean <- train(dataset$Soybean_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+fit.rf.Soybean <- train(Soybean_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.Soybean) #print results
 
 stopCluster(cl)
@@ -915,7 +916,7 @@ write.csv(exp(modelerror),file="Models/Predictions/Soybean_predictions.csv") # e
 ```
 
 ### Sunflower RFR
-```{r, Analysis: Random Forest Trial, cache=TRUE}
+```{r, Analysis: Sunflower RFR, cache=TRUE}
 
 rf.Sunflower<-read.csv(file="Models/Sunflower_RF.csv", header = T, row.names = 1)
 rf.Sunflower$Growing_Mean<-as.numeric(rf.Sunflower$Growing_Mean)
@@ -931,7 +932,7 @@ validation <- rf[-validation_index,]
 # use the remaining 60% of data to training and testing the models
 dataset <- rf[validation_index,]     
 # Run algorithms using 10-fold cross validation
-control <- trainControl(method="cv", repeats = 10)  
+control <- trainControl(method="repeatedcv", repeats = 10)  
 metric <- "RMSE" 
 
 # set up clusters
@@ -942,7 +943,7 @@ registerDoParallel(cl)
 
 # Random Forest
 set.seed(7)
-fit.rf.Sunflower <- train(dataset$Sunflower_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+fit.rf.Sunflower <- train(Sunflower_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.Sunflower) #print results
 
 stopCluster(cl)
@@ -961,8 +962,8 @@ write.csv(exp(modelerror),file="Models/Predictions/Sunflower_predictions.csv") #
 
 ```
 
-### Wheat
-```{r, Analysis: Random Forest Trial, cache=TRUE}
+### Wheat RFR
+```{r, Analysis: Wheat RFR, cache=TRUE}
 
 rf.Wheat<-read.csv(file="Models/Wheat_RF.csv", header = T, row.names = 1)
 rf.Wheat$Growing_Mean<-as.numeric(rf.Wheat$Growing_Mean)
@@ -978,7 +979,7 @@ validation <- rf[-validation_index,]
 # use the remaining 60% of data to training and testing the models
 dataset <- rf[validation_index,]     
 # Run algorithms using 10-fold cross validation
-control <- trainControl(method="cv", repeats = 10)  
+control <- trainControl(method="repeatedcv", repeats = 10)  
 metric <- "RMSE" 
 
 # set up clusters
@@ -989,7 +990,7 @@ registerDoParallel(cl)
 
 # Random Forest
 set.seed(7)
-fit.rf.Wheat <- train(dataset$Wheat_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+fit.rf.Wheat <- train(Wheat_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.Wheat) #print results
 
 stopCluster(cl)
