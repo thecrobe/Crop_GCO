@@ -475,12 +475,13 @@ registerDoParallel(cl)
 set.seed(7)
 fit.rf.barley <- train(barley_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.barley) #print results
+write.csv(fit.rf.barley$results, "Models/barley_rfFIT.csv")
 
 stopCluster(cl)
 
 barley.varIMP<-(varImp(fit.rf.barley)) #identify variable importance
 plot(barley.varIMP)
-write.csv(barley.varIMP, file = "Models/Variable_Importance/barley_varIMP.csv")
+write.csv(barley.varIMP$importance, file = "Models/barley_varIMP.csv")
 # Model Performance
 predictions <- predict(fit.rf.barley, validation) #predict 
 pred.error<-RMSE(predictions,validation$barley_HgHa) #get the Root Mean Standard Error of predicted values
@@ -527,7 +528,10 @@ stopCluster(cl)
 
 cassava.varIMP<-(varImp(fit.rf.cassava)) #identify variable importance
 plot(cassava.varIMP)
-write.csv(cassava.varIMP, file = "Models/Variable_Importance/cassava_varIMP.csv")
+write.csv(cassava.varIMP$importance, file = "Models/cassava_varIMP.csv")
+write.csv(fit.rf.cassava$results, "Models/cassava_rfFIT.csv")
+
+
 # Model Performance
 predictions <- predict(fit.rf.cassava, validation) #predict 
 pred.error<-RMSE(predictions,validation$cassava_HgHa) #get the Root Mean Standard Error of predicted values
@@ -569,12 +573,13 @@ registerDoParallel(cl)
 set.seed(7)
 fit.rf.groundnut <- train(groundnut_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.groundnut) #print results
+write.csv(fit.rf.groundnut$results, "Models/groundnut_rfFIT.csv")
 
 stopCluster(cl)
 
 groundnut.varIMP<-(varImp(fit.rf.groundnut)) #identify variable importance
 plot(groundnut.varIMP)
-write.csv(groundnut.varIMP, file = "Models/Variable_Importance/groundnut_varIMP.csv")
+write.csv(groundnut.varIMP$importance, file = "Models/groundnut_varIMP.csv")
 # Model Performance
 predictions <- predict(fit.rf.groundnut, validation) #predict 
 pred.error<-RMSE(predictions,validation$groundnut_HgHa) #get the Root Mean Standard Error of predicted values
@@ -616,12 +621,14 @@ registerDoParallel(cl)
 set.seed(7)
 fit.rf.maize <- train(maize_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.maize) #print results
+write.csv(fit.rf.maize$results, "Models/maize_rfFIT.csv")
 
+fit.r
 stopCluster(cl)
 
 maize.varIMP<-(varImp(fit.rf.maize)) #identify variable importance
 plot(maize.varIMP)
-write.csv(maize.varIMP, file = "Models/Variable_Importance/maize_varIMP.csv")
+write.csv(maize.varIMP$importance, file = "Models/maize_varIMP.csv")
 # Model Performance
 predictions <- predict(fit.rf.maize, validation) #predict 
 pred.error<-RMSE(predictions,validation$maize_HgHa) #get the Root Mean Standard Error of predicted values
@@ -663,12 +670,14 @@ registerDoParallel(cl)
 set.seed(7)
 fit.rf.millet <- train(millet_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.millet) #print results
+write.csv(fit.rf.millet$results, "Models/millet_rfFIT.csv")
+
 
 stopCluster(cl)
 
 millet.varIMP<-(varImp(fit.rf.millet)) #identify variable importance
 plot(millet.varIMP)
-write.csv(millet.varIMP, file = "Models/Variable_Importance/millet_varIMP.csv")
+write.csv(millet.varIMP$importance, file = "Models/millet_varIMP.csv")
 # Model Performance
 predictions <- predict(fit.rf.millet, validation) #predict 
 pred.error<-RMSE(predictions,validation$millet_HgHa) #get the Root Mean Standard Error of predicted values
@@ -710,12 +719,13 @@ registerDoParallel(cl)
 set.seed(7)
 fit.rf.rapeseed <- train(rapeseed_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.rapeseed) #print results
+write.csv(fit.rf.rapeseed$results, "Models/rapeseed_rfFIT.csv")
 
 stopCluster(cl)
 
 rapeseed.varIMP<-(varImp(fit.rf.rapeseed)) #identify variable importance
 plot(rapeseed.varIMP)
-write.csv(rapeseed.varIMP, file = "Models/Variable_Importance/rapeseed_varIMP.csv")
+write.csv(rapeseed.varIMP$importance, file = "Models/rapeseed_varIMP.csv")
 # Model Performance
 predictions <- predict(fit.rf.rapeseed, validation) #predict 
 pred.error<-RMSE(predictions,validation$rapeseed_HgHa) #get the Root Mean Standard Error of predicted values
@@ -757,12 +767,13 @@ registerDoParallel(cl)
 set.seed(7)
 fit.rf.rice <- train(rice_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.rice) #print results
+write.csv(fit.rf.rice$results, "Models/rice_rfFIT.csv")
 
 stopCluster(cl)
 
 rice.varIMP<-(varImp(fit.rf.rice)) #identify variable importance
 plot(rice.varIMP)
-write.csv(rice.varIMP, file = "Models/Variable_Importance/rice_varIMP.csv")
+write.csv(rice.varIMP$importance, file = "Models/rice_varIMP.csv")
 # Model Performance
 predictions <- predict(fit.rf.rice, validation) #predict 
 pred.error<-RMSE(predictions,validation$rice_HgHa) #get the Root Mean Standard Error of predicted values
@@ -804,12 +815,14 @@ registerDoParallel(cl)
 set.seed(7)
 fit.rf.rye <- train(rye_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.rye) #print results
+write.csv(fit.rf.rye$results, "Models/rye_rfFIT.csv")
+
 
 stopCluster(cl)
 
 rye.varIMP<-(varImp(fit.rf.rye)) #identify variable importance
 plot(rye.varIMP)
-write.csv(rye.varIMP, file = "Models/Variable_Importance/rye_varIMP.csv")
+write.csv(rye.varIMP$importance, file = "Models/rye_varIMP.csv")
 # Model Performance
 predictions <- predict(fit.rf.rye, validation) #predict 
 pred.error<-RMSE(predictions,validation$rye_HgHa) #get the Root Mean Standard Error of predicted values
@@ -832,7 +845,7 @@ summary(rf)
 sapply(rf.Sorghum, "class")
 
 # create a list of 60% of the rows in the original dataset we can use for training
-validation_index <- createDataPartition(rf$Sorghum_HgHa, p=0.60, list=FALSE)
+validation_index <- createDataPartition(rf$Yield, p=0.60, list=FALSE)
 # select 20% of the data for validation
 validation <- rf[-validation_index,]
 # use the remaining 60% of data to training and testing the models
@@ -849,20 +862,21 @@ registerDoParallel(cl)
 
 # Random Forest
 set.seed(7)
-fit.rf.Sorghum <- train(Sorghum_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+fit.rf.Sorghum <- train(Yield~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.Sorghum) #print results
+write.csv(fit.rf.Sorghum$results, "Models/sorghum_rfFIT.csv")
 
 stopCluster(cl)
 
 sorghum.varIMP<-(varImp(fit.rf.Sorghum)) #identify variable importance
-plot(Sorghum.varIMP)
-write.csv(Sorghum.varIMP, file = "Models/Variable_Importance/Sorghum_varIMP.csv")
+plot(sorghum.varIMP)
+write.csv(sorghum.varIMP$importance, file = "Models/Sorghum_varIMP.csv")
 # Model Performance
 predictions <- predict(fit.rf.Sorghum, validation) #predict 
 pred.error<-RMSE(predictions,validation$Sorghum_HgHa) #get the Root Mean Standard Error of predicted values
 exp(pred.error) #put in yield values
 
-modelerror <- predict(fit.rf.sorghum, rf ) #predict on whole dataset
+modelerror <- predict(fit.rf.Sorghum, rf ) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
 write.csv(exp(modelerror),file="Models/Predictions/Sorghum_predictions.csv") # export for mapping
 
@@ -879,7 +893,7 @@ summary(rf)
 sapply(rf.Soybean, "class")
 
 # create a list of 60% of the rows in the original dataset we can use for training
-validation_index <- createDataPartition(rf$Soybean_HgHa, p=0.60, list=FALSE)
+validation_index <- createDataPartition(rf$soybean_HgHa, p=0.60, list=FALSE)
 # select 20% of the data for validation
 validation <- rf[-validation_index,]
 # use the remaining 60% of data to training and testing the models
@@ -896,20 +910,22 @@ registerDoParallel(cl)
 
 # Random Forest
 set.seed(7)
-fit.rf.Soybean <- train(Soybean_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+fit.rf.Soybean <- train(soybean_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.Soybean) #print results
+write.csv(fit.rf.Soybean$results, "Models/soybean_rfFIT.csv")
+
 
 stopCluster(cl)
 
 soybean.varIMP<-(varImp(fit.rf.Soybean)) #identify variable importance
-plot(Soybean.varIMP)
-write.csv(Soybean.varIMP, file = "Models/Variable_Importance/Soybean_varIMP.csv")
+plot(soybean.varIMP)
+write.csv(soybean.varIMP$importance, file = "Models/Soybean_varIMP.csv")
 # Model Performance
 predictions <- predict(fit.rf.Soybean, validation) #predict 
-pred.error<-RMSE(predictions,validation$Soybean_HgHa) #get the Root Mean Standard Error of predicted values
+pred.error<-RMSE(predictions,validation$soybean_HgHa) #get the Root Mean Standard Error of predicted values
 exp(pred.error) #put in yield values
 
-modelerror <- predict(fit.rf.soybean, rf ) #predict on whole dataset
+modelerror <- predict(fit.rf.Soybean, rf ) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
 write.csv(exp(modelerror),file="Models/Predictions/Soybean_predictions.csv") # export for mapping
 
@@ -926,7 +942,7 @@ summary(rf)
 sapply(rf.Sunflower, "class")
 
 # create a list of 60% of the rows in the original dataset we can use for training
-validation_index <- createDataPartition(rf$Sunflower_HgHa, p=0.60, list=FALSE)
+validation_index <- createDataPartition(rf$sunflower_HgHa, p=0.60, list=FALSE)
 # select 20% of the data for validation
 validation <- rf[-validation_index,]
 # use the remaining 60% of data to training and testing the models
@@ -943,20 +959,21 @@ registerDoParallel(cl)
 
 # Random Forest
 set.seed(7)
-fit.rf.Sunflower <- train(Sunflower_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+fit.rf.Sunflower <- train(sunflower_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.Sunflower) #print results
+write.csv(fit.rf.Sunflower$results, "Models/sunflower_rfFIT.csv")
 
 stopCluster(cl)
 
 sunflower.varIMP<-(varImp(fit.rf.Sunflower)) #identify variable importance
-plot(Sunflower.varIMP)
-write.csv(Sunflower.varIMP, file = "Models/Variable_Importance/Sunflower_varIMP.csv")
+plot(sunflower.varIMP)
+write.csv(sunflower.varIMP$importance, file = "Models/sunflower_varIMP.csv")
 # Model Performance
 predictions <- predict(fit.rf.Sunflower, validation) #predict 
-pred.error<-RMSE(predictions,validation$Sunflower_HgHa) #get the Root Mean Standard Error of predicted values
+pred.error<-RMSE(predictions,validation$sunflower_HgHa) #get the Root Mean Standard Error of predicted values
 exp(pred.error) #put in yield values
 
-modelerror <- predict(fit.rf.sunflower, rf ) #predict on whole dataset
+modelerror <- predict(fit.rf.Sunflower, rf ) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
 write.csv(exp(modelerror),file="Models/Predictions/Sunflower_predictions.csv") # export for mapping
 
@@ -973,7 +990,7 @@ summary(rf)
 sapply(rf.Wheat, "class")
 
 # create a list of 60% of the rows in the original dataset we can use for training
-validation_index <- createDataPartition(rf$Wheat_HgHa, p=0.60, list=FALSE)
+validation_index <- createDataPartition(rf$wheat_HgHa, p=0.60, list=FALSE)
 # select 20% of the data for validation
 validation <- rf[-validation_index,]
 # use the remaining 60% of data to training and testing the models
@@ -990,20 +1007,22 @@ registerDoParallel(cl)
 
 # Random Forest
 set.seed(7)
-fit.rf.Wheat <- train(Wheat_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+fit.rf.Wheat <- train(wheat_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.Wheat) #print results
+write.csv(fit.rf.Wheat$results, "Models/wheat_rfFIT.csv")
+
 
 stopCluster(cl)
 
 wheat.varIMP<-(varImp(fit.rf.Wheat)) #identify variable importance
-plot(Wheat.varIMP)
-write.csv(Wheat.varIMP, file = "Models/Variable_Importance/Wheat_varIMP.csv")
+plot(wheat.varIMP)
+write.csv(wheat.varIMP$importance, file = "Models/wheat_varIMP.csv")
 # Model Performance
 predictions <- predict(fit.rf.Wheat, validation) #predict 
-pred.error<-RMSE(predictions,validation$Wheat_HgHa) #get the Root Mean Standard Error of predicted values
+pred.error<-RMSE(predictions,validation$wheat_HgHa) #get the Root Mean Standard Error of predicted values
 exp(pred.error) #put in yield values
 
-modelerror <- predict(fit.rf.wheat, rf ) #predict on whole dataset
+modelerror <- predict(fit.rf.Wheat, rf ) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
 write.csv(exp(modelerror),file="Models/Predictions/Wheat_predictions.csv") # export for mapping
 
