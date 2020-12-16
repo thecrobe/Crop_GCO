@@ -1390,22 +1390,25 @@ print(wheat.fert)
 ```
 
 #Variable Direction Heatmap
-```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
+```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE, fig.cap="Heatmap of Rho coefficients for each variable by crop. The final version of this is found in the manuscript and is annotated with Bonforonni corrected significance"}
 
 vard<-read.csv(file="Models/VariableDirection/VariableDirection.csv", header=T)
 
+
+#values
 vard$Crop<-factor(vard$Crop, levels=vard$Crop) #set factor
 vard.m<-melt(vard) #melt
 
-ggplot(vard.m, aes(x=vard.m$Crop, y=vard.m$variable, fill=vard.m$value)) +geom_tile() + 
-  theme_bw() +
-  theme(axis.line = element_line(colour = "black"),
+#heatmap
+ggplot(vard.m, aes(x=vard.m$Crop, y=vard.m$variable, fill=vard.m$value)) +geom_tile() + theme_bw() +theme(axis.line = element_line(colour = "black"),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
     panel.border = element_blank(),
     panel.background = element_blank()) + 
   ylab("Crop") +xlab("Variable") + labs(color='Rho') +scale_fill_gradient(low="white", high="blue") +theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
+
+```
 
 ```
 
