@@ -91,6 +91,7 @@ library(caret)
 library(spatialEco)
 library(rgdal)
 library(wPerm)
+library(RVAideMemoire)
 
 #plots
 library(RColorBrewer)
@@ -129,7 +130,7 @@ yield.mapping<-merge(yield,mapping, by="Fishnet_ID")
 
 ## Barley 
 ```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Barley yield with individual colors", cache=TRUE}
-barley<-na.omit(yield.mapping %>% select(barley_HgHa,barley_GCO))
+barley<-na.omit(yield.mapping %>% dplyr::select(barley_HgHa,barley_GCO))
 barley.inside<-filter(barley, barley_GCO == "Inside")
 barley.outside<-filter(barley, barley_GCO == "Outside")
 barley.m<-melt(barley)
@@ -149,13 +150,13 @@ ggplot(barley.m, aes(x=barley.m$barley_GCO, y=barley.m$value, color=barley.m$bar
   ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
 
 # Permutational T Test
-barley.perm<-(barley.inside$barley_HgHa,barley.outside$barley_HgHa,progress=FALSE)
+barley.perm<-perm.t.test(barley.inside$barley_HgHa,barley.outside$barley_HgHa,progress=FALSE)
 print(barley.perm)
 ```
 
 ## Cassava 
 ```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Cassava yield with individual colors,", cache=TRUE}
-cassava<-na.omit(yield.mapping %>% select(cassava_HgHa,cassava_GCO))
+cassava<-na.omit(yield.mapping %>% dplyr::select(cassava_HgHa,cassava_GCO))
 cassava.inside<-filter(cassava, cassava_GCO == "Inside")
 cassava.outside<-filter(cassava, cassava_GCO == "Outside")
 cassava.m<-melt(cassava)
@@ -180,7 +181,7 @@ print(cassava.perm)
 ```
 ## Groundnut 
 ```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Groundnut yield with individual colors", cache=TRUE}
-groundnut<-na.omit(yield.mapping %>% select(groundnut_HgHa,groundnut_GCO))
+groundnut<-na.omit(yield.mapping %>% dplyr::select(groundnut_HgHa,groundnut_GCO))
 groundnut.inside<-filter(groundnut, groundnut_GCO == "Inside")
 groundnut.outside<-filter(groundnut, groundnut_GCO == "Outside")
 groundnut.m<-melt(groundnut)
@@ -207,7 +208,7 @@ print(groundnut.perm)
 ```
 ## Maize 
 ```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Maize yield with individual colors", cache=TRUE}
-maize<-na.omit(yield.mapping %>% select(maize_HgHa,maize_GCO))
+maize<-na.omit(yield.mapping %>% dplyr::select(maize_HgHa,maize_GCO))
 maize.inside<-filter(maize, maize_GCO == "Inside")
 maize.outside<-filter(maize, maize_GCO == "Outside")
 maize.m<-melt(maize)
@@ -233,7 +234,7 @@ print(maize.perm)
 ```
 ## Millet 
 ```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Millet yield with individual colors", cache=TRUE}
-millet<-na.omit(yield.mapping %>% select(millet_HgHa,millet_GCO))
+millet<-na.omit(yield.mapping %>% dplyr::select(millet_HgHa,millet_GCO))
 millet.inside<-filter(millet, millet_GCO == "Inside")
 millet.outside<-filter(millet, millet_GCO == "Outside")
 millet.m<-melt(millet)
@@ -258,7 +259,7 @@ print(millet.perm)
 ```
 ## Rapeseed 
 ```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Rapeseed yield with individual colors", cache=TRUE}
-rapeseed<-na.omit(yield.mapping %>% select(rapeseed_HgHa,rapeseed_GCO))
+rapeseed<-na.omit(yield.mapping %>% dplyr::select(rapeseed_HgHa,rapeseed_GCO))
 rapeseed.inside<-filter(rapeseed, rapeseed_GCO == "Inside")
 rapeseed.outside<-filter(rapeseed, rapeseed_GCO == "Outside")
 rapeseed.m<-melt(rapeseed)
@@ -283,7 +284,7 @@ print(rapeseed.perm)
 ```
 ## Rice 
 ```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Rice yield with individual colors", cache=TRUE}
-rice<-na.omit(yield.mapping %>% select(rice_HgHa,rice_GCO))
+rice<-na.omit(yield.mapping %>% dplyr::select(rice_HgHa,rice_GCO))
 rice.inside<-filter(rice, rice_GCO == "Inside")
 rice.outside<-filter(rice, rice_GCO == "Outside")
 rice.m<-melt(rice)
@@ -307,7 +308,7 @@ print(rice.perm)
 ```
 ## Rye 
 ```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Rye yield with individual colors", cache=TRUE}
-rye<-na.omit(yield.mapping %>% select(rye_HgHa,rye_GCO))
+rye<-na.omit(yield.mapping %>% dplyr::select(rye_HgHa,rye_GCO))
 rye.inside<-filter(rye, rye_GCO == "Inside")
 rye.outside<-filter(rye, rye_GCO == "Outside")
 rye.m<-melt(rye)
@@ -331,7 +332,7 @@ print(rye.perm)
 ```
 ## Sorghum 
 ```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Sorghum yield with individual colors", cache=TRUE}
-sorghum<-na.omit(yield.mapping %>% select(sorghum_HgHa,sorghum_GCO))
+sorghum<-na.omit(yield.mapping %>% dplyr::select(sorghum_HgHa,sorghum_GCO))
 sorghum.inside<-filter(sorghum, sorghum_GCO == "Inside")
 sorghum.outside<-filter(sorghum, sorghum_GCO == "Outside")
 sorghum.m<-melt(sorghum)
@@ -356,7 +357,7 @@ print(sorghum.perm)
 ```
 ## Soybean 
 ```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Soybean yield with individual colors", cache=TRUE}
-soybean<-na.omit(yield.mapping %>% select(soybean_HgHa,soybean_GCO))
+soybean<-na.omit(yield.mapping %>% dplyr::select(soybean_HgHa,soybean_GCO))
 soybean.inside<-filter(soybean, soybean_GCO == "Inside")
 soybean.outside<-filter(soybean, soybean_GCO == "Outside")
 soybean.m<-melt(soybean)
@@ -381,7 +382,7 @@ print(soybean.perm)
 ```
 ## Sunflower 
 ```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Sunflower yield with individual colors", cache=TRUE}
-sunflower<-na.omit(yield.mapping %>% select(sunflower_HgHa,sunflower_GCO))
+sunflower<-na.omit(yield.mapping %>% dplyr::select(sunflower_HgHa,sunflower_GCO))
 sunflower.inside<-filter(sunflower, sunflower_GCO == "Inside")
 sunflower.outside<-filter(sunflower, sunflower_GCO == "Outside")
 sunflower.m<-melt(sunflower)
@@ -406,7 +407,7 @@ print(sunflower.perm)
 ```
 ## Wheat 
 ```{r,fig.align='center',message=FALSE, warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Wheat yield with individual colors", cache=TRUE}
-wheat<-na.omit(yield.mapping %>% select(wheat_HgHa,wheat_GCO))
+wheat<-na.omit(yield.mapping %>% dplyr::select(wheat_HgHa,wheat_GCO))
 wheat.inside<-filter(wheat, wheat_GCO == "Inside")
 wheat.outside<-filter(wheat, wheat_GCO == "Outside")
 wheat.m<-melt(wheat)
@@ -624,7 +625,6 @@ fit.rf.maize <- train(maize_HgHa~., data=dataset, method="rf", metric=metric, tr
 print(fit.rf.maize) #print results
 write.csv(fit.rf.maize$results, "Models/maize_rfFIT.csv")
 
-fit.r
 stopCluster(cl)
 
 maize.varIMP<-(varImp(fit.rf.maize)) #identify variable importance
@@ -1040,7 +1040,7 @@ write.csv(exp(modelerror),file="Models/Predictions/Wheat_predictions.csv") # exp
 </div>
 
 <div class = "col-md-4">
-<br><br> **What Are The Model Assumptions:** Spearman rank-order correlations are used and have the s
+<br><br> **What Are The Model Assumptions:** Permutational Spearman rank-order correlations are used as they will identify monotonic relationships.Permutational tests were chosen as they have few assumptions about the distribution and independence of the data (i.e. exchangability is th only assumption however there is no way to test for this as we do not know the true distribution). Likewise permutational tests destroy the spatial-autocorrelation structure that influences test results. Plots are solely visual.
 </div>
 
 ```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
@@ -1051,16 +1051,27 @@ rf.barley<-na.omit(rf.barley)
 rf.barley<-log10(rf.barley+1)
 
 #AET
-barely.aet<-perm.relation(rf.barley$barley_HgHa,rf.barley$AET_mean,method = "spearman") 
-#Growing
-barely.growing<-perm.relation(rf.barley$barley_HgHa,rf.barley$Growing_Mean,method = "spearman") 
-#GDP
-barely.gdp<-perm.relation(rf.barley$barley_HgHa,rf.barley$GDP_Mean,method = "spearman") 
-#Pest
-barely.pest<-perm.relation(rf.barley$barley_HgHa,rf.barley$Pesticide,method = "spearman") 
-#Fertilizer
-barely.fert<-perm.relation(rf.barley$barley_HgHa,rf.barley$Barley_Fertilizer,method = "spearman") 
+barley.aet<-perm.relation(rf.barley$barley_HgHa,rf.barley$AET_mean,method = "spearman") 
+print(barley.aet)
 
+#Growing
+barley.growing<-perm.relation(rf.barley$barley_HgHa,rf.barley$Growing_Mean,method = "spearman") 
+print(barley.growing)
+
+#GDP
+barley.gdp<-perm.relation(rf.barley$barley_HgHa,rf.barley$GDP_Mean,method = "spearman") 
+print(barley.gdp)
+
+#Pest
+barley.pest<-perm.relation(rf.barley$barley_HgHa,rf.barley$Pesticide,method = "spearman") 
+print(barley.pest)
+
+#Fertilizer
+barley.fert<-perm.relation(rf.barley$barley_HgHa,rf.barley$Barley_Fertilizer,method = "spearman") 
+print(barley.fert)
+```
+
+```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Cassava
 rf.cassava<-read.csv(file="Models/Cassava_RF.csv", header = T, row.names = 1)
 rf.cassava$Growing_Mean<-as.numeric(rf.cassava$Growing_Mean)
@@ -1069,15 +1080,28 @@ rf.cassava<-log10(rf.cassava+1)
 
 #AET
 cassava.aet<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$AET_mean,method = "spearman") 
+print(cassava.aet)
+
 #Growing
 cassava.growing<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$Growing_Mean,method = "spearman") 
+print(cassava.growing)
+
 #GDP
 cassava.gdp<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$GDP_Mean,method = "spearman") 
+print(cassava.gdp)
+
 #Pest
 cassava.pest<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$Pesticide,method = "spearman") 
-#Fertilizer
-cassava.fert<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$Cassava_Fertilizer,method = "spearman")
+print(cassava.pest)
 
+#Fertilizer
+cassava.fert<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$cassava_HgHa,method = "spearman")
+print(cassava.fert)
+
+```
+
+
+```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Groundnut
 rf.groundnut<-read.csv(file="Models/Groundnut_RF.csv", header = T, row.names = 1)
 rf.groundnut$Growing_Mean<-as.numeric(rf.groundnut$Growing_Mean)
@@ -1086,15 +1110,28 @@ rf.groundnut<-log10(rf.groundnut+1)
 
 #AET
 groundnut.aet<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$AET_mean,method = "spearman") 
+print(groundnut.aet)
+
 #Growing
 groundnut.growing<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$Growing_Mean,method = "spearman") 
+print(groundnut.growing)
+
 #GDP
 groundnut.gdp<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$GDP_Mean,method = "spearman") 
+print(groundnut.gdp)
+
 #Pest
 groundnut.pest<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$Pesticide,method = "spearman") 
-#Fertilizer
-groundnut.fert<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$Groundnut_Fertilizer,method = "spearman")
+print(groundnut.pest)
 
+#Fertilizer
+groundnut.fert<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$groundnut_Fertilizer,method = "spearman")
+print(groundnut.fert)
+
+
+```
+
+```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Maize
 rf.maize<-read.csv(file="Models/Maize_RF.csv", header = T, row.names = 1)
 rf.maize$Growing_Mean<-as.numeric(rf.maize$Growing_Mean)
@@ -1103,15 +1140,27 @@ rf.maize<-log10(rf.maize+1)
 
 #AET
 maize.aet<-perm.relation(rf.maize$maize_HgHa,rf.maize$AET_mean,method = "spearman") 
+print(maize.aet)
+
 #Growing
 maize.growing<-perm.relation(rf.maize$maize_HgHa,rf.maize$Growing_Mean,method = "spearman") 
+print(maize.growing)
+
 #GDP
 maize.gdp<-perm.relation(rf.maize$maize_HgHa,rf.maize$GDP_Mean,method = "spearman") 
+print(maize.gdp)
+
 #Pest
 maize.pest<-perm.relation(rf.maize$maize_HgHa,rf.maize$Pesticide,method = "spearman") 
-#Fertilizer
-maize.fert<-perm.relation(rf.maize$maize_HgHa,rf.maize$Maize_Fertilizer,method = "spearman")
+print(maize.pest)
 
+#Fertilizer
+maize.fert<-perm.relation(rf.maize$maize_HgHa,rf.maize$maize_Fertilizer,method = "spearman")
+print(maize.fert)
+
+```
+
+```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Millet
 
 rf.millet<-read.csv(file="Models/Millet_RF.csv", header = T, row.names = 1)
@@ -1121,15 +1170,24 @@ rf.millet<-log10(rf.millet+1)
 
 #AET
 millet.aet<-perm.relation(rf.millet$millet_HgHa,rf.millet$AET_mean,method = "spearman") 
+print(millet.aet)
+
 #Growing
 millet.growing<-perm.relation(rf.millet$millet_HgHa,rf.millet$Growing_Mean,method = "spearman") 
+print(millet.growing)
+
 #GDP
 millet.gdp<-perm.relation(rf.millet$millet_HgHa,rf.millet$GDP_Mean,method = "spearman") 
 #Pest
 millet.pest<-perm.relation(rf.millet$millet_HgHa,rf.millet$Pesticide,method = "spearman") 
-#Fertilizer
-millet.fert<-perm.relation(rf.millet$millet_HgHa,rf.millet$Millet_Fertilizer,method = "spearman")
+print(millet.pest)
 
+#Fertilizer
+millet.fert<-perm.relation(rf.millet$millet_HgHa,rf.millet$millet_Fertilizer,method = "spearman")
+print(millet.fert)
+```
+
+```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Rapeseed
 rf.rapeseed<-read.csv(file="Models/Rapeseed_RF.csv", header = T, row.names = 1)
 rf.rapeseed$Growing_Mean<-as.numeric(rf.rapeseed$Growing_Mean)
@@ -1138,15 +1196,27 @@ rf.rapeseed<-log10(rf.rapeseed+1)
 
 #AET
 rapeseed.aet<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$AET_mean,method = "spearman") 
+print(rapeseed.aet)
+
 #Growing
 rapeseed.growing<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$Growing_Mean,method = "spearman") 
+print(rapeseed.growing)
+
 #GDP
 rapeseed.gdp<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$GDP_Mean,method = "spearman") 
+print(rapeseed.gdp)
+
 #Pest
 rapeseed.pest<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$Pesticide,method = "spearman") 
-#Fertilizer
-rapeseed.fert<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$Rapeseed_Fertilizer,method = "spearman")
+print(rapeseed.pest)
 
+#Fertilizer
+rapeseed.fert<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$rapeseed_Fertilizer,method = "spearman")
+print(rapeseed.fert)
+
+```
+
+```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Rice
 rf.rice<-read.csv(file="Models/Rice_RF.csv", header = T, row.names = 1)
 rf.rice$Growing_Mean<-as.numeric(rf.rice$Growing_Mean)
@@ -1155,15 +1225,27 @@ rf.rice<-log10(rf.rice+1)
 
 #AET
 rice.aet<-perm.relation(rf.rice$rice_HgHa,rf.rice$AET_mean,method = "spearman") 
+print(rice.aet)
+
 #Growing
 rice.growing<-perm.relation(rf.rice$rice_HgHa,rf.rice$Growing_Mean,method = "spearman") 
+print(rice.growing)
+
 #GDP
 rice.gdp<-perm.relation(rf.rice$rice_HgHa,rf.rice$GDP_Mean,method = "spearman") 
+print(rice.gdp)
+
 #Pest
 rice.pest<-perm.relation(rf.rice$rice_HgHa,rf.rice$Pesticide,method = "spearman") 
-#Fertilizer
-rice.fert<-perm.relation(rf.rice$rice_HgHa,rf.rice$Rice_Fertilizer,method = "spearman")
+print(rice.pest)
 
+#Fertilizer
+rice.fert<-perm.relation(rf.rice$rice_HgHa,rf.rice$rice_Fertilizer,method = "spearman")
+print(rice.fert)
+
+```
+
+```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Rye
 rf.rye<-read.csv(file="Models/Rye_RF.csv", header = T, row.names = 1)
 rf.rye$Growing_Mean<-as.numeric(rf.rye$Growing_Mean)
@@ -1172,15 +1254,28 @@ rf.rye<-log10(rf.rye+1)
 
 #AET
 rye.aet<-perm.relation(rf.rye$rye_HgHa,rf.rye$AET_mean,method = "spearman") 
+print(rye.aet)
+
 #Growing
 rye.growing<-perm.relation(rf.rye$rye_HgHa,rf.rye$Growing_Mean,method = "spearman") 
+print(rye.growing)
+
 #GDP
 rye.gdp<-perm.relation(rf.rye$rye_HgHa,rf.rye$GDP_Mean,method = "spearman") 
+print(rye.gdp)
+
 #Pest
 rye.pest<-perm.relation(rf.rye$rye_HgHa,rf.rye$Pesticide,method = "spearman") 
-#Fertilizer
-rye.fert<-perm.relation(rf.rye$rye_HgHa,rf.rye$Rye_Fertilizer,method = "spearman")
 
+print(rye.pest)
+
+#Fertilizer
+rye.fert<-perm.relation(rf.rye$rye_HgHa,rf.rye$rye_Fertilizer,method = "spearman")
+
+print(rye.fert)
+```
+
+```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Sorghum
 rf.sorghum<-read.csv(file="Models/Sorghum_RF.csv", header = T, row.names = 1)
 rf.sorghum$Growing.Season<-as.numeric(rf.sorghum$Growing.Season)
@@ -1188,16 +1283,27 @@ rf.sorghum<-na.omit(rf.sorghum)
 rf.sorghum<-log10(rf.sorghum+1)
 
 #AET
-sorghum.aet<-perm.relation(rf.sorghum$Yieldrf.sorghum$AET_mean,method = "spearman") 
+sorghum.aet<-perm.relation(rf.sorghum$Yield,rf.sorghum$Evapotranspiraton,method = "spearman") 
+print(sorghum.aet)
+
 #Growing
 sorghum.growing<-perm.relation(rf.sorghum$Yield,rf.sorghum$Growing.Season,method = "spearman") 
+print(sorghum.growing)
+
 #GDP
-sorghum.gdp<-perm.relation(rf.sorghum$Yield,rf.sorghum$GDP_Mean,method = "spearman") 
+sorghum.gdp<-perm.relation(rf.sorghum$Yield,rf.sorghum$GDP,method = "spearman") 
+print(sorghum.gdp)
+
 #Pest
 sorghum.pest<-perm.relation(rf.sorghum$Yield,rf.sorghum$Pesticide,method = "spearman") 
-#Fertilizer
-sorghum.fert<-perm.relation(rf.sorghum$Yield,rf.sorghum$Sorghum_Fertilizer,method = "spearman")
+print(sorghum.pest)
 
+#Fertilizer
+sorghum.fert<-perm.relation(rf.sorghum$Yield,rf.sorghum$sorghum_Fertilizer,method = "spearman")
+print(sorghum.fert)
+```
+
+```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Soybean
 rf.soybean<-read.csv(file="Models/Soybean_RF.csv", header = T, row.names = 1)
 rf.soybean$Growing_Mean<-as.numeric(rf.soybean$Growing_Mean)
@@ -1206,15 +1312,26 @@ rf.soybean<-log10(rf.soybean+1)
 
 #AET
 soybean.aet<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$AET_mean,method = "spearman") 
+print(soybean.aet)
+
 #Growing
 soybean.growing<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$Growing_Mean,method = "spearman") 
+print(soybean.growing)
+
 #GDP
 soybean.gdp<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$GDP_Mean,method = "spearman") 
+print(soybean.gdp)
+
 #Pest
 soybean.pest<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$Pesticide,method = "spearman") 
-#Fertilizer
-soybean.fert<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$Soybean_Fertilizer,method = "spearman")
+print(soybean.pest)
 
+#Fertilizer
+soybean.fert<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$soybean_Fertilizer,method = "spearman")
+print(soybean.fert)
+```
+
+```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Sunflower
 rf.sunflower<-read.csv(file="Models/Sunflower_RF.csv", header = T, row.names = 1)
 rf.sunflower$Growing_Mean<-as.numeric(rf.sunflower$Growing_Mean)
@@ -1223,15 +1340,26 @@ rf.sunflower<-log10(rf.sunflower+1)
 
 #AET
 sunflower.aet<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$AET_mean,method = "spearman") 
+print(sunflower.aet)
+
 #Growing
 sunflower.growing<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$Growing_Mean,method = "spearman") 
+print(sunflower.growing)
+
 #GDP
-sunflower.gdp<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$GDP_Mean,method = "spearman") 
+sunflower.gdp<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$GDP_Mean,method = "spearman")
+print(sunflower.gdp)
+
 #Pest
 sunflower.pest<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$Pesticide,method = "spearman") 
-#Fertilizer
-sunflower.fert<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$Sunflower_Fertilizer,method = "spearman")
+print(sunflower.pest)
 
+#Fertilizer
+sunflower.fert<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$sunflower_Fertilizer,method = "spearman")
+print(sunflower.fert)
+```
+
+```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Wheat
 rf.wheat<-read.csv(file="Models/Wheat_RF.csv", header = T, row.names = 1)
 rf.wheat$Growing_Mean<-as.numeric(rf.wheat$Growing_Mean)
@@ -1240,15 +1368,23 @@ rf.wheat<-log10(rf.wheat+1)
 
 #AET
 wheat.aet<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$AET_mean,method = "spearman") 
+print(wheat.aet)
+
 #Growing
 wheat.growing<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$Growing_Mean,method = "spearman") 
+print(wheat.growing)
+
 #GDP
 wheat.gdp<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$GDP_Mean,method = "spearman") 
+print(wheat.gdp)
+
 #Pest
 wheat.pest<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$Pesticide,method = "spearman")
-#Fertilizer
-wheat.fert<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$Wheat_Fertilizer,method = "spearman")
+print(wheat.pest)
 
+#Fertilizer
+wheat.fert<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$wheat_Fertilizer,method = "spearman")
+print(wheat.fert)
 ```
 
 
