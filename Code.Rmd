@@ -1095,7 +1095,7 @@ cassava.pest<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$Pesticide,method 
 print(cassava.pest)
 
 #Fertilizer
-cassava.fert<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$cassava_HgHa,method = "spearman")
+cassava.fert<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$cassava_Fertilizer,method = "spearman")
 print(cassava.fert)
 
 ```
@@ -1178,6 +1178,8 @@ print(millet.growing)
 
 #GDP
 millet.gdp<-perm.relation(rf.millet$millet_HgHa,rf.millet$GDP_Mean,method = "spearman") 
+print(millet.gdp)
+
 #Pest
 millet.pest<-perm.relation(rf.millet$millet_HgHa,rf.millet$Pesticide,method = "spearman") 
 print(millet.pest)
@@ -1387,4 +1389,23 @@ wheat.fert<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$wheat_Fertilizer,method =
 print(wheat.fert)
 ```
 
+#Variable Direction Heatmap
+```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
+
+vard<-read.csv(file="Models/VariableDirection/VariableDirection.csv", header=T)
+
+vard$Crop<-factor(vard$Crop, levels=vard$Crop) #set factor
+vard.m<-melt(vard) #melt
+
+ggplot(vard.m, aes(x=vard.m$Crop, y=vard.m$variable, fill=vard.m$value)) +geom_tile() + 
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank()) + 
+  ylab("Crop") +xlab("Variable") + labs(color='Rho') +scale_fill_gradient(low="white", high="blue") +theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+
+```
 
