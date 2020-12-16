@@ -14,3 +14,7 @@ dplyr
 survival
 Formula
 Hmisc
+wPerm
+foreach
+iterators
+doParallel
