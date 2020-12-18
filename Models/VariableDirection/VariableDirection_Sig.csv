@@ -1,13 +1,13 @@
 ﻿Crop,Fertilizer,Evapotranspiration,Pesticide,GDP,Growing Season
-Barley,A,A,A,A,B
-Cassava,A,B,A,B,B
-Groundnut,A,A,A,A,B
-Maize,A,B,A,A,B
-Millet,A,A,A,A,B
-Rapeseed,A,A,A,A,A
-Rice,A,B,A,A,B
-Rye,A,A,A,B,B
-Sorghum,A,A,A,A,B
-Soybean,A,A,A,A,B
-Sunflower,A,A,A,A,A
-Wheat,A,A,A,A,B
+Barley,1,1,1,1,
+Cassava,1,,1,,
+Groundnut,1,1,1,1,
+Maize,1,,1,1,
+Millet,1,1,1,1,
+Rapeseed,1,1,1,1,1
+Rice,1,,1,1,
+Rye,1,1,1,,
+Sorghum,1,1,1,1,
+Soybean,1,1,1,1,
+Sunflower,1,1,1,1,1
+Whear,1,1,1,1,
