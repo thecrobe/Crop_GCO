@@ -128,9 +128,12 @@ yield<-read.csv("yield_fishnet.csv", header=T)
 yield.mapping<-merge(yield,mapping, by="Fishnet_ID")
 ```
 
+
+
 ## Barley 
 ```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Barley yield with individual colors", cache=TRUE}
 barley<-na.omit(yield.mapping %>% dplyr::select(barley_HgHa,barley_GCO))
+
 barley.inside<-filter(barley, barley_GCO == "Inside")
 barley.outside<-filter(barley, barley_GCO == "Outside")
 barley.m<-melt(barley)
@@ -332,13 +335,26 @@ print(rye.perm)
 ```
 ## Sorghum 
 ```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Sorghum yield with individual colors", cache=TRUE}
+
 sorghum<-na.omit(yield.mapping %>% dplyr::select(sorghum_HgHa,sorghum_GCO))
+
+#Outlier Removal
+hist(sorghum$sorghum_HgHa)
+qqnorm(sorghum$sorghum_HgHa)
+sorg.filter<-sorghum %>% filter(between(sorghum_HgHa, quantile(sorghum_HgHa, .01), quantile(sorghum_HgHa, .99))) #remove top and bottom 1% 
+hist(sorg.filter$sorghum_HgHa)
+qqnorm(sorg.filter$sorghum_HgHa)
+dim(sorghum) - dim(sorg.filter) # Num Outliers Removed
+summary(sorghum)
+summary(sorg.filter)
+#Inside vs Outside GCO 
 sorghum.inside<-filter(sorghum, sorghum_GCO == "Inside")
 sorghum.outside<-filter(sorghum, sorghum_GCO == "Outside")
 sorghum.m<-melt(sorghum)
 summary(sorghum.inside)
 summary(sorghum.outside)
 
+#Plot
 ggplot(sorghum.m, aes(x=sorghum.m$sorghum_GCO, y=sorghum.m$value, color=sorghum.m$sorghum_GCO)) + 
   geom_jitter(alpha=0.4, width=0.2) + 
   geom_boxplot(color="black", fill="transparent", width=0.4)+
