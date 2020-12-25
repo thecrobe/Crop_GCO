@@ -454,13 +454,13 @@ sorghum<-na.omit(yield.mapping %>% dplyr::select(sorghum_HgHa,sorghum_GCO))
 #Outlier Removal
 hist(sorghum$sorghum_HgHa)
 qqnorm(sorghum$sorghum_HgHa)
-sorg.filter<-sorghum %>% filter(between(sorghum_HgHa, quantile(sorghum_HgHa, .01), quantile(sorghum_HgHa, .99))) #remove top and bottom 1% 
-hist(sorg.filter$sorghum_HgHa)
-qqnorm(sorg.filter$sorghum_HgHa)
-dim(sorghum) - dim(sorg.filter) # Num Outliers Removed
+sorghum.filter<-sorghum %>% filter(between(sorghum_HgHa, quantile(sorghum_HgHa, .01), quantile(sorghum_HgHa, .99))) #remove top and bottom 1% 
+hist(sorghum.filter$sorghum_HgHa)
+qqnorm(sorghum.filter$sorghum_HgHa)
+dim(sorghum) - dim(sorghum.filter) # Num Outliers Removed
 summary(sorghum)
-summary(sorg.filter)
-sorghum<-sorg.filter
+summary(sorghum.filter)
+sorghum<-sorghum.filter
 
 #Inside vs Outside GCO 
 sorghum.inside<-filter(sorghum, sorghum_GCO == "Inside")
@@ -483,12 +483,25 @@ ggplot(sorghum.m, aes(x=sorghum.m$sorghum_GCO, y=sorghum.m$value, color=sorghum.
   ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
 
 # Permutational T Test
+set.seed(8675309)
 sorghum.perm<-perm.t.test(sorghum.inside$sorghum_HgHa,sorghum.outside$sorghum_HgHa, progress=FALSE)
 print(sorghum.perm)
 ```
 ## Soybean 
 ```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Soybean yield with individual colors", cache=TRUE}
 soybean<-na.omit(yield.mapping %>% dplyr::select(soybean_HgHa,soybean_GCO))
+
+#Outlier Removal
+hist(rice$rice_HgHa)
+qqnorm(rice$rice_HgHa)
+rice.filter<-rice %>% filter(between(rice_HgHa, quantile(rice_HgHa, .01), quantile(rice_HgHa, .99))) #remove top and bottom 1% 
+hist(rice.filter$rice_HgHa)
+qqnorm(rice.filter$rice_HgHa)
+dim(rice) - dim(sorg.filter) # Num Outliers Removed
+summary(rice)
+summary(rice.filter)
+rice<-rice.filter
+
 
 #Inside vs Outside GCO 
 soybean.inside<-filter(soybean, soybean_GCO == "Inside")
@@ -511,12 +524,24 @@ ggplot(soybean.m, aes(x=soybean.m$soybean_GCO, y=soybean.m$value, color=soybean.
   ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
 
 # Permutational T Test
+set.seed(8675309)
 soybean.perm<-perm.t.test(soybean.inside$soybean_HgHa,soybean.outside$soybean_HgHa, progress=FALSE)
 print(soybean.perm)
 ```
 ## Sunflower 
 ```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Sunflower yield with individual colors", cache=TRUE}
 sunflower<-na.omit(yield.mapping %>% dplyr::select(sunflower_HgHa,sunflower_GCO))
+
+#Outlier Removal
+hist(sunflower$sunflower_HgHa)
+qqnorm(sunflower$sunflower_HgHa)
+sunflower.filter<-sunflower %>% filter(between(sunflower_HgHa, quantile(sunflower_HgHa, .01), quantile(sunflower_HgHa, .99))) #remove top and bottom 1% 
+hist(sunflower.filter$sunflower_HgHa)
+qqnorm(sunflower.filter$sunflower_HgHa)
+dim(sunflower) - dim(sunflower.filter) # Num Outliers Removed
+summary(sunflower)
+summary(sunflower.filter)
+sunflower<-sunflower.filter
 
 #Inside vs Outside GCO 
 sunflower.inside<-filter(sunflower, sunflower_GCO == "Inside")
@@ -546,6 +571,17 @@ print(sunflower.perm)
 ```{r,fig.align='center',message=FALSE, warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Wheat yield with individual colors", cache=TRUE}
 wheat<-na.omit(yield.mapping %>% dplyr::select(wheat_HgHa,wheat_GCO))
 
+#Outlier Removal
+hist(wheat$wheat_HgHa)
+qqnorm(wheat$wheat_HgHa)
+wheat.filter<-wheat %>% filter(between(wheat_HgHa, quantile(wheat_HgHa, .01), quantile(wheat_HgHa, .99))) #remove top and bottom 1% 
+hist(wheat.filter$wheat_HgHa)
+qqnorm(wheat.filter$wheat_HgHa)
+dim(wheat) - dim(wheat.filter) # Num Outliers Removed
+summary(wheat)
+summary(wheat.filter)
+wheat<-wheat.filter
+
 #Inside vs Outside GCO 
 wheat.inside<-filter(wheat, wheat_GCO == "Inside")
 wheat.outside<-filter(wheat, wheat_GCO == "Outside")
@@ -571,7 +607,32 @@ wheat.perm<-perm.t.test(wheat.inside$wheat_HgHa,wheat.outside$wheat_HgHa, progre
 print(wheat.perm)
 ```
 
+## Near Analysis 
 
+<div class = "col-md-4">
+<br><br> **What Was Tested:** Does a distance decay relationship exist for each crop as you increase distance from GCO? If this is true, what is the magnitude and direction? 
+</div>
+
+<div class = "col-md-4">
+<br><br> **What This Allows Me To Do:** Identify if crop yields are greater as a fucntion of distance from GCO
+</div>
+
+<div class = "col-md-4">
+<br><br> **What Are The Model Assumptions:**For generating the near table (a table of the distance centroid of each pixel outside of the GCO and crop yield) a geodesic approach was used to be more accurate at the equator and the poles. Likewise, permutational Spearman correlations are used and are non-parametric (rank ordered) and permutational. The nature of permutation means that the spatio-temporal autocorrelative structure in the data is removed. 
+</div>
+
+```{r message=TRUE, warning=FALSE, cache=T}
+
+
+### Sorghum 
+
+sorghum.near<-read.csv(file = "Near_Coded/Sorghum_near.csv", header=T)
+sorghum.near.filter<-sorghum.near %>% filter(between(sorghum.near$mean_sorgh, quantile(mean_sorgh, .01), quantile(mean_sorgh, .99))) #remove top and bottom 1% 
+sorghum<-sorghum.near.filter
+
+
+
+```
 
 ## Random Forest Regression (RFR)
 
@@ -627,10 +688,11 @@ write.csv(barley.varIMP$importance, file = "Models/barley_varIMP.csv")
 # Model Performance
 predictions <- predict(fit.rf.barley, validation) #predict 
 pred.error<-RMSE(predictions,validation$barley_HgHa) #get the Root Mean Standard Error of predicted values
-exp(pred.error) #put in yield values
+exp(pred.error-1) #put in yield values
 
 modelerror <- predict(fit.rf.barley, rf ) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
+
 write.csv(10^(modelerror) –1),file="Models/Predictions/barley_predictions.csv") # export for mapping
 
 ```
