@@ -1103,7 +1103,6 @@ write.csv(modelerror,file="Models/Predictions/maize_predictions.csv") # export f
 ```{r, Analysis: Millet RFR, cache=TRUE}
 
 rf.millet<-read.csv(file="Models/Millet_RF.csv", header = T, row.names = 1)
-rf.millet$Growing_Mean<-as.numeric(rf.millet$Growing_Mean)
 rf<-na.omit(rf.millet)
 rf<-log10(rf+1)
 summary(rf)
@@ -1152,7 +1151,6 @@ write.csv(modelerror,file="Models/Predictions/millet_predictions.csv") # export 
 ```{r, Analysis: Rapeseed RFR, cache=TRUE}
 
 rf.rapeseed<-read.csv(file="Models/Rapeseed_RF.csv", header = T, row.names = 1)
-rf.rapeseed$Growing_Mean<-as.numeric(rf.rapeseed$Growing_Mean)
 rf<-na.omit(rf.rapeseed)
 rf<-log10(rf+1)
 summary(rf)
@@ -1191,7 +1189,7 @@ pred.error<-RMSE(predictions,validation$rapeseed_HgHa) #get the Root Mean Standa
 exp(pred.error) #put in yield values
 
 modelerror <- exp(predict(fit.rf.rapeseed, rf )-1) #predict on whole dataset
-head(modelerror) #make sure it worked honeyyyy
+summary(modelerror) #make sure it worked honeyyyy
 write.csv(modelerror,file="Models/Predictions/rapeseed_predictions.csv") # export for mapping
 
 ```
@@ -1200,7 +1198,6 @@ write.csv(modelerror,file="Models/Predictions/rapeseed_predictions.csv") # expor
 ```{r, Analysis: Rice RFR, cache=TRUE}
 
 rf.rice<-read.csv(file="Models/Rice_RF.csv", header = T, row.names = 1)
-rf.rice$Growing_Mean<-as.numeric(rf.rice$Growing_Mean)
 rf<-na.omit(rf.rice)
 rf<-log10(rf+1)
 summary(rf)
@@ -1248,7 +1245,6 @@ write.csv(modelerror,file="Models/Predictions/rice_predictions.csv") # export fo
 ```{r, Analysis: Rye RFR, cache=TRUE}
 
 rf.rye<-read.csv(file="Models/Rye_RF.csv", header = T, row.names = 1)
-rf.rye$Growing_Mean<-as.numeric(rf.rye$Growing_Mean)
 rf<-na.omit(rf.rye)
 rf<-log10(rf+1)
 summary(rf)
@@ -1297,7 +1293,6 @@ write.csv(modelerror,file="Models/Predictions/rye_predictions.csv") # export for
 ```{r, Analysis: Random Forest Trial, cache=TRUE}
 
 rf.Sorghum<-read.csv(file="Models/Sorghum_RF.csv", header = T, row.names = 1)
-rf.Sorghum$Growing.Season<-as.numeric(rf.Sorghum$Growing.Season)
 rf<-na.omit(rf.Sorghum)
 rf<-log10(rf+1)
 summary(rf)
@@ -1345,7 +1340,6 @@ write.csv(modelerror,file="Models/Predictions/Sorghum_predictions.csv") # export
 ```{r, Analysis: Soybean RFR, cache=TRUE}
 
 rf.Soybean<-read.csv(file="Models/Soybean_RF.csv", header = T, row.names = 1)
-rf.Soybean$Growing_Mean<-as.numeric(rf.Soybean$Growing_Mean)
 rf<-na.omit(rf.Soybean)
 rf<-log10(rf+1)
 summary(rf)
@@ -1394,7 +1388,6 @@ write.csv(modelerror,file="Models/Predictions/Soybean_predictions.csv") # export
 ```{r, Analysis: Sunflower RFR, cache=TRUE}
 
 rf.Sunflower<-read.csv(file="Models/Sunflower_RF.csv", header = T, row.names = 1)
-rf.Sunflower$Growing_Mean<-as.numeric(rf.Sunflower$Growing_Mean)
 rf<-na.omit(rf.Sunflower)
 rf<-log10(rf+1)
 summary(rf)
@@ -1442,7 +1435,6 @@ write.csv(modelerror,file="Models/Predictions/Sunflower_predictions.csv") # expo
 ```{r, Analysis: Wheat RFR, cache=TRUE}
 
 rf.Wheat<-read.csv(file="Models/Wheat_RF.csv", header = T, row.names = 1)
-rf.Wheat$Growing_Mean<-as.numeric(rf.Wheat$Growing_Mean)
 rf<-na.omit(rf.Wheat)
 rf<-log10(rf+1)
 summary(rf)
