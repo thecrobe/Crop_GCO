@@ -917,9 +917,9 @@ ggplot(wheat.near, aes(x=log10(NEAR_DIST), y=log10(wheat.near$mean_wheat))) +
 ```{r, Analysis: Barley RFR, cache=TRUE}
 
 rf.barley<-read.csv(file="Models/Barley_RF.csv", header = T, row.names = 1)
-rf.barley$Growing_Mean<-as.numeric(rf.barley$Growing_Mean)
+rf.barley[rf.barley == 0] <- NA
 rf<-na.omit(rf.barley)
-rf<-log10(rf+1)
+rf<-log10(rf)
 summary(rf)
 sapply(rf.barley, "class")
 
@@ -966,9 +966,9 @@ write.csv(10^(modelerror) –1),file="Models/Predictions/barley_predictions.csv"
 ```{r, Analysis: Cassava RFR, cache=TRUE}
 
 rf.cassava<-read.csv(file="Models/Cassava_RF.csv", header = T, row.names = 1)
-rf.cassava$Growing_Mean<-as.numeric(rf.cassava$Growing_Mean)
+rf.cassava[rf.cassava == 0] <- NA
 rf<-na.omit(rf.cassava)
-rf<-log10(rf+1)
+rf<-log10(rf)
 summary(rf)
 sapply(rf.cassava, "class")
 
@@ -1016,9 +1016,9 @@ write.csv(exp(modelerror),file="Models/Predictions/cassava_predictions.csv") # e
 ```{r, Analysis: Groundnut RFR, cache=TRUE}
 
 rf.groundnut<-read.csv(file="Models/Groundnut_RF.csv", header = T, row.names = 1)
-rf.groundnut$Growing_Mean<-as.numeric(rf.groundnut$Growing_Mean)
+rf.groundnut[rf.groundnut == 0] <- NA
 rf<-na.omit(rf.groundnut)
-rf<-log10(rf+1)
+rf<-log10(rf)
 summary(rf)
 sapply(rf.groundnut, "class")
 
@@ -1064,9 +1064,9 @@ write.csv(exp(modelerror),file="Models/Predictions/groundnut_predictions.csv") #
 ```{r, Analysis: Maize RFR, cache=TRUE}
 
 rf.maize<-read.csv(file="Models/Maize_RF.csv", header = T, row.names = 1)
-rf.maize$Growing_Mean<-as.numeric(rf.maize$Growing_Mean)
+rf.maize[rf.maize == 0] <- NA
 rf<-na.omit(rf.maize)
-rf<-log10(rf+1)
+rf<-log10(rf)
 summary(rf)
 sapply(rf.maize, "class")
 
@@ -1112,9 +1112,9 @@ write.csv(exp(modelerror),file="Models/Predictions/maize_predictions.csv") # exp
 ```{r, Analysis: Millet RFR, cache=TRUE}
 
 rf.millet<-read.csv(file="Models/Millet_RF.csv", header = T, row.names = 1)
-rf.millet$Growing_Mean<-as.numeric(rf.millet$Growing_Mean)
+rf.millet[rf.millet == 0] <- NA
 rf<-na.omit(rf.millet)
-rf<-log10(rf+1)
+rf<-log10(rf)
 summary(rf)
 sapply(rf.millet, "class")
 
@@ -1161,9 +1161,9 @@ write.csv(exp(modelerror),file="Models/Predictions/millet_predictions.csv") # ex
 ```{r, Analysis: Rapeseed RFR, cache=TRUE}
 
 rf.rapeseed<-read.csv(file="Models/Rapeseed_RF.csv", header = T, row.names = 1)
-rf.rapeseed$Growing_Mean<-as.numeric(rf.rapeseed$Growing_Mean)
+rf.rapeseed[rf.rapeseed == 0] <- NA
 rf<-na.omit(rf.rapeseed)
-rf<-log10(rf+1)
+rf<-log10(rf)
 summary(rf)
 sapply(rf.rapeseed, "class")
 
@@ -1209,9 +1209,9 @@ write.csv(exp(modelerror),file="Models/Predictions/rapeseed_predictions.csv") # 
 ```{r, Analysis: Rice RFR, cache=TRUE}
 
 rf.rice<-read.csv(file="Models/Rice_RF.csv", header = T, row.names = 1)
-rf.rice$Growing_Mean<-as.numeric(rf.rice$Growing_Mean)
+rf.rice[rf.rice == 0] <- NA
 rf<-na.omit(rf.rice)
-rf<-log10(rf+1)
+rf<-log10(rf)
 summary(rf)
 sapply(rf.rice, "class")
 
@@ -1257,9 +1257,9 @@ write.csv(exp(modelerror),file="Models/Predictions/rice_predictions.csv") # expo
 ```{r, Analysis: Rye RFR, cache=TRUE}
 
 rf.rye<-read.csv(file="Models/Rye_RF.csv", header = T, row.names = 1)
-rf.rye$Growing_Mean<-as.numeric(rf.rye$Growing_Mean)
+rf.rye[rf.rye == 0] <- NA
 rf<-na.omit(rf.rye)
-rf<-log10(rf+1)
+rf<-log10(rf)
 summary(rf)
 sapply(rf.rye, "class")
 
@@ -1306,9 +1306,9 @@ write.csv(exp(modelerror),file="Models/Predictions/rye_predictions.csv") # expor
 ```{r, Analysis: Random Forest Trial, cache=TRUE}
 
 rf.Sorghum<-read.csv(file="Models/Sorghum_RF.csv", header = T, row.names = 1)
-rf.Sorghum$Growing.Season<-as.numeric(rf.Sorghum$Growing.Season)
+rf.sorghum[rf.sorghum == 0] <- NA
 rf<-na.omit(rf.Sorghum)
-rf<-log10(rf+1)
+rf<-log10(rf)
 summary(rf)
 sapply(rf.Sorghum, "class")
 
@@ -1354,9 +1354,9 @@ write.csv(exp(modelerror),file="Models/Predictions/Sorghum_predictions.csv") # e
 ```{r, Analysis: Soybean RFR, cache=TRUE}
 
 rf.Soybean<-read.csv(file="Models/Soybean_RF.csv", header = T, row.names = 1)
-rf.Soybean$Growing_Mean<-as.numeric(rf.Soybean$Growing_Mean)
+rf.Soybean[rf.Soybean == 0] <- NA
 rf<-na.omit(rf.Soybean)
-rf<-log10(rf+1)
+rf<-log10(rf)
 summary(rf)
 sapply(rf.Soybean, "class")
 
@@ -1403,9 +1403,9 @@ write.csv(exp(modelerror),file="Models/Predictions/Soybean_predictions.csv") # e
 ```{r, Analysis: Sunflower RFR, cache=TRUE}
 
 rf.Sunflower<-read.csv(file="Models/Sunflower_RF.csv", header = T, row.names = 1)
-rf.Sunflower$Growing_Mean<-as.numeric(rf.Sunflower$Growing_Mean)
+rf.Sunflower[rf.Sunflower == 0] <- NA
 rf<-na.omit(rf.Sunflower)
-rf<-log10(rf+1)
+rf<-log10(rf)
 summary(rf)
 sapply(rf.Sunflower, "class")
 
@@ -1451,9 +1451,9 @@ write.csv(exp(modelerror),file="Models/Predictions/Sunflower_predictions.csv") #
 ```{r, Analysis: Wheat RFR, cache=TRUE}
 
 rf.Wheat<-read.csv(file="Models/Wheat_RF.csv", header = T, row.names = 1)
-rf.Wheat$Growing_Mean<-as.numeric(rf.Wheat$Growing_Mean)
+rf.Wheat[rf.Wheat == 0] <- NA
 rf<-na.omit(rf.Wheat)
-rf<-log10(rf+1)
+rf<-log10(rf)
 summary(rf)
 sapply(rf.Wheat, "class")
 
