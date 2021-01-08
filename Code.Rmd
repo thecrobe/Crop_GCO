@@ -917,9 +917,8 @@ ggplot(wheat.near, aes(x=log10(NEAR_DIST), y=log10(wheat.near$mean_wheat))) +
 ```{r, Analysis: Barley RFR, cache=TRUE}
 
 rf.barley<-read.csv(file="Models/Barley_RF.csv", header = T, row.names = 1)
-rf.barley[rf.barley == 0] <- NA
 rf<-na.omit(rf.barley)
-rf<-log10(rf)
+rf<-log10(rf+1)
 summary(rf)
 sapply(rf.barley, "class")
 
@@ -958,7 +957,7 @@ exp(pred.error-1) #put in yield values
 modelerror <- predict(fit.rf.barley, rf ) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
 
-write.csv(10^(modelerror) –1),file="Models/Predictions/barley_predictions.csv") # export for mapping
+write.csv(exp(modelerror)-1),file="Models/Predictions/barley_predictions.csv") # export for mapping
 
 ```
 
@@ -966,9 +965,8 @@ write.csv(10^(modelerror) –1),file="Models/Predictions/barley_predictions.csv"
 ```{r, Analysis: Cassava RFR, cache=TRUE}
 
 rf.cassava<-read.csv(file="Models/Cassava_RF.csv", header = T, row.names = 1)
-rf.cassava[rf.cassava == 0] <- NA
 rf<-na.omit(rf.cassava)
-rf<-log10(rf)
+rf<-log10(rf+1)
 summary(rf)
 sapply(rf.cassava, "class")
 
@@ -1008,7 +1006,7 @@ exp(pred.error) #put in yield values
 
 modelerror <- predict(fit.rf.cassava, rf ) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(exp(modelerror),file="Models/Predictions/cassava_predictions.csv") # export for mapping
+write.csv(exp(modelerror)-1),file="Models/Predictions/cassava_predictions.csv") # export for mapping
 
 ```
 
@@ -1016,9 +1014,8 @@ write.csv(exp(modelerror),file="Models/Predictions/cassava_predictions.csv") # e
 ```{r, Analysis: Groundnut RFR, cache=TRUE}
 
 rf.groundnut<-read.csv(file="Models/Groundnut_RF.csv", header = T, row.names = 1)
-rf.groundnut[rf.groundnut == 0] <- NA
 rf<-na.omit(rf.groundnut)
-rf<-log10(rf)
+rf<-log10(rf+1)
 summary(rf)
 sapply(rf.groundnut, "class")
 
@@ -1056,7 +1053,7 @@ exp(pred.error) #put in yield values
 
 modelerror <- predict(fit.rf.groundnut, rf ) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(exp(modelerror),file="Models/Predictions/groundnut_predictions.csv") # export for mapping
+write.csv(exp(modelerror)-1),file="Models/Predictions/groundnut_predictions.csv") # export for mapping
 
 ```
 
@@ -1064,9 +1061,8 @@ write.csv(exp(modelerror),file="Models/Predictions/groundnut_predictions.csv") #
 ```{r, Analysis: Maize RFR, cache=TRUE}
 
 rf.maize<-read.csv(file="Models/Maize_RF.csv", header = T, row.names = 1)
-rf.maize[rf.maize == 0] <- NA
 rf<-na.omit(rf.maize)
-rf<-log10(rf)
+rf<-log10(rf+1)
 summary(rf)
 sapply(rf.maize, "class")
 
@@ -1104,7 +1100,7 @@ exp(pred.error) #put in yield values
 
 modelerror <- predict(fit.rf.maize, rf ) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(exp(modelerror),file="Models/Predictions/maize_predictions.csv") # export for mapping
+write.csv(exp(modelerror)-1),file="Models/Predictions/maize_predictions.csv") # export for mapping
 
 ```
 
@@ -1112,9 +1108,9 @@ write.csv(exp(modelerror),file="Models/Predictions/maize_predictions.csv") # exp
 ```{r, Analysis: Millet RFR, cache=TRUE}
 
 rf.millet<-read.csv(file="Models/Millet_RF.csv", header = T, row.names = 1)
-rf.millet[rf.millet == 0] <- NA
+rf.millet$Growing_Mean<-as.numeric(rf.millet$Growing_Mean)
 rf<-na.omit(rf.millet)
-rf<-log10(rf)
+rf<-log10(rf+1)
 summary(rf)
 sapply(rf.millet, "class")
 
@@ -1153,7 +1149,7 @@ exp(pred.error) #put in yield values
 
 modelerror <- predict(fit.rf.millet, rf ) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(exp(modelerror),file="Models/Predictions/millet_predictions.csv") # export for mapping
+write.csv(exp(modelerror)-1),file="Models/Predictions/millet_predictions.csv") # export for mapping
 
 ```
 
@@ -1161,9 +1157,9 @@ write.csv(exp(modelerror),file="Models/Predictions/millet_predictions.csv") # ex
 ```{r, Analysis: Rapeseed RFR, cache=TRUE}
 
 rf.rapeseed<-read.csv(file="Models/Rapeseed_RF.csv", header = T, row.names = 1)
-rf.rapeseed[rf.rapeseed == 0] <- NA
+rf.rapeseed$Growing_Mean<-as.numeric(rf.rapeseed$Growing_Mean)
 rf<-na.omit(rf.rapeseed)
-rf<-log10(rf)
+rf<-log10(rf+1)
 summary(rf)
 sapply(rf.rapeseed, "class")
 
@@ -1201,7 +1197,7 @@ exp(pred.error) #put in yield values
 
 modelerror <- predict(fit.rf.rapeseed, rf ) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(exp(modelerror),file="Models/Predictions/rapeseed_predictions.csv") # export for mapping
+write.csv(exp(modelerror)-1),file="Models/Predictions/rapeseed_predictions.csv") # export for mapping
 
 ```
 
@@ -1209,9 +1205,9 @@ write.csv(exp(modelerror),file="Models/Predictions/rapeseed_predictions.csv") # 
 ```{r, Analysis: Rice RFR, cache=TRUE}
 
 rf.rice<-read.csv(file="Models/Rice_RF.csv", header = T, row.names = 1)
-rf.rice[rf.rice == 0] <- NA
+rf.rice$Growing_Mean<-as.numeric(rf.rice$Growing_Mean)
 rf<-na.omit(rf.rice)
-rf<-log10(rf)
+rf<-log10(rf+1)
 summary(rf)
 sapply(rf.rice, "class")
 
@@ -1249,7 +1245,7 @@ exp(pred.error) #put in yield values
 
 modelerror <- predict(fit.rf.rice, rf ) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(exp(modelerror),file="Models/Predictions/rice_predictions.csv") # export for mapping
+write.csv(exp(modelerror)-1),file="Models/Predictions/rice_predictions.csv") # export for mapping
 
 ```
 
@@ -1257,9 +1253,9 @@ write.csv(exp(modelerror),file="Models/Predictions/rice_predictions.csv") # expo
 ```{r, Analysis: Rye RFR, cache=TRUE}
 
 rf.rye<-read.csv(file="Models/Rye_RF.csv", header = T, row.names = 1)
-rf.rye[rf.rye == 0] <- NA
+rf.rye$Growing_Mean<-as.numeric(rf.rye$Growing_Mean)
 rf<-na.omit(rf.rye)
-rf<-log10(rf)
+rf<-log10(rf+1)
 summary(rf)
 sapply(rf.rye, "class")
 
@@ -1298,7 +1294,7 @@ exp(pred.error) #put in yield values
 
 modelerror <- predict(fit.rf.rye, rf ) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(exp(modelerror),file="Models/Predictions/rye_predictions.csv") # export for mapping
+write.csv(exp(modelerror)-1),file="Models/Predictions/rye_predictions.csv") # export for mapping
 
 ```
 
@@ -1306,9 +1302,9 @@ write.csv(exp(modelerror),file="Models/Predictions/rye_predictions.csv") # expor
 ```{r, Analysis: Random Forest Trial, cache=TRUE}
 
 rf.Sorghum<-read.csv(file="Models/Sorghum_RF.csv", header = T, row.names = 1)
-rf.sorghum[rf.sorghum == 0] <- NA
+rf.Sorghum$Growing.Season<-as.numeric(rf.Sorghum$Growing.Season)
 rf<-na.omit(rf.Sorghum)
-rf<-log10(rf)
+rf<-log10(rf+1)
 summary(rf)
 sapply(rf.Sorghum, "class")
 
@@ -1346,7 +1342,7 @@ exp(pred.error) #put in yield values
 
 modelerror <- predict(fit.rf.Sorghum, rf ) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(exp(modelerror),file="Models/Predictions/Sorghum_predictions.csv") # export for mapping
+write.csv(exp(modelerror)-1),file="Models/Predictions/Sorghum_predictions.csv") # export for mapping
 
 ```
 
@@ -1354,9 +1350,9 @@ write.csv(exp(modelerror),file="Models/Predictions/Sorghum_predictions.csv") # e
 ```{r, Analysis: Soybean RFR, cache=TRUE}
 
 rf.Soybean<-read.csv(file="Models/Soybean_RF.csv", header = T, row.names = 1)
-rf.Soybean[rf.Soybean == 0] <- NA
+rf.Soybean$Growing_Mean<-as.numeric(rf.Soybean$Growing_Mean)
 rf<-na.omit(rf.Soybean)
-rf<-log10(rf)
+rf<-log10(rf+1)
 summary(rf)
 sapply(rf.Soybean, "class")
 
@@ -1395,7 +1391,7 @@ exp(pred.error) #put in yield values
 
 modelerror <- predict(fit.rf.Soybean, rf ) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(exp(modelerror),file="Models/Predictions/Soybean_predictions.csv") # export for mapping
+write.csv(exp(modelerror)-1),file="Models/Predictions/Soybean_predictions.csv") # export for mapping
 
 ```
 
@@ -1403,9 +1399,9 @@ write.csv(exp(modelerror),file="Models/Predictions/Soybean_predictions.csv") # e
 ```{r, Analysis: Sunflower RFR, cache=TRUE}
 
 rf.Sunflower<-read.csv(file="Models/Sunflower_RF.csv", header = T, row.names = 1)
-rf.Sunflower[rf.Sunflower == 0] <- NA
+rf.Sunflower$Growing_Mean<-as.numeric(rf.Sunflower$Growing_Mean)
 rf<-na.omit(rf.Sunflower)
-rf<-log10(rf)
+rf<-log10(rf+1)
 summary(rf)
 sapply(rf.Sunflower, "class")
 
@@ -1443,7 +1439,7 @@ exp(pred.error) #put in yield values
 
 modelerror <- predict(fit.rf.Sunflower, rf ) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(exp(modelerror),file="Models/Predictions/Sunflower_predictions.csv") # export for mapping
+write.csv(exp(modelerror)-1),file="Models/Predictions/Sunflower_predictions.csv") # export for mapping
 
 ```
 
@@ -1451,9 +1447,9 @@ write.csv(exp(modelerror),file="Models/Predictions/Sunflower_predictions.csv") #
 ```{r, Analysis: Wheat RFR, cache=TRUE}
 
 rf.Wheat<-read.csv(file="Models/Wheat_RF.csv", header = T, row.names = 1)
-rf.Wheat[rf.Wheat == 0] <- NA
+rf.Wheat$Growing_Mean<-as.numeric(rf.Wheat$Growing_Mean)
 rf<-na.omit(rf.Wheat)
-rf<-log10(rf)
+rf<-log10(rf+1)
 summary(rf)
 sapply(rf.Wheat, "class")
 
@@ -1492,7 +1488,7 @@ exp(pred.error) #put in yield values
 
 modelerror <- predict(fit.rf.Wheat, rf ) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(exp(modelerror),file="Models/Predictions/Wheat_predictions.csv") # export for mapping
+write.csv(exp(modelerror)-1),file="Models/Predictions/Wheat_predictions.csv") # export for mapping
 
 ```
 
@@ -1514,10 +1510,8 @@ write.csv(exp(modelerror),file="Models/Predictions/Wheat_predictions.csv") # exp
 ```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ## Barley
 rf.barley<-read.csv(file="Models/Barley_RF.csv", header = T, row.names = 1)
-rf.barley[rf.barley == 0] <- NA
 rf.barley<-na.omit(rf.barley)
-rf.barley<-log10(rf.barley)
-summary(rf.barley)
+rf.barley<-log10(rf.barley+1)
 
 #AET
 barley.aet<-perm.relation(rf.barley$barley_HgHa,rf.barley$AET_mean,method = "pearson") 
@@ -1538,9 +1532,9 @@ barley.fert<-perm.relation(rf.barley$barley_HgHa,rf.barley$Barley_Fertilizer,met
 ```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Cassava
 rf.cassava<-read.csv(file="Models/Cassava_RF.csv", header = T, row.names = 1)
-rf.cassava[rf.cassava == 0] <- NA
+rf.cassava$Growing_Mean<-as.numeric(rf.cassava$Growing_Mean)
 rf.cassava<-na.omit(rf.cassava)
-rf.cassava<-log10(rf.cassava)
+rf.cassava<-log10(rf.cassava+1)
 
 #AET
 cassava.aet<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$AET_mean,method = "pearson") 
@@ -1564,9 +1558,9 @@ print(cassava.fert)
 ```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Groundnut
 rf.groundnut<-read.csv(file="Models/Groundnut_RF.csv", header = T, row.names = 1)
-rf.groundnut[rf.groundnut == 0] <- NA
+rf.groundnut$Growing_Mean<-as.numeric(rf.groundnut$Growing_Mean)
 rf.groundnut<-na.omit(rf.groundnut)
-rf.groundnut<-log10(rf.groundnut)
+rf.groundnut<-log10(rf.groundnut+1)
 
 #AET
 groundnut.aet<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$AET_mean,method = "pearson") 
@@ -1590,9 +1584,9 @@ print(groundnut.fert)
 ```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Maize
 rf.maize<-read.csv(file="Models/Maize_RF.csv", header = T, row.names = 1)
-rf.maize[rf.maize == 0] <- NA
+rf.maize$Growing_Mean<-as.numeric(rf.maize$Growing_Mean)
 rf.maize<-na.omit(rf.maize)
-rf.maize<-log10(rf.maize)
+rf.maize<-log10(rf.maize+1)
 
 #AET
 maize.aet<-perm.relation(rf.maize$maize_HgHa,rf.maize$AET_mean,method = "pearson") 
@@ -1616,9 +1610,9 @@ print(maize.fert)
 ##Millet
 
 rf.millet<-read.csv(file="Models/Millet_RF.csv", header = T, row.names = 1)
-rf.millet[rf.millet == 0] <- NA
+rf.millet$Growing_Mean<-as.numeric(rf.millet$Growing_Mean)
 rf.millet<-na.omit(rf.millet)
-rf.millet<-log10(rf.millet)
+rf.millet<-log10(rf.millet+1)
 
 #AET
 millet.aet<-perm.relation(rf.millet$millet_HgHa,rf.millet$AET_mean,method = "pearson") 
@@ -1641,8 +1635,7 @@ print(millet.fert)
 ##Rapeseed
 rf.rapeseed<-read.csv(file="Models/Rapeseed_RF.csv", header = T, row.names = 1)
 rf.rapeseed<-na.omit(rf.rapeseed)
-rf.rapeseed[rf.rapeseed == 0] <- NA
-rf.rapeseed<-log10(rf.rapeseed)
+rf.rapeseed<-log10(rf.rapeseed+1)
 
 #AET
 rapeseed.aet<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$AET_mean,method = "pearson") 
@@ -1653,9 +1646,8 @@ rapeseed.gdp<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$GDP_Mean,metho
 print(rapeseed.gdp)
 
 #Pest
-rapeseed.pest<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$Pesticide,method = "pearson")
+rapeseed.pest<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$Pesticide,method = "pearson") 
 print(rapeseed.pest)
-plot(rf.rapeseed$Pesticide,rf.rapeseed$rapeseed_HgHa)
 
 #Fertilizer
 rapeseed.fert<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$rapeseed_Fertilizer,method = "pearson")
@@ -1666,9 +1658,9 @@ print(rapeseed.fert)
 ```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Rice
 rf.rice<-read.csv(file="Models/Rice_RF.csv", header = T, row.names = 1)
-rf.rice[rf.rice == 0] <- NA
+rf.rice$Growing_Mean<-as.numeric(rf.rice$Growing_Mean)
 rf.rice<-na.omit(rf.rice)
-rf.rice<-log10(rf.rice)
+rf.rice<-log10(rf.rice+1)
 
 #AET
 rice.aet<-perm.relation(rf.rice$rice_HgHa,rf.rice$AET_mean,method = "pearson") 
@@ -1691,9 +1683,9 @@ print(rice.fert)
 ```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Rye
 rf.rye<-read.csv(file="Models/Rye_RF.csv", header = T, row.names = 1)
-rf.rye[rf.rye == 0] <- NA
+rf.rye$Growing_Mean<-as.numeric(rf.rye$Growing_Mean)
 rf.rye<-na.omit(rf.rye)
-rf.rye<-log10(rf.rye)
+rf.rye<-log10(rf.rye+1)
 
 #AET
 rye.aet<-perm.relation(rf.rye$rye_HgHa,rf.rye$AET_mean,method = "pearson") 
@@ -1717,9 +1709,9 @@ print(rye.fert)
 ```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Sorghum
 rf.sorghum<-read.csv(file="Models/Sorghum_RF.csv", header = T, row.names = 1)
-rf.sorghum[rf.sorghum == 0] <- NA
+rf.sorghum$Growing.Season<-as.numeric(rf.sorghum$Growing.Season)
 rf.sorghum<-na.omit(rf.sorghum)
-rf.sorghum<-log10(rf.sorghum)
+rf.sorghum<-log10(rf.sorghum+1)
 
 #AET
 sorghum.aet<-perm.relation(rf.sorghum$Yield,rf.sorghum$Evapotranspiraton,method = "pearson") 
@@ -1741,9 +1733,9 @@ print(sorghum.fert)
 ```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Soybean
 rf.soybean<-read.csv(file="Models/Soybean_RF.csv", header = T, row.names = 1)
-rf.soybean[rf.soybean == 0] <- NA
+rf.soybean$Growing_Mean<-as.numeric(rf.soybean$Growing_Mean)
 rf.soybean<-na.omit(rf.soybean)
-rf.soybean<-log10(rf.soybean)
+rf.soybean<-log10(rf.soybean+1)
 
 #AET
 soybean.aet<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$AET_mean,method = "pearson") 
@@ -1765,9 +1757,9 @@ print(soybean.fert)
 ```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Sunflower
 rf.sunflower<-read.csv(file="Models/Sunflower_RF.csv", header = T, row.names = 1)
-rf.sunflower[rf.sunflower == 0] <- NA
+rf.sunflower$Growing_Mean<-as.numeric(rf.sunflower$Growing_Mean)
 rf.sunflower<-na.omit(rf.sunflower)
-rf.sunflower<-log10(rf.sunflower)
+rf.sunflower<-log10(rf.sunflower+1)
 
 #AET
 sunflower.aet<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$AET_mean,method = "pearson") 
@@ -1789,9 +1781,9 @@ print(sunflower.fert)
 ```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Wheat
 rf.wheat<-read.csv(file="Models/Wheat_RF.csv", header = T, row.names = 1)
-rf.wheat[rf.wheat == 0] <- NA
+rf.wheat$Growing_Mean<-as.numeric(rf.wheat$Growing_Mean)
 rf.wheat<-na.omit(rf.wheat)
-rf.wheat<-log10(rf.wheat)
+rf.wheat<-log10(rf.wheat+1)
 
 #AET
 wheat.aet<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$AET_mean,method = "pearson") 
@@ -1808,5 +1800,26 @@ print(wheat.pest)
 #Fertilizer
 wheat.fert<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$wheat_Fertilizer,method = "pearson")
 print(wheat.fert)
+```
+
+#Variable Direction Heatmap
+```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE, fig.cap="Heatmap of Rho coefficients for each variable by crop. The final version of this is found in the manuscript and is annotated with Bonforonni corrected significance"}
+
+vard<-read.csv(file="Models/VariableDirection/VariableDirection.csv", header=T)
+
+
+#values
+vard$Crop<-factor(vard$Crop, levels=vard$Crop) #set factor
+vard.m<-melt(vard) #melt
+
+#heatmap
+ggplot(vard.m, aes(x=vard.m$Crop, y=vard.m$variable, fill=vard.m$value)) +geom_tile() + theme_bw() +theme(axis.line = element_line(colour = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank()) + 
+  ylab("Crop") +xlab("Variable") + labs(color='Rho') +scale_fill_gradient(low="white", high="#006669") +theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+
 ```
 
