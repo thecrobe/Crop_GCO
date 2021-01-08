@@ -940,6 +940,7 @@ write.csv(fit.rf.barley$results, "Models/barley_rfFIT.csv")
 
 stopCluster(cl)
 
+
 barley.varIMP<-(varImp(fit.rf.barley)) #identify variable importance
 plot(barley.varIMP)
 write.csv(barley.varIMP$importance, file = "Models/barley_varIMP.csv")
@@ -1237,9 +1238,9 @@ predictions <- predict(fit.rf.rice, validation) #predict
 pred.error<-RMSE(predictions,validation$rice_HgHa) #get the Root Mean Standard Error of predicted values
 exp(pred.error) #put in yield values
 
-modelerror <- predict(fit.rf.rice, rf ) #predict on whole dataset
+modelerror <- exp(predict(fit.rf.rice, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(exp(modelerror)-1),file="Models/Predictions/rice_predictions.csv") # export for mapping
+write.csv(modelerror,file="Models/Predictions/rice_predictions.csv") # export for mapping
 
 ```
 
@@ -1286,9 +1287,9 @@ predictions <- predict(fit.rf.rye, validation) #predict
 pred.error<-RMSE(predictions,validation$rye_HgHa) #get the Root Mean Standard Error of predicted values
 exp(pred.error) #put in yield values
 
-modelerror <- predict(fit.rf.rye, rf ) #predict on whole dataset
+modelerror <- exp(predict(fit.rf.rye, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(exp(modelerror)-1),file="Models/Predictions/rye_predictions.csv") # export for mapping
+write.csv(modelerror,file="Models/Predictions/rye_predictions.csv") # export for mapping
 
 ```
 
@@ -1334,9 +1335,9 @@ predictions <- predict(fit.rf.Sorghum, validation) #predict
 pred.error<-RMSE(predictions,validation$Yield) #get the Root Mean Standard Error of predicted values
 exp(pred.error) #put in yield values
 
-modelerror <- predict(fit.rf.Sorghum, rf ) #predict on whole dataset
+modelerror <- exp(predict(fit.rf.Sorghum, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(exp(modelerror)-1),file="Models/Predictions/Sorghum_predictions.csv") # export for mapping
+write.csv(modelerror,file="Models/Predictions/Sorghum_predictions.csv") # export for mapping
 
 ```
 
@@ -1383,9 +1384,9 @@ predictions <- predict(fit.rf.Soybean, validation) #predict
 pred.error<-RMSE(predictions,validation$soybean_HgHa) #get the Root Mean Standard Error of predicted values
 exp(pred.error) #put in yield values
 
-modelerror <- predict(fit.rf.Soybean, rf ) #predict on whole dataset
+modelerror <- exp(predict(fit.rf.Soybean, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(exp(modelerror)-1),file="Models/Predictions/Soybean_predictions.csv") # export for mapping
+write.csv(modelerror,file="Models/Predictions/Soybean_predictions.csv") # export for mapping
 
 ```
 
@@ -1431,9 +1432,9 @@ predictions <- predict(fit.rf.Sunflower, validation) #predict
 pred.error<-RMSE(predictions,validation$sunflower_HgHa) #get the Root Mean Standard Error of predicted values
 exp(pred.error) #put in yield values
 
-modelerror <- predict(fit.rf.Sunflower, rf ) #predict on whole dataset
+modelerror <- exp(predict(fit.rf.Sunflower, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(exp(modelerror)-1),file="Models/Predictions/Sunflower_predictions.csv") # export for mapping
+write.csv(modelerror,file="Models/Predictions/Sunflower_predictions.csv") # export for mapping
 
 ```
 
@@ -1480,9 +1481,9 @@ predictions <- predict(fit.rf.Wheat, validation) #predict
 pred.error<-RMSE(predictions,validation$wheat_HgHa) #get the Root Mean Standard Error of predicted values
 exp(pred.error) #put in yield values
 
-modelerror <- predict(fit.rf.Wheat, rf ) #predict on whole dataset
+modelerror <- exp(predict(fit.rf.Wheat, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(exp(modelerror)-1),file="Models/Predictions/Wheat_predictions.csv") # export for mapping
+write.csv(modelerror,file="Models/Predictions/Wheat_predictions.csv") # export for mapping
 
 ```
 
