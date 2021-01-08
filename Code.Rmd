@@ -44,12 +44,6 @@ Resolution: Resolution: Country level. Mean from 1997-2003 derived from FAO
 
 ### GDP: 
 Resolution: Country level. Mean from 1997-2003 derived from WorldBank
-  
-### Growing Season
-Resolution: Raster based (10km2)
-UNEP (2010): The GEO Data Portal, as compiled from FAO, TERRASTAT I Global GIS Databases Poverty and Food Insecurity Mapping Project. United Nations Environment Program.
-  
-
 
 ## Geographic Centers of Origin: 
 ###These are defined at the country level for each crop with regions being taken from FAOSTAT labels and publications of origins from a mixture of molecular and archaeological studies.
@@ -914,7 +908,7 @@ ggplot(wheat.near, aes(x=log10(NEAR_DIST), y=log10(wheat.near$mean_wheat))) +
 </div>
 
 ### Barley RFR 
-```{r, Analysis: Barley RFR, cache=TRUE}
+```{r, Analysis: Barley RFR, cache=TRUE} 
 
 rf.barley<-read.csv(file="Models/Barley_RF.csv", header = T, row.names = 1)
 rf<-na.omit(rf.barley)
@@ -954,10 +948,10 @@ predictions <- predict(fit.rf.barley, validation) #predict
 pred.error<-RMSE(predictions,validation$barley_HgHa) #get the Root Mean Standard Error of predicted values
 exp(pred.error-1) #put in yield values
 
-modelerror <- predict(fit.rf.barley, rf ) #predict on whole dataset
-head(modelerror) #make sure it worked honeyyyy
+modelerror <- exp(predict(fit.rf.barley, rf )-1) #predict on whole dataset
+summary(modelerror) #make sure it worked honeyyyy
 
-write.csv(exp(modelerror)-1),file="Models/Predictions/barley_predictions.csv") # export for mapping
+write.csv(modelerror,file="Models/Predictions/barley_predictions.csv") # export for mapping
 
 ```
 
@@ -1004,9 +998,9 @@ predictions <- predict(fit.rf.cassava, validation) #predict
 pred.error<-RMSE(predictions,validation$cassava_HgHa) #get the Root Mean Standard Error of predicted values
 exp(pred.error) #put in yield values
 
-modelerror <- predict(fit.rf.cassava, rf ) #predict on whole dataset
-head(modelerror) #make sure it worked honeyyyy
-write.csv(exp(modelerror)-1),file="Models/Predictions/cassava_predictions.csv") # export for mapping
+modelerror <- exp(predict(fit.rf.cassava, rf )-1) #predict on whole dataset
+summary(modelerror) #make sure it worked honeyyyy
+write.csv(modelerror,file="Models/Predictions/cassava_predictions.csv") # export for mapping
 
 ```
 
@@ -1051,9 +1045,9 @@ predictions <- predict(fit.rf.groundnut, validation) #predict
 pred.error<-RMSE(predictions,validation$groundnut_HgHa) #get the Root Mean Standard Error of predicted values
 exp(pred.error) #put in yield values
 
-modelerror <- predict(fit.rf.groundnut, rf ) #predict on whole dataset
+modelerror <- exp(predict(fit.rf.groundnut, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(exp(modelerror)-1),file="Models/Predictions/groundnut_predictions.csv") # export for mapping
+write.csv(modelerror,file="Models/Predictions/groundnut_predictions.csv") # export for mapping
 
 ```
 
@@ -1098,9 +1092,9 @@ predictions <- predict(fit.rf.maize, validation) #predict
 pred.error<-RMSE(predictions,validation$maize_HgHa) #get the Root Mean Standard Error of predicted values
 exp(pred.error) #put in yield values
 
-modelerror <- predict(fit.rf.maize, rf ) #predict on whole dataset
+modelerror <- exp(predict(fit.rf.maize, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(exp(modelerror)-1),file="Models/Predictions/maize_predictions.csv") # export for mapping
+write.csv(modelerror,file="Models/Predictions/maize_predictions.csv") # export for mapping
 
 ```
 
@@ -1147,9 +1141,9 @@ predictions <- predict(fit.rf.millet, validation) #predict
 pred.error<-RMSE(predictions,validation$millet_HgHa) #get the Root Mean Standard Error of predicted values
 exp(pred.error) #put in yield values
 
-modelerror <- predict(fit.rf.millet, rf ) #predict on whole dataset
+modelerror <- exp(predict(fit.rf.millet, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(exp(modelerror)-1),file="Models/Predictions/millet_predictions.csv") # export for mapping
+write.csv(modelerror,file="Models/Predictions/millet_predictions.csv") # export for mapping
 
 ```
 
@@ -1195,9 +1189,9 @@ predictions <- predict(fit.rf.rapeseed, validation) #predict
 pred.error<-RMSE(predictions,validation$rapeseed_HgHa) #get the Root Mean Standard Error of predicted values
 exp(pred.error) #put in yield values
 
-modelerror <- predict(fit.rf.rapeseed, rf ) #predict on whole dataset
+modelerror <- exp(predict(fit.rf.rapeseed, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(exp(modelerror)-1),file="Models/Predictions/rapeseed_predictions.csv") # export for mapping
+write.csv(modelerror,file="Models/Predictions/rapeseed_predictions.csv") # export for mapping
 
 ```
 
