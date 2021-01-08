@@ -631,13 +631,13 @@ barley.near<-read.csv(file = "Near_Coded/Barley_near.csv", header=T)
 barley.filter<-barley.near %>% filter(between(mean_barle, quantile(mean_barle, .01), quantile(mean_barle, .99))) #remove top and bottom 1% 
 barley.near<-barley.filter
 
-#Permutational Spearman Correlartion
-near.barley<-perm.relation(x = log10(barley.near$NEAR_DIST),barley.near$mean_barle,method = "spearman")
+#Permutational  Correlation
+near.barley<-perm.relation(x = log10(barley.near$NEAR_DIST),barley.near$mean_barle,method = "pearson")
 print(near.barley$Observed) #coefficient
 print(near.barley$P.value) # p-value
 #Plot
 ggplot(barley.near, aes(x=log10(NEAR_DIST), y=log10(barley.near$mean_barle))) +
-  geom_point(alpha=0.2, color="#00A9B4") +
+  geom_point(alpha=0.2, color="#00A9B4") + geom_smooth(method = "lm",color="#DB3500") +
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
         panel.grid.major = element_blank(),
@@ -646,6 +646,7 @@ ggplot(barley.near, aes(x=log10(NEAR_DIST), y=log10(barley.near$mean_barle))) +
         panel.background = element_blank()) + 
   ylab("Log10 Yield (Hg/Ha)") +xlab("Log 10 Distance") + labs(color='GCO')
 
+
 ### Cassava ###
 cassava.near<-read.csv(file = "Near_Coded/Cassava_near.csv", header=T)
 
@@ -653,13 +654,13 @@ cassava.near<-read.csv(file = "Near_Coded/Cassava_near.csv", header=T)
 cassava.filter<-cassava.near %>% filter(between(mean_cassa, quantile(mean_cassa, .01), quantile(mean_cassa, .99))) #remove top and bottom 1% 
 cassava.near<-cassava.filter
 
-#Permutational Spearman Correlartion
-near.cassava<-perm.relation(x = log10(cassava.near$NEAR_DIST),cassava.near$mean_cassa,method = "spearman")
+#Permutational  Correlartion
+near.cassava<-perm.relation(x = log10(cassava.near$NEAR_DIST),cassava.near$mean_cassa,method = "pearson")
 print(near.cassava$Observed) #coefficient
 print(near.cassava$P.value) # p-value
 #Plot
 ggplot(cassava.near, aes(x=log10(NEAR_DIST), y=log10(cassava.near$mean_cassa))) +
-  geom_point(alpha=0.2, color="#00A9B4") +
+  geom_point(alpha=0.2, color="#00A9B4") + geom_smooth(method = "lm",color="#DB3500") +
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
         panel.grid.major = element_blank(),
@@ -676,13 +677,13 @@ groundnut.near<-read.csv(file = "Near_Coded/Groundnut_near.csv", header=T)
 groundnut.filter<-groundnut.near %>% filter(between(mean_groun, quantile(mean_groun, .01), quantile(mean_groun, .99))) #remove top and bottom 1% 
 groundnut.near<-groundnut.filter
 
-#Permutational Spearman Correlartion
-near.groundnut<-perm.relation(x = log10(groundnut.near$NEAR_DIST),groundnut.near$mean_groun,method = "spearman")
+#Permutational  Correlartion
+near.groundnut<-perm.relation(x = log10(groundnut.near$NEAR_DIST),groundnut.near$mean_groun,method = "pearson")
 print(near.groundnut$Observed) #coefficient
 print(near.groundnut$P.value) # p-value
 #Plot
 ggplot(groundnut.near, aes(x=log10(NEAR_DIST), y=log10(groundnut.near$mean_groun))) +
-  geom_point(alpha=0.2, color="#00A9B4") +
+  geom_point(alpha=0.2, color="#00A9B4") + geom_smooth(method = "lm",color="#DB3500") +
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
         panel.grid.major = element_blank(),
@@ -690,6 +691,51 @@ ggplot(groundnut.near, aes(x=log10(NEAR_DIST), y=log10(groundnut.near$mean_groun
         panel.border = element_blank(),
         panel.background = element_blank()) + 
   ylab("Log10 Yield (Hg/Ha)") +xlab("Log 10 Distance") + labs(color='GCO')
+
+### Maize ###
+maize.near<-read.csv(file = "Near_Coded/Maize_near.csv", header=T)
+
+#Outlier Removal
+maize.filter<-maize.near %>% filter(between(mean_maize, quantile(mean_maize, .01), quantile(mean_maize, .99))) #remove top and bottom 1% 
+maize.near<-maize.filter
+
+#Permutational  Correlation
+near.maize<-perm.relation(x = log10(maize.near$NEAR_DIST),maize.near$mean_maize,method = "pearson")
+print(near.maize$Observed) #coefficient
+print(near.maize$P.value) # p-value
+#Plot
+ggplot(maize.near, aes(x=log10(NEAR_DIST), y=log10(maize.near$mean_maize))) +
+  geom_point(alpha=0.2, color="#F0AB00") +geom_smooth(method = "lm",color="#DB3500") +
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) + 
+  ylab("Log10 Yield (Hg/Ha)") +xlab("Log 10 Distance") + labs(color='GCO')
+
+### Millet ###
+millet.near<-read.csv(file = "Near_Coded/Millet_near.csv", header=T)
+
+#Outlier Removal
+millet.filter<-millet.near %>% filter(between(mean_mille, quantile(mean_mille, .01), quantile(mean_mille, .99))) #remove top and bottom 1% 
+millet.near<-millet.filter
+
+#Permutational  Correlation
+near.millet<-perm.relation(x = log10(millet.near$NEAR_DIST),millet.near$mean_mille,method = "pearson")
+print(near.millet$Observed) #coefficient
+print(near.millet$P.value) # p-value
+#Plot
+ggplot(millet.near, aes(x=log10(NEAR_DIST), y=log10(millet.near$mean_mille))) +
+  geom_point(alpha=0.2, color="#00A9B4") + geom_smooth(method = "lm",color="#DB3500") +
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) + 
+  ylab("Log10 Yield (Hg/Ha)") +xlab("Log 10 Distance") + labs(color='GCO')
+
 
 ### Rapeseed ###
 rapeseed.near<-read.csv(file = "Near_Coded/Rapeseed_near.csv", header=T)
@@ -698,13 +744,13 @@ rapeseed.near<-read.csv(file = "Near_Coded/Rapeseed_near.csv", header=T)
 rapeseed.filter<-rapeseed.near %>% filter(between(mean_rapes, quantile(mean_rapes, .01), quantile(mean_rapes, .99))) #remove top and bottom 1% 
 rapeseed.near<-rapeseed.filter
 
-#Permutational Spearman Correlartion
-near.rapeseed<-perm.relation(x = log10(rapeseed.near$NEAR_DIST),rapeseed.near$mean_rapes,method = "spearman")
+#Permutational  Correlartion
+near.rapeseed<-perm.relation(x = log10(rapeseed.near$NEAR_DIST),rapeseed.near$mean_rapes,method = "pearson")
 print(near.rapeseed$Observed) #coefficient
 print(near.rapeseed$P.value) # p-value
 #Plot
 ggplot(rapeseed.near, aes(x=log10(NEAR_DIST), y=log10(rapeseed.near$mean_rapes))) +
-  geom_point(alpha=0.2, color="#00A9B4") +
+  geom_point(alpha=0.2, color="#38474E") + geom_smooth(method = "lm",color="#DB3500") +
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
         panel.grid.major = element_blank(),
@@ -713,6 +759,48 @@ ggplot(rapeseed.near, aes(x=log10(NEAR_DIST), y=log10(rapeseed.near$mean_rapes))
         panel.background = element_blank()) + 
   ylab("Log10 Yield (Hg/Ha)") +xlab("Log 10 Distance") + labs(color='GCO')
 
+### Rice ###
+rice.near<-read.csv(file = "Near_Coded/Rice_near.csv", header=T)
+
+#Outlier Removal
+rice.filter<-rice.near %>% filter(between(mean_rice, quantile(mean_rice, .01), quantile(mean_rice, .99))) #remove top and bottom 1% 
+rice.near<-rice.filter
+#Permutational  Correlation
+
+print(near.rice$Observed) #coefficient
+print(near.rice$P.value) # p-value
+#Plot
+ggplot(rice.near, aes(x=log10(NEAR_DIST), y=log10(rice.near$mean_rice))) +
+  geom_point(alpha=0.2, color="#FBA900") + geom_smooth(method = "lm",color="#DB3500") +
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) + 
+  ylab("Log10 Yield (Hg/Ha)") +xlab("Log 10 Distance") + labs(color='GCO')
+
+### Rye ###
+rye.near<-read.csv(file = "Near_Coded/Rye_near.csv", header=T)
+
+#Outlier Removal
+rye.filter<-rye.near %>% filter(between(mean_rye_Y, quantile(mean_rye_Y, .01), quantile(mean_rye_Y, .99))) #remove top and bottom 1% 
+rye.near<-rye.filter
+
+#Permutational  Correlation
+near.rye<-perm.relation(x = log10(rye.near$NEAR_DIST),rye.near$mean_rye_Y,method = "pearson")
+print(near.rye$Observed) #coefficient
+print(near.rye$P.value) # p-value
+#Plot
+ggplot(rye.near, aes(x=log10(NEAR_DIST), y=log10(rye.near$mean_rye_Y))) +
+  geom_point(alpha=0.2, color="#FFB200") +geom_smooth(method = "lm",color="#DB3500") +
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) + 
+  ylab("Log10 Yield (Hg/Ha)") +xlab("Log 10 Distance") + labs(color='GCO')
 
 ### Sorghum ###
 sorghum.near<-read.csv(file = "Near_Coded/Sorghum_near.csv", header=T)
@@ -721,14 +809,14 @@ sorghum.near<-read.csv(file = "Near_Coded/Sorghum_near.csv", header=T)
 sorghum.filter<-sorghum.near %>% filter(between(mean_sorgh, quantile(mean_sorgh, .01), quantile(mean_sorgh, .99))) #remove top and bottom 1% 
 sorghum.near<-sorghum.filter
 
-#Permutational Spearman Correlartion
-near.sorghum<-perm.relation(x = log10(sorghum.near$NEAR_DIST),sorghum.near$mean_sorgh,method = "spearman")
+#Permutational  Correlartion
+near.sorghum<-perm.relation(x = log10(sorghum.near$NEAR_DIST),sorghum.near$mean_sorgh,method = "pearson")
 print(near.sorghum$Observed) #coefficient
 print(near.sorghum$P.value) # p-value
 
 #Plot
 ggplot(sorghum.near, aes(x=log10(NEAR_DIST), y=log10(sorghum.near$mean_sorgh))) +
-     geom_point(alpha=0.2, color="#00A9B4") +
+     geom_point(alpha=0.2, color="#00A9B4") +geom_smooth(method = "lm",color="#DB3500") +
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
         panel.grid.major = element_blank(),
@@ -737,6 +825,53 @@ ggplot(sorghum.near, aes(x=log10(NEAR_DIST), y=log10(sorghum.near$mean_sorgh))) 
         panel.background = element_blank()) + 
   ylab("Log10 Yield (Hg/Ha)") +xlab("Log 10 Distance") + labs(color='GCO')
 
+### Soybean ###
+soybean.near<-read.csv(file = "Near_Coded/Soybean_near.csv", header=T)
+
+#Outlier Removal
+soybean.filter<-soybean.near %>% filter(between(mean_soybe, quantile(mean_soybe, .01), quantile(mean_soybe, .99))) #remove top and bottom 1% 
+soybean.near<-soybean.filter
+
+#Permutational  Correlation
+near.soybean<-perm.relation(x = log10(soybean.near$NEAR_DIST),soybean.near$mean_soybe,method = "pearson")
+print(near.soybean$Observed) #coefficient
+print(near.soybean$P.value) # p-value
+#Plot
+ggplot(soybean.near, aes(x=log10(NEAR_DIST), y=log10(soybean.near$mean_soybe))) +
+  geom_point(alpha=0.2, color="#00A9B4") +geom_smooth(method = "lm",color="#DB3500") +
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) + 
+  ylab("Log10 Yield (Hg/Ha)") +xlab("Log 10 Distance") + labs(color='GCO')
+
+### Sunflower ###
+sunflower.near<-read.csv(file = "Near_Coded/Sunflower_near.csv", header=T)
+
+#Outlier Removal
+sunflower.filter<-sunflower.near %>% filter(between(mean_sunfl, quantile(mean_sunfl, .01), quantile(mean_sunfl, .99))) #remove top and bottom 1% 
+sunflower.near<-sunflower.filter
+
+
+
+#Permutational Spearman Correlation
+near.sunflower<-perm.relation(x = log10(sunflower.near$NEAR_DIST),sunflower.near$mean_sunfl,method = "pearson")
+print(near.sunflower$Observed) #coefficient
+print(near.sunflower$P.value) # p-value
+#Plot
+ggplot(sunflower.near, aes(x=log10(NEAR_DIST), y=log10(sunflower.near$mean_sunfl))) +
+  geom_point(alpha=0.2, color="#38474E") + geom_smooth(method = "lm",color="#DB3500") +
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) + 
+  ylab("Log10 Yield (Hg/Ha)") +xlab("Log 10 Distance") + labs(color='GCO')
+
+
 ### Wheat ### 
 wheat.near<-read.csv(file = "Near_Coded/Wheat_near.csv", header=T)
 
@@ -744,14 +879,14 @@ wheat.near<-read.csv(file = "Near_Coded/Wheat_near.csv", header=T)
 wheat.filter<-wheat.near %>% filter(between(mean_wheat, quantile(mean_wheat, .01), quantile(mean_wheat, .99))) #remove top and bottom 1% 
 wheat.near<-wheat.filter
 
-#Permutational Spearman Correlartion
-near.wheat<-perm.relation(x = log10(wheat.near$NEAR_DIST),wheat.near$mean_wheat,method = "spearman")
+#Permutational  Correlartion
+near.wheat<-perm.relation(x = log10(wheat.near$NEAR_DIST),wheat.near$mean_wheat,method = "pearson")
 print(near.wheat$Observed) #coefficient
 print(near.wheat$P.value) # p-value
 
 #Plot
 ggplot(wheat.near, aes(x=log10(NEAR_DIST), y=log10(wheat.near$mean_wheat))) +
-     geom_point(alpha=0.2, color="#00A9B4") +
+  geom_point(alpha=0.2, color="#00A9B4") + geom_smooth(method = "lm",color="#DB3500") +
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
         panel.grid.major = element_blank(),
@@ -1375,32 +1510,27 @@ write.csv(exp(modelerror),file="Models/Predictions/Wheat_predictions.csv") # exp
 <br><br> **What Are The Model Assumptions:** Permutational Spearman rank-order correlations are used as they will identify monotonic relationships.Permutational tests were chosen as they have few assumptions about the distribution and independence of the data (i.e. exchangability is th only assumption however there is no way to test for this as we do not know the true distribution). Likewise permutational tests destroy the spatial-autocorrelation structure that influences test results. Plots are solely visual.
 </div>
 
+
 ```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ## Barley
 rf.barley<-read.csv(file="Models/Barley_RF.csv", header = T, row.names = 1)
-rf.barley$Growing_Mean<-as.numeric(rf.barley$Growing_Mean)
 rf.barley<-na.omit(rf.barley)
 rf.barley<-log10(rf.barley+1)
 
 #AET
-barley.aet<-perm.relation(rf.barley$barley_HgHa,rf.barley$AET_mean,method = "spearman") 
+barley.aet<-perm.relation(rf.barley$barley_HgHa,rf.barley$AET_mean,method = "pearson") 
 print(barley.aet)
 
-#Growing
-barley.growing<-perm.relation(rf.barley$barley_HgHa,rf.barley$Growing_Mean,method = "spearman") 
-print(barley.growing)
-
 #GDP
-barley.gdp<-perm.relation(rf.barley$barley_HgHa,rf.barley$GDP_Mean,method = "spearman") 
+barley.gdp<-perm.relation(rf.barley$barley_HgHa,rf.barley$GDP_Mean,method = "pearson") 
 print(barley.gdp)
 
 #Pest
-barley.pest<-perm.relation(rf.barley$barley_HgHa,rf.barley$Pesticide,method = "spearman") 
+barley.pest<-perm.relation(rf.barley$barley_HgHa,rf.barley$Pesticide,method = "pearson") 
 print(barley.pest)
 
 #Fertilizer
-barley.fert<-perm.relation(rf.barley$barley_HgHa,rf.barley$Barley_Fertilizer,method = "spearman") 
-print(barley.fert)
+barley.fert<-perm.relation(rf.barley$barley_HgHa,rf.barley$Barley_Fertilizer,method = "pearson") print(barley.fert)
 ```
 
 ```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
@@ -1411,23 +1541,19 @@ rf.cassava<-na.omit(rf.cassava)
 rf.cassava<-log10(rf.cassava+1)
 
 #AET
-cassava.aet<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$AET_mean,method = "spearman") 
+cassava.aet<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$AET_mean,method = "pearson") 
 print(cassava.aet)
 
-#Growing
-cassava.growing<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$Growing_Mean,method = "spearman") 
-print(cassava.growing)
-
 #GDP
-cassava.gdp<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$GDP_Mean,method = "spearman") 
+cassava.gdp<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$GDP_Mean,method = "pearson") 
 print(cassava.gdp)
 
 #Pest
-cassava.pest<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$Pesticide,method = "spearman") 
+cassava.pest<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$Pesticide,method = "pearson") 
 print(cassava.pest)
 
 #Fertilizer
-cassava.fert<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$cassava_Fertilizer,method = "spearman")
+cassava.fert<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$cassava_Fertilizer,method = "pearson")
 print(cassava.fert)
 
 ```
@@ -1441,23 +1567,19 @@ rf.groundnut<-na.omit(rf.groundnut)
 rf.groundnut<-log10(rf.groundnut+1)
 
 #AET
-groundnut.aet<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$AET_mean,method = "spearman") 
+groundnut.aet<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$AET_mean,method = "pearson") 
 print(groundnut.aet)
 
-#Growing
-groundnut.growing<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$Growing_Mean,method = "spearman") 
-print(groundnut.growing)
-
 #GDP
-groundnut.gdp<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$GDP_Mean,method = "spearman") 
+groundnut.gdp<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$GDP_Mean,method = "pearson") 
 print(groundnut.gdp)
 
 #Pest
-groundnut.pest<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$Pesticide,method = "spearman") 
+groundnut.pest<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$Pesticide,method = "pearson") 
 print(groundnut.pest)
 
 #Fertilizer
-groundnut.fert<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$groundnut_Fertilizer,method = "spearman")
+groundnut.fert<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$groundnut_Fertilizer,method = "pearson")
 print(groundnut.fert)
 
 
@@ -1471,23 +1593,19 @@ rf.maize<-na.omit(rf.maize)
 rf.maize<-log10(rf.maize+1)
 
 #AET
-maize.aet<-perm.relation(rf.maize$maize_HgHa,rf.maize$AET_mean,method = "spearman") 
+maize.aet<-perm.relation(rf.maize$maize_HgHa,rf.maize$AET_mean,method = "pearson") 
 print(maize.aet)
 
-#Growing
-maize.growing<-perm.relation(rf.maize$maize_HgHa,rf.maize$Growing_Mean,method = "spearman") 
-print(maize.growing)
-
 #GDP
-maize.gdp<-perm.relation(rf.maize$maize_HgHa,rf.maize$GDP_Mean,method = "spearman") 
+maize.gdp<-perm.relation(rf.maize$maize_HgHa,rf.maize$GDP_Mean,method = "pearson") 
 print(maize.gdp)
 
 #Pest
-maize.pest<-perm.relation(rf.maize$maize_HgHa,rf.maize$Pesticide,method = "spearman") 
+maize.pest<-perm.relation(rf.maize$maize_HgHa,rf.maize$Pesticide,method = "pearson") 
 print(maize.pest)
 
 #Fertilizer
-maize.fert<-perm.relation(rf.maize$maize_HgHa,rf.maize$maize_Fertilizer,method = "spearman")
+maize.fert<-perm.relation(rf.maize$maize_HgHa,rf.maize$maize_Fertilizer,method = "pearson")
 print(maize.fert)
 
 ```
@@ -1501,23 +1619,19 @@ rf.millet<-na.omit(rf.millet)
 rf.millet<-log10(rf.millet+1)
 
 #AET
-millet.aet<-perm.relation(rf.millet$millet_HgHa,rf.millet$AET_mean,method = "spearman") 
+millet.aet<-perm.relation(rf.millet$millet_HgHa,rf.millet$AET_mean,method = "pearson") 
 print(millet.aet)
 
-#Growing
-millet.growing<-perm.relation(rf.millet$millet_HgHa,rf.millet$Growing_Mean,method = "spearman") 
-print(millet.growing)
-
 #GDP
-millet.gdp<-perm.relation(rf.millet$millet_HgHa,rf.millet$GDP_Mean,method = "spearman") 
+millet.gdp<-perm.relation(rf.millet$millet_HgHa,rf.millet$GDP_Mean,method = "pearson") 
 print(millet.gdp)
 
 #Pest
-millet.pest<-perm.relation(rf.millet$millet_HgHa,rf.millet$Pesticide,method = "spearman") 
+millet.pest<-perm.relation(rf.millet$millet_HgHa,rf.millet$Pesticide,method = "pearson") 
 print(millet.pest)
 
 #Fertilizer
-millet.fert<-perm.relation(rf.millet$millet_HgHa,rf.millet$millet_Fertilizer,method = "spearman")
+millet.fert<-perm.relation(rf.millet$millet_HgHa,rf.millet$millet_Fertilizer,method = "pearson")
 print(millet.fert)
 ```
 
@@ -1529,23 +1643,23 @@ rf.rapeseed<-na.omit(rf.rapeseed)
 rf.rapeseed<-log10(rf.rapeseed+1)
 
 #AET
-rapeseed.aet<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$AET_mean,method = "spearman") 
+rapeseed.aet<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$AET_mean,method = "pearson") 
 print(rapeseed.aet)
 
 #Growing
-rapeseed.growing<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$Growing_Mean,method = "spearman") 
+rapeseed.growing<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$Growing_Mean,method = "pearson") 
 print(rapeseed.growing)
 
 #GDP
-rapeseed.gdp<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$GDP_Mean,method = "spearman") 
+rapeseed.gdp<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$GDP_Mean,method = "pearson") 
 print(rapeseed.gdp)
 
 #Pest
-rapeseed.pest<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$Pesticide,method = "spearman") 
+rapeseed.pest<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$Pesticide,method = "pearson") 
 print(rapeseed.pest)
 
 #Fertilizer
-rapeseed.fert<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$rapeseed_Fertilizer,method = "spearman")
+rapeseed.fert<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$rapeseed_Fertilizer,method = "pearson")
 print(rapeseed.fert)
 
 ```
@@ -1558,23 +1672,19 @@ rf.rice<-na.omit(rf.rice)
 rf.rice<-log10(rf.rice+1)
 
 #AET
-rice.aet<-perm.relation(rf.rice$rice_HgHa,rf.rice$AET_mean,method = "spearman") 
+rice.aet<-perm.relation(rf.rice$rice_HgHa,rf.rice$AET_mean,method = "pearson") 
 print(rice.aet)
 
-#Growing
-rice.growing<-perm.relation(rf.rice$rice_HgHa,rf.rice$Growing_Mean,method = "spearman") 
-print(rice.growing)
-
 #GDP
-rice.gdp<-perm.relation(rf.rice$rice_HgHa,rf.rice$GDP_Mean,method = "spearman") 
+rice.gdp<-perm.relation(rf.rice$rice_HgHa,rf.rice$GDP_Mean,method = "pearson") 
 print(rice.gdp)
 
 #Pest
-rice.pest<-perm.relation(rf.rice$rice_HgHa,rf.rice$Pesticide,method = "spearman") 
+rice.pest<-perm.relation(rf.rice$rice_HgHa,rf.rice$Pesticide,method = "pearson") 
 print(rice.pest)
 
 #Fertilizer
-rice.fert<-perm.relation(rf.rice$rice_HgHa,rf.rice$rice_Fertilizer,method = "spearman")
+rice.fert<-perm.relation(rf.rice$rice_HgHa,rf.rice$rice_Fertilizer,method = "pearson")
 print(rice.fert)
 
 ```
@@ -1587,24 +1697,20 @@ rf.rye<-na.omit(rf.rye)
 rf.rye<-log10(rf.rye+1)
 
 #AET
-rye.aet<-perm.relation(rf.rye$rye_HgHa,rf.rye$AET_mean,method = "spearman") 
+rye.aet<-perm.relation(rf.rye$rye_HgHa,rf.rye$AET_mean,method = "pearson") 
 print(rye.aet)
 
-#Growing
-rye.growing<-perm.relation(rf.rye$rye_HgHa,rf.rye$Growing_Mean,method = "spearman") 
-print(rye.growing)
-
 #GDP
-rye.gdp<-perm.relation(rf.rye$rye_HgHa,rf.rye$GDP_Mean,method = "spearman") 
+rye.gdp<-perm.relation(rf.rye$rye_HgHa,rf.rye$GDP_Mean,method = "pearson") 
 print(rye.gdp)
 
 #Pest
-rye.pest<-perm.relation(rf.rye$rye_HgHa,rf.rye$Pesticide,method = "spearman") 
+rye.pest<-perm.relation(rf.rye$rye_HgHa,rf.rye$Pesticide,method = "pearson") 
 
 print(rye.pest)
 
 #Fertilizer
-rye.fert<-perm.relation(rf.rye$rye_HgHa,rf.rye$rye_Fertilizer,method = "spearman")
+rye.fert<-perm.relation(rf.rye$rye_HgHa,rf.rye$rye_Fertilizer,method = "pearson")
 
 print(rye.fert)
 ```
@@ -1617,23 +1723,19 @@ rf.sorghum<-na.omit(rf.sorghum)
 rf.sorghum<-log10(rf.sorghum+1)
 
 #AET
-sorghum.aet<-perm.relation(rf.sorghum$Yield,rf.sorghum$Evapotranspiraton,method = "spearman") 
+sorghum.aet<-perm.relation(rf.sorghum$Yield,rf.sorghum$Evapotranspiraton,method = "pearson") 
 print(sorghum.aet)
 
-#Growing
-sorghum.growing<-perm.relation(rf.sorghum$Yield,rf.sorghum$Growing.Season,method = "spearman") 
-print(sorghum.growing)
-
 #GDP
-sorghum.gdp<-perm.relation(rf.sorghum$Yield,rf.sorghum$GDP,method = "spearman") 
+sorghum.gdp<-perm.relation(rf.sorghum$Yield,rf.sorghum$GDP,method = "pearson") 
 print(sorghum.gdp)
 
 #Pest
-sorghum.pest<-perm.relation(rf.sorghum$Yield,rf.sorghum$Pesticide,method = "spearman") 
+sorghum.pest<-perm.relation(rf.sorghum$Yield,rf.sorghum$Pesticide,method = "pearson") 
 print(sorghum.pest)
 
 #Fertilizer
-sorghum.fert<-perm.relation(rf.sorghum$Yield,rf.sorghum$sorghum_Fertilizer,method = "spearman")
+sorghum.fert<-perm.relation(rf.sorghum$Yield,rf.sorghum$sorghum_Fertilizer,method = "pearson")
 print(sorghum.fert)
 ```
 
@@ -1645,23 +1747,19 @@ rf.soybean<-na.omit(rf.soybean)
 rf.soybean<-log10(rf.soybean+1)
 
 #AET
-soybean.aet<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$AET_mean,method = "spearman") 
+soybean.aet<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$AET_mean,method = "pearson") 
 print(soybean.aet)
 
-#Growing
-soybean.growing<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$Growing_Mean,method = "spearman") 
-print(soybean.growing)
-
 #GDP
-soybean.gdp<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$GDP_Mean,method = "spearman") 
+soybean.gdp<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$GDP_Mean,method = "pearson") 
 print(soybean.gdp)
 
 #Pest
-soybean.pest<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$Pesticide,method = "spearman") 
+soybean.pest<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$Pesticide,method = "pearson") 
 print(soybean.pest)
 
 #Fertilizer
-soybean.fert<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$soybean_Fertilizer,method = "spearman")
+soybean.fert<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$soybean_Fertilizer,method = "pearson")
 print(soybean.fert)
 ```
 
@@ -1673,23 +1771,19 @@ rf.sunflower<-na.omit(rf.sunflower)
 rf.sunflower<-log10(rf.sunflower+1)
 
 #AET
-sunflower.aet<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$AET_mean,method = "spearman") 
+sunflower.aet<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$AET_mean,method = "pearson") 
 print(sunflower.aet)
 
-#Growing
-sunflower.growing<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$Growing_Mean,method = "spearman") 
-print(sunflower.growing)
-
 #GDP
-sunflower.gdp<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$GDP_Mean,method = "spearman")
+sunflower.gdp<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$GDP_Mean,method = "pearson")
 print(sunflower.gdp)
 
 #Pest
-sunflower.pest<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$Pesticide,method = "spearman") 
+sunflower.pest<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$Pesticide,method = "pearson") 
 print(sunflower.pest)
 
 #Fertilizer
-sunflower.fert<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$sunflower_Fertilizer,method = "spearman")
+sunflower.fert<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$sunflower_Fertilizer,method = "pearson")
 print(sunflower.fert)
 ```
 
@@ -1701,23 +1795,19 @@ rf.wheat<-na.omit(rf.wheat)
 rf.wheat<-log10(rf.wheat+1)
 
 #AET
-wheat.aet<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$AET_mean,method = "spearman") 
+wheat.aet<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$AET_mean,method = "pearson") 
 print(wheat.aet)
 
-#Growing
-wheat.growing<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$Growing_Mean,method = "spearman") 
-print(wheat.growing)
-
 #GDP
-wheat.gdp<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$GDP_Mean,method = "spearman") 
+wheat.gdp<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$GDP_Mean,method = "pearson") 
 print(wheat.gdp)
 
 #Pest
-wheat.pest<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$Pesticide,method = "spearman")
+wheat.pest<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$Pesticide,method = "pearson")
 print(wheat.pest)
 
 #Fertilizer
-wheat.fert<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$wheat_Fertilizer,method = "spearman")
+wheat.fert<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$wheat_Fertilizer,method = "pearson")
 print(wheat.fert)
 ```
 
@@ -1737,10 +1827,8 @@ ggplot(vard.m, aes(x=vard.m$Crop, y=vard.m$variable, fill=vard.m$value)) +geom_t
     panel.grid.minor = element_blank(),
     panel.border = element_blank(),
     panel.background = element_blank()) + 
-  ylab("Crop") +xlab("Variable") + labs(color='Rho') +scale_fill_gradient(low="white", high="blue") +theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  ylab("Crop") +xlab("Variable") + labs(color='Rho') +scale_fill_gradient(low="white", high="#006669") +theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
-
-```
 
 ```
 
