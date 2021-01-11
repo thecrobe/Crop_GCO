@@ -3,8 +3,9 @@
 title: "GCO Crop Pathogens"
 author: "JD Stewart (@thecrobe)"
 output:
+  pdf_document: default
   html_document: default
-editor_options: 
+editor_options:
   chunk_output_type: inline
 ---
 # The goal of this study is to answer:
@@ -480,22 +481,21 @@ ggplot(sorghum.m, aes(x=sorghum.m$sorghum_GCO, y=sorghum.m$value, color=sorghum.
 set.seed(8675309)
 sorghum.perm<-perm.t.test(sorghum.inside$sorghum_HgHa,sorghum.outside$sorghum_HgHa, progress=FALSE)
 print(sorghum.perm)
-library(RVAideMemoire)
 ```
 ## Soybean 
 ```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Soybean yield with individual colors", cache=TRUE}
 soybean<-na.omit(yield.mapping %>% dplyr::select(soybean_HgHa,soybean_GCO))
 
 #Outlier Removal
-hist(rice$rice_HgHa)
-qqnorm(rice$rice_HgHa)
-rice.filter<-rice %>% filter(between(rice_HgHa, quantile(rice_HgHa, .01), quantile(rice_HgHa, .99))) #remove top and bottom 1% 
-hist(rice.filter$rice_HgHa)
-qqnorm(rice.filter$rice_HgHa)
-dim(rice) - dim(sorg.filter) # Num Outliers Removed
-summary(rice)
-summary(rice.filter)
-rice<-rice.filter
+hist(soybean$soybean_HgHa)
+qqnorm(soybean$soybean_HgHa)
+soybean.filter<-soybean %>% filter(between(soybean_HgHa, quantile(soybean_HgHa, .01), quantile(soybean_HgHa, .99))) #remove top and bottom 1% 
+hist(soybean.filter$soybean_HgHa)
+qqnorm(soybean.filter$soybean_HgHa)
+dim(soybean) - dim(soybean.filter) # Num Outliers Removed
+summary(soybean)
+summary(soybean.filter)
+soybean<-soybean.filter
 
 
 #Inside vs Outside GCO 
@@ -617,9 +617,8 @@ print(wheat.perm)
 </div>
 
 ```{r message=TRUE, warning=FALSE, cache=TRUE}
-
 ### Barley ###
-barley.near<-read.csv(file = "Near_Coded/Barley_near.csv", header=T)
+barley.near<-read.csv(file = "Near_Coded/Barley_Near.csv", header=T)
 
 #Outlier Removal
 barley.filter<-barley.near %>% filter(between(mean_barle, quantile(mean_barle, .01), quantile(mean_barle, .99))) #remove top and bottom 1% 
@@ -642,7 +641,7 @@ ggplot(barley.near, aes(x=log10(NEAR_DIST), y=log10(barley.near$mean_barle))) +
 
 
 ### Cassava ###
-cassava.near<-read.csv(file = "Near_Coded/Cassava_near.csv", header=T)
+cassava.near<-read.csv(file = "Near_Coded/Cassava_Near.csv", header=T)
 
 #Outlier Removal
 cassava.filter<-cassava.near %>% filter(between(mean_cassa, quantile(mean_cassa, .01), quantile(mean_cassa, .99))) #remove top and bottom 1% 
@@ -665,7 +664,7 @@ ggplot(cassava.near, aes(x=log10(NEAR_DIST), y=log10(cassava.near$mean_cassa))) 
 
 
 ### Groundnut ###
-groundnut.near<-read.csv(file = "Near_Coded/Groundnut_near.csv", header=T)
+groundnut.near<-read.csv(file = "Near_Coded/Groundnut_Near.csv", header=T)
 
 #Outlier Removal
 groundnut.filter<-groundnut.near %>% filter(between(mean_groun, quantile(mean_groun, .01), quantile(mean_groun, .99))) #remove top and bottom 1% 
@@ -687,7 +686,7 @@ ggplot(groundnut.near, aes(x=log10(NEAR_DIST), y=log10(groundnut.near$mean_groun
   ylab("Log10 Yield (Hg/Ha)") +xlab("Log 10 Distance") + labs(color='GCO')
 
 ### Maize ###
-maize.near<-read.csv(file = "Near_Coded/Maize_near.csv", header=T)
+  maize.near<-read.csv(file = "Near_Coded/Maize_Near.csv", header=T)
 
 #Outlier Removal
 maize.filter<-maize.near %>% filter(between(mean_maize, quantile(mean_maize, .01), quantile(mean_maize, .99))) #remove top and bottom 1% 
@@ -709,7 +708,7 @@ ggplot(maize.near, aes(x=log10(NEAR_DIST), y=log10(maize.near$mean_maize))) +
   ylab("Log10 Yield (Hg/Ha)") +xlab("Log 10 Distance") + labs(color='GCO')
 
 ### Millet ###
-millet.near<-read.csv(file = "Near_Coded/Millet_near.csv", header=T)
+millet.near<-read.csv(file = "Near_Coded/Millet_Near.csv", header=T)
 
 #Outlier Removal
 millet.filter<-millet.near %>% filter(between(mean_mille, quantile(mean_mille, .01), quantile(mean_mille, .99))) #remove top and bottom 1% 
@@ -732,7 +731,7 @@ ggplot(millet.near, aes(x=log10(NEAR_DIST), y=log10(millet.near$mean_mille))) +
 
 
 ### Rapeseed ###
-rapeseed.near<-read.csv(file = "Near_Coded/Rapeseed_near.csv", header=T)
+rapeseed.near<-read.csv(file = "Near_Coded/Rapeseed_Near.csv", header=T)
 
 #Outlier Removal
 rapeseed.filter<-rapeseed.near %>% filter(between(mean_rapes, quantile(mean_rapes, .01), quantile(mean_rapes, .99))) #remove top and bottom 1% 
@@ -754,13 +753,14 @@ ggplot(rapeseed.near, aes(x=log10(NEAR_DIST), y=log10(rapeseed.near$mean_rapes))
   ylab("Log10 Yield (Hg/Ha)") +xlab("Log 10 Distance") + labs(color='GCO')
 
 ### Rice ###
-rice.near<-read.csv(file = "Near_Coded/Rice_near.csv", header=T)
+rice.near<-read.csv(file = "Near_Coded/Rice_Near.csv", header=T)
 
 #Outlier Removal
 rice.filter<-rice.near %>% filter(between(mean_rice, quantile(mean_rice, .01), quantile(mean_rice, .99))) #remove top and bottom 1% 
 rice.near<-rice.filter
 #Permutational  Correlation
 
+near.rice<-perm.relation(x = log10(rice.near$NEAR_DIST),rice.near$mean_rice,method = "pearson")
 print(near.rice$Observed) #coefficient
 print(near.rice$P.value) # p-value
 #Plot
@@ -775,7 +775,7 @@ ggplot(rice.near, aes(x=log10(NEAR_DIST), y=log10(rice.near$mean_rice))) +
   ylab("Log10 Yield (Hg/Ha)") +xlab("Log 10 Distance") + labs(color='GCO')
 
 ### Rye ###
-rye.near<-read.csv(file = "Near_Coded/Rye_near.csv", header=T)
+rye.near<-read.csv(file = "Near_Coded/Rye_Near.csv", header=T)
 
 #Outlier Removal
 rye.filter<-rye.near %>% filter(between(mean_rye_Y, quantile(mean_rye_Y, .01), quantile(mean_rye_Y, .99))) #remove top and bottom 1% 
