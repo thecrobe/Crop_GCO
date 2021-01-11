@@ -1,0 +1,36 @@
+  Fishnet_ID, barley_HgHa, cassava_HgHa,groundnut_HgHa,  maize_HgHa, millet_HgHa,rapeseed_HgHa,  rice_HgHa,   rye_HgHa, sorghum_HgHa, soybean_HgHa,sunflower_HgHa,  wheat_HgHa,,,
+Min.   :     0  ,Min.   :0.00  ,Min.   : 0.01  ,Min.   :0.00  ,Min.   : 0.00  ,Min.   :0.00  ,Min.   :0.00  ,Min.   : 0.00  ,Min.   :0.00  ,Min.   :0.00  ,Min.   :0.00  ,Min.   :0.00  ,Min.   :0.00  ,,,
+1st Qu.: 27045  ,1st Qu.:0.49  ,1st Qu.: 3.67  ,1st Qu.:0.38  ,1st Qu.: 0.73  ,1st Qu.:0.25  ,1st Qu.:0.30  ,1st Qu.: 0.78  ,1st Qu.:0.32  ,1st Qu.:0.36  ,1st Qu.:0.35  ,1st Qu.:0.26  ,1st Qu.:0.50  ,,,
+Median : 54090  ,Median :1.32  ,Median : 7.74  ,Median :0.87  ,Median : 1.80  ,Median :0.62  ,Median :0.77  ,Median : 1.68  ,Median :0.99  ,Median :0.92  ,Median :0.88  ,Median :0.60  ,Median :1.25  ,,,
+Mean   : 54090  ,Mean   :1.57  ,Mean   : 8.18  ,Mean   :1.04  ,Mean   : 2.50  ,Mean   :0.76  ,Mean   :0.85  ,Mean   : 2.18  ,Mean   :1.20  ,Mean   :1.35  ,Mean   :0.99  ,Mean   :0.73  ,Mean   :1.59  ,,,
+3rd Qu.: 81135  ,3rd Qu.:2.42  ,3rd Qu.:12.24  ,3rd Qu.:1.50  ,3rd Qu.: 3.36  ,3rd Qu.:1.09  ,3rd Qu.:1.23  ,3rd Qu.: 3.11  ,3rd Qu.:1.72  ,3rd Qu.:2.06  ,3rd Qu.:1.44  ,3rd Qu.:1.11  ,3rd Qu.:2.23  ,,,
+Max.   :108180  ,Max.   :7.61  ,Max.   :38.90  ,Max.   :5.44  ,Max.   :17.58  ,Max.   :4.54  ,Max.   :3.66  ,Max.   :10.57  ,Max.   :7.07  ,Max.   :8.69  ,Max.   :4.35  ,Max.   :3.89  ,Max.   :8.79  ,,,
+NA,NA's   :96984  ,NA's   :101865  ,NA's   :99859  ,NA's   :94388  ,NA's   :100882  ,NA's   :98922  ,NA's   :99753  ,NA's   :99781  ,NA's   :97951  ,NA's   :97632  ,NA's   :98878  ,NA's   :95369  ,,,
+,,,,,,,,,,,,,,,
+  Fishnet_ID,Min.   :     0  ,1st Qu.: 27045  ,Median : 54090  ,Mean   : 54090  ,3rd Qu.: 81135  ,Max.   :108180  ,NA,108180,,,NA,Cultivated,,Mean,54090
+ barley_HgHa,Min.   :0.00  ,1st Qu.:0.49  ,Median :1.32  ,Mean   :1.57  ,3rd Qu.:2.42  ,Max.   :7.61  ,NA's,108180,,,96984,11196,,Mean,1.57
+ cassava_HgHa,Min.   : 0.01  ,1st Qu.: 3.67  ,Median : 7.74  ,Mean   : 8.18  ,3rd Qu.:12.24  ,Max.   :38.90  ,NA's,108180,,,101865,6315,,Mean,8.18
+groundnut_HgHa,Min.   :0.00  ,1st Qu.:0.38  ,Median :0.87  ,Mean   :1.04  ,3rd Qu.:1.50  ,Max.   :5.44  ,NA's,108180,,,99859,8321,,Mean,1.04
+  maize_HgHa,Min.   : 0.00  ,1st Qu.: 0.73  ,Median : 1.80  ,Mean   : 2.50  ,3rd Qu.: 3.36  ,Max.   :17.58  ,NA's,108180,,,94388,13792,,Mean,2.5
+ millet_HgHa,Min.   :0.00  ,1st Qu.:0.25  ,Median :0.62  ,Mean   :0.76  ,3rd Qu.:1.09  ,Max.   :4.54  ,NA's,108180,,,100882,7298,,Mean,0.76
+rapeseed_HgHa,Min.   :0.00  ,1st Qu.:0.30  ,Median :0.77  ,Mean   :0.85  ,3rd Qu.:1.23  ,Max.   :3.66  ,NA's,108180,,,98922,9258,,Mean,0.85
+  rice_HgHa,Min.   : 0.00  ,1st Qu.: 0.78  ,Median : 1.68  ,Mean   : 2.18  ,3rd Qu.: 3.11  ,Max.   :10.57  ,NA's,108180,,,99753,8427,,Mean,2.18
+   rye_HgHa,Min.   :0.00  ,1st Qu.:0.32  ,Median :0.99  ,Mean   :1.20  ,3rd Qu.:1.72  ,Max.   :7.07  ,NA's,108180,,,99781,8399,,Mean,1.2
+ sorghum_HgHa,Min.   :0.00  ,1st Qu.:0.36  ,Median :0.92  ,Mean   :1.35  ,3rd Qu.:2.06  ,Max.   :8.69  ,NA's,108180,,,97951,10229,,Mean,1.35
+ soybean_HgHa,Min.   :0.00  ,1st Qu.:0.35  ,Median :0.88  ,Mean   :0.99  ,3rd Qu.:1.44  ,Max.   :4.35  ,NA's,108180,,,97632,10548,,Mean,0.99
+sunflower_HgHa,Min.   :0.00  ,1st Qu.:0.26  ,Median :0.60  ,Mean   :0.73  ,3rd Qu.:1.11  ,Max.   :3.89  ,NA's,108180,,,98878,9302,,Mean,0.73
+  wheat_HgHa,Min.   :0.00  ,1st Qu.:0.50  ,Median :1.25  ,Mean   :1.59  ,3rd Qu.:2.23  ,Max.   :8.79  ,NA's,108180,,,95369,12811,,Mean,1.59
+,,,,,,,,,,,,,,,
+Crop,Mean (hg/ha),Global Cultivation (%),,,,,,,,,,,,,
+Barley,1.57,10.35,,,,,,,,,,,,,
+Cassava,8.18,5.84,,,,,,,,,,,,,
+Groundnut,1.04,7.69,,,,,,,,,,,,,
+Maize,2.50,12.75,,,,,,,,,,,,,
+Millet,0.76,6.75,,,,,,,,,,,,,
+Rapeseed,0.85,8.56,,,,,,,,,,,,,
+Rice,2.18,7.79,,,,,,,,,,,,,
+Rye,1.20,7.76,,,,,,,,,,,,,
+Sorghum,1.35,9.46,,,,,,,,,,,,,
+Soybean,0.99,9.75,,,,,,,,,,,,,
+Sunflower,0.73,8.60,,,,,,,,,,,,,
+Wheat,1.59,11.84,,,,,,,,,,,,,

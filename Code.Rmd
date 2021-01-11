@@ -936,14 +936,14 @@ registerDoParallel(cl)
 set.seed(7)
 fit.rf.barley <- train(barley_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.barley) #print results
-write.csv(fit.rf.barley$results, "Models/barley_rfFIT.csv")
+#write.csv(fit.rf.barley$results, "Models/barley_rfFIT.csv")
 
 stopCluster(cl)
 
 
 barley.varIMP<-(varImp(fit.rf.barley)) #identify variable importance
 plot(barley.varIMP)
-write.csv(barley.varIMP$importance, file = "Models/barley_varIMP.csv")
+#write.csv(barley.varIMP$importance, file = "Models/barley_varIMP.csv")
 # Model Performance
 predictions <- predict(fit.rf.barley, validation) #predict 
 pred.error<-RMSE(predictions,validation$barley_HgHa) #get the Root Mean Standard Error of predicted values
@@ -952,7 +952,7 @@ exp(pred.error-1) #put in yield values
 modelerror <- exp(predict(fit.rf.barley, rf )-1) #predict on whole dataset
 summary(modelerror) #make sure it worked honeyyyy
 
-write.csv(modelerror,file="Models/Predictions/barley_predictions.csv") # export for mapping
+#write.csv(modelerror,file="Models/Predictions/barley_predictions.csv") # export for mapping
 
 ```
 
@@ -990,8 +990,8 @@ stopCluster(cl)
 
 cassava.varIMP<-(varImp(fit.rf.cassava)) #identify variable importance
 plot(cassava.varIMP)
-write.csv(cassava.varIMP$importance, file = "Models/cassava_varIMP.csv")
-write.csv(fit.rf.cassava$results, "Models/cassava_rfFIT.csv")
+#write.csv(cassava.varIMP$importance, file = "Models/cassava_varIMP.csv")
+#write.csv(fit.rf.cassava$results, "Models/cassava_rfFIT.csv")
 
 
 # Model Performance
@@ -1001,7 +1001,7 @@ exp(pred.error) #put in yield values
 
 modelerror <- exp(predict(fit.rf.cassava, rf )-1) #predict on whole dataset
 summary(modelerror) #make sure it worked honeyyyy
-write.csv(modelerror,file="Models/Predictions/cassava_predictions.csv") # export for mapping
+#write.csv(modelerror,file="Models/Predictions/cassava_predictions.csv") # export for mapping
 
 ```
 
@@ -1034,13 +1034,13 @@ registerDoParallel(cl)
 set.seed(7)
 fit.rf.groundnut <- train(groundnut_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.groundnut) #print results
-write.csv(fit.rf.groundnut$results, "Models/groundnut_rfFIT.csv")
+#write.csv(fit.rf.groundnut$results, "Models/groundnut_rfFIT.csv")
 
 stopCluster(cl)
 
 groundnut.varIMP<-(varImp(fit.rf.groundnut)) #identify variable importance
 plot(groundnut.varIMP)
-write.csv(groundnut.varIMP$importance, file = "Models/groundnut_varIMP.csv")
+#write.csv(groundnut.varIMP$importance, file = "Models/groundnut_varIMP.csv")
 # Model Performance
 predictions <- predict(fit.rf.groundnut, validation) #predict 
 pred.error<-RMSE(predictions,validation$groundnut_HgHa) #get the Root Mean Standard Error of predicted values
@@ -1048,7 +1048,7 @@ exp(pred.error) #put in yield values
 
 modelerror <- exp(predict(fit.rf.groundnut, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(modelerror,file="Models/Predictions/groundnut_predictions.csv") # export for mapping
+#write.csv(modelerror,file="Models/Predictions/groundnut_predictions.csv") # export for mapping
 
 ```
 
@@ -1081,13 +1081,13 @@ registerDoParallel(cl)
 set.seed(7)
 fit.rf.maize <- train(maize_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.maize) #print results
-write.csv(fit.rf.maize$results, "Models/maize_rfFIT.csv")
+#write.csv(fit.rf.maize$results, "Models/maize_rfFIT.csv")
 
 stopCluster(cl)
 
 maize.varIMP<-(varImp(fit.rf.maize)) #identify variable importance
 plot(maize.varIMP)
-write.csv(maize.varIMP$importance, file = "Models/maize_varIMP.csv")
+#write.csv(maize.varIMP$importance, file = "Models/maize_varIMP.csv")
 # Model Performance
 predictions <- predict(fit.rf.maize, validation) #predict 
 pred.error<-RMSE(predictions,validation$maize_HgHa) #get the Root Mean Standard Error of predicted values
@@ -1095,7 +1095,7 @@ exp(pred.error) #put in yield values
 
 modelerror <- exp(predict(fit.rf.maize, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(modelerror,file="Models/Predictions/maize_predictions.csv") # export for mapping
+#write.csv(modelerror,file="Models/Predictions/maize_predictions.csv") # export for mapping
 
 ```
 
@@ -1128,14 +1128,14 @@ registerDoParallel(cl)
 set.seed(7)
 fit.rf.millet <- train(millet_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.millet) #print results
-write.csv(fit.rf.millet$results, "Models/millet_rfFIT.csv")
+#write.csv(fit.rf.millet$results, "Models/millet_rfFIT.csv")
 
 
 stopCluster(cl)
 
 millet.varIMP<-(varImp(fit.rf.millet)) #identify variable importance
 plot(millet.varIMP)
-write.csv(millet.varIMP$importance, file = "Models/millet_varIMP.csv")
+#write.csv(millet.varIMP$importance, file = "Models/millet_varIMP.csv")
 # Model Performance
 predictions <- predict(fit.rf.millet, validation) #predict 
 pred.error<-RMSE(predictions,validation$millet_HgHa) #get the Root Mean Standard Error of predicted values
@@ -1143,7 +1143,7 @@ exp(pred.error) #put in yield values
 
 modelerror <- exp(predict(fit.rf.millet, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(modelerror,file="Models/Predictions/millet_predictions.csv") # export for mapping
+#write.csv(modelerror,file="Models/Predictions/millet_predictions.csv") # export for mapping
 
 ```
 
@@ -1176,13 +1176,13 @@ registerDoParallel(cl)
 set.seed(7)
 fit.rf.rapeseed <- train(rapeseed_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.rapeseed) #print results
-write.csv(fit.rf.rapeseed$results, "Models/rapeseed_rfFIT.csv")
+#write.csv(fit.rf.rapeseed$results, "Models/rapeseed_rfFIT.csv")
 
 stopCluster(cl)
 
 rapeseed.varIMP<-(varImp(fit.rf.rapeseed)) #identify variable importance
 plot(rapeseed.varIMP)
-write.csv(rapeseed.varIMP$importance, file = "Models/rapeseed_varIMP.csv")
+#write.csv(rapeseed.varIMP$importance, file = "Models/rapeseed_varIMP.csv")
 # Model Performance
 predictions <- predict(fit.rf.rapeseed, validation) #predict 
 pred.error<-RMSE(predictions,validation$rapeseed_HgHa) #get the Root Mean Standard Error of predicted values
@@ -1190,7 +1190,7 @@ exp(pred.error) #put in yield values
 
 modelerror <- exp(predict(fit.rf.rapeseed, rf )-1) #predict on whole dataset
 summary(modelerror) #make sure it worked honeyyyy
-write.csv(modelerror,file="Models/Predictions/rapeseed_predictions.csv") # export for mapping
+#write.csv(modelerror,file="Models/Predictions/rapeseed_predictions.csv") # export for mapping
 
 ```
 
@@ -1223,13 +1223,13 @@ registerDoParallel(cl)
 set.seed(7)
 fit.rf.rice <- train(rice_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.rice) #print results
-write.csv(fit.rf.rice$results, "Models/rice_rfFIT.csv")
+#write.csv(fit.rf.rice$results, "Models/rice_rfFIT.csv")
 
 stopCluster(cl)
 
 rice.varIMP<-(varImp(fit.rf.rice)) #identify variable importance
 plot(rice.varIMP)
-write.csv(rice.varIMP$importance, file = "Models/rice_varIMP.csv")
+#write.csv(rice.varIMP$importance, file = "Models/rice_varIMP.csv")
 # Model Performance
 predictions <- predict(fit.rf.rice, validation) #predict 
 pred.error<-RMSE(predictions,validation$rice_HgHa) #get the Root Mean Standard Error of predicted values
@@ -1237,7 +1237,7 @@ exp(pred.error) #put in yield values
 
 modelerror <- exp(predict(fit.rf.rice, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(modelerror,file="Models/Predictions/rice_predictions.csv") # export for mapping
+#write.csv(modelerror,file="Models/Predictions/rice_predictions.csv") # export for mapping
 
 ```
 
@@ -1270,14 +1270,14 @@ registerDoParallel(cl)
 set.seed(7)
 fit.rf.rye <- train(rye_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.rye) #print results
-write.csv(fit.rf.rye$results, "Models/rye_rfFIT.csv")
+#write.csv(fit.rf.rye$results, "Models/rye_rfFIT.csv")
 
 
 stopCluster(cl)
 
 rye.varIMP<-(varImp(fit.rf.rye)) #identify variable importance
 plot(rye.varIMP)
-write.csv(rye.varIMP$importance, file = "Models/rye_varIMP.csv")
+#write.csv(rye.varIMP$importance, file = "Models/rye_varIMP.csv")
 # Model Performance
 predictions <- predict(fit.rf.rye, validation) #predict 
 pred.error<-RMSE(predictions,validation$rye_HgHa) #get the Root Mean Standard Error of predicted values
@@ -1285,7 +1285,7 @@ exp(pred.error) #put in yield values
 
 modelerror <- exp(predict(fit.rf.rye, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(modelerror,file="Models/Predictions/rye_predictions.csv") # export for mapping
+#write.csv(modelerror,file="Models/Predictions/rye_predictions.csv") # export for mapping
 
 ```
 
@@ -1318,13 +1318,13 @@ registerDoParallel(cl)
 set.seed(7)
 fit.rf.Sorghum <- train(Yield~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.Sorghum) #print results
-write.csv(fit.rf.Sorghum$results, "Models/sorghum_rfFIT.csv")
+#write.csv(fit.rf.Sorghum$results, "Models/sorghum_rfFIT.csv")
 
 stopCluster(cl)
 
 sorghum.varIMP<-(varImp(fit.rf.Sorghum)) #identify variable importance
 plot(sorghum.varIMP)
-write.csv(sorghum.varIMP$importance, file = "Models/Sorghum_varIMP.csv")
+#write.csv(sorghum.varIMP$importance, file = "Models/Sorghum_varIMP.csv")
 # Model Performance
 predictions <- predict(fit.rf.Sorghum, validation) #predict 
 pred.error<-RMSE(predictions,validation$Yield) #get the Root Mean Standard Error of predicted values
@@ -1332,7 +1332,7 @@ exp(pred.error) #put in yield values
 
 modelerror <- exp(predict(fit.rf.Sorghum, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(modelerror,file="Models/Predictions/Sorghum_predictions.csv") # export for mapping
+#write.csv(modelerror,file="Models/Predictions/Sorghum_predictions.csv") # export for mapping
 
 ```
 
@@ -1365,14 +1365,14 @@ registerDoParallel(cl)
 set.seed(7)
 fit.rf.Soybean <- train(soybean_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.Soybean) #print results
-write.csv(fit.rf.Soybean$results, "Models/soybean_rfFIT.csv")
+#write.csv(fit.rf.Soybean$results, "Models/soybean_rfFIT.csv")
 
 
 stopCluster(cl)
 
 soybean.varIMP<-(varImp(fit.rf.Soybean)) #identify variable importance
 plot(soybean.varIMP)
-write.csv(soybean.varIMP$importance, file = "Models/Soybean_varIMP.csv")
+#write.csv(soybean.varIMP$importance, file = "Models/Soybean_varIMP.csv")
 # Model Performance
 predictions <- predict(fit.rf.Soybean, validation) #predict 
 pred.error<-RMSE(predictions,validation$soybean_HgHa) #get the Root Mean Standard Error of predicted values
@@ -1380,7 +1380,7 @@ exp(pred.error) #put in yield values
 
 modelerror <- exp(predict(fit.rf.Soybean, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(modelerror,file="Models/Predictions/Soybean_predictions.csv") # export for mapping
+#write.csv(modelerror,file="Models/Predictions/Soybean_predictions.csv") # export for mapping
 
 ```
 
@@ -1413,13 +1413,13 @@ registerDoParallel(cl)
 set.seed(7)
 fit.rf.Sunflower <- train(sunflower_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.Sunflower) #print results
-write.csv(fit.rf.Sunflower$results, "Models/sunflower_rfFIT.csv")
+#write.csv(fit.rf.Sunflower$results, "Models/sunflower_rfFIT.csv")
 
 stopCluster(cl)
 
 sunflower.varIMP<-(varImp(fit.rf.Sunflower)) #identify variable importance
 plot(sunflower.varIMP)
-write.csv(sunflower.varIMP$importance, file = "Models/sunflower_varIMP.csv")
+#write.csv(sunflower.varIMP$importance, file = "Models/sunflower_varIMP.csv")
 # Model Performance
 predictions <- predict(fit.rf.Sunflower, validation) #predict 
 pred.error<-RMSE(predictions,validation$sunflower_HgHa) #get the Root Mean Standard Error of predicted values
@@ -1427,7 +1427,7 @@ exp(pred.error) #put in yield values
 
 modelerror <- exp(predict(fit.rf.Sunflower, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(modelerror,file="Models/Predictions/Sunflower_predictions.csv") # export for mapping
+#write.csv(modelerror,file="Models/Predictions/Sunflower_predictions.csv") # export for mapping
 
 ```
 
@@ -1460,14 +1460,14 @@ registerDoParallel(cl)
 set.seed(7)
 fit.rf.Wheat <- train(wheat_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
 print(fit.rf.Wheat) #print results
-write.csv(fit.rf.Wheat$results, "Models/wheat_rfFIT.csv")
+#write.csv(fit.rf.Wheat$results, "Models/wheat_rfFIT.csv")
 
 
 stopCluster(cl)
 
 wheat.varIMP<-(varImp(fit.rf.Wheat)) #identify variable importance
 plot(wheat.varIMP)
-write.csv(wheat.varIMP$importance, file = "Models/wheat_varIMP.csv")
+#write.csv(wheat.varIMP$importance, file = "Models/wheat_varIMP.csv")
 # Model Performance
 predictions <- predict(fit.rf.Wheat, validation) #predict 
 pred.error<-RMSE(predictions,validation$wheat_HgHa) #get the Root Mean Standard Error of predicted values
@@ -1475,7 +1475,7 @@ exp(pred.error) #put in yield values
 
 modelerror <- exp(predict(fit.rf.Wheat, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
-write.csv(modelerror,file="Models/Predictions/Wheat_predictions.csv") # export for mapping
+#write.csv(modelerror,file="Models/Predictions/Wheat_predictions.csv") # export for mapping
 
 ```
 
@@ -1502,18 +1502,18 @@ rf.barley<-log10(rf.barley+1)
 
 #AET
 barley.aet<-perm.relation(rf.barley$barley_HgHa,rf.barley$AET_mean,method = "pearson") 
-print(barley.aet)
+#print(barley.aet)
 
 #GDP
 barley.gdp<-perm.relation(rf.barley$barley_HgHa,rf.barley$GDP_Mean,method = "pearson") 
-print(barley.gdp)
+#print(barley.gdp)
 
 #Pest
 barley.pest<-perm.relation(rf.barley$barley_HgHa,rf.barley$Pesticide,method = "pearson") 
-print(barley.pest)
+#print(barley.pest)
 
 #Fertilizer
-barley.fert<-perm.relation(rf.barley$barley_HgHa,rf.barley$Barley_Fertilizer,method = "pearson") print(barley.fert)
+barley.fert<-perm.relation(rf.barley$barley_HgHa,rf.barley$Barley_Fertilizer,method = "pearson") #print(barley.fert)
 ```
 
 ```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
@@ -1525,19 +1525,19 @@ rf.cassava<-log10(rf.cassava+1)
 
 #AET
 cassava.aet<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$AET_mean,method = "pearson") 
-print(cassava.aet)
+#print(cassava.aet)
 
 #GDP
 cassava.gdp<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$GDP_Mean,method = "pearson") 
-print(cassava.gdp)
+#print(cassava.gdp)
 
 #Pest
 cassava.pest<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$Pesticide,method = "pearson") 
-print(cassava.pest)
+#print(cassava.pest)
 
 #Fertilizer
 cassava.fert<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$cassava_Fertilizer,method = "pearson")
-print(cassava.fert)
+#print(cassava.fert)
 
 ```
 
@@ -1551,19 +1551,19 @@ rf.groundnut<-log10(rf.groundnut+1)
 
 #AET
 groundnut.aet<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$AET_mean,method = "pearson") 
-print(groundnut.aet)
+#print(groundnut.aet)
 
 #GDP
 groundnut.gdp<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$GDP_Mean,method = "pearson") 
-print(groundnut.gdp)
+#print(groundnut.gdp)
 
 #Pest
 groundnut.pest<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$Pesticide,method = "pearson") 
-print(groundnut.pest)
+#print(groundnut.pest)
 
 #Fertilizer
 groundnut.fert<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$groundnut_Fertilizer,method = "pearson")
-print(groundnut.fert)
+#print(groundnut.fert)
 
 
 ```
@@ -1577,19 +1577,19 @@ rf.maize<-log10(rf.maize+1)
 
 #AET
 maize.aet<-perm.relation(rf.maize$maize_HgHa,rf.maize$AET_mean,method = "pearson") 
-print(maize.aet)
+#print(maize.aet)
 
 #GDP
 maize.gdp<-perm.relation(rf.maize$maize_HgHa,rf.maize$GDP_Mean,method = "pearson") 
-print(maize.gdp)
+#print(maize.gdp)
 
 #Pest
 maize.pest<-perm.relation(rf.maize$maize_HgHa,rf.maize$Pesticide,method = "pearson") 
-print(maize.pest)
+#print(maize.pest)
 
 #Fertilizer
 maize.fert<-perm.relation(rf.maize$maize_HgHa,rf.maize$maize_Fertilizer,method = "pearson")
-print(maize.fert)
+#print(maize.fert)
 
 ```
 
@@ -1603,19 +1603,19 @@ rf.millet<-log10(rf.millet+1)
 
 #AET
 millet.aet<-perm.relation(rf.millet$millet_HgHa,rf.millet$AET_mean,method = "pearson") 
-print(millet.aet)
+#print(millet.aet)
 
 #GDP
 millet.gdp<-perm.relation(rf.millet$millet_HgHa,rf.millet$GDP_Mean,method = "pearson") 
-print(millet.gdp)
+#print(millet.gdp)
 
 #Pest
 millet.pest<-perm.relation(rf.millet$millet_HgHa,rf.millet$Pesticide,method = "pearson") 
-print(millet.pest)
+#print(millet.pest)
 
 #Fertilizer
 millet.fert<-perm.relation(rf.millet$millet_HgHa,rf.millet$millet_Fertilizer,method = "pearson")
-print(millet.fert)
+#print(millet.fert)
 ```
 
 ```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
@@ -1626,167 +1626,159 @@ rf.rapeseed<-log10(rf.rapeseed+1)
 
 #AET
 rapeseed.aet<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$AET_mean,method = "pearson") 
-print(rapeseed.aet)
+#print(rapeseed.aet)
 
 #GDP
 rapeseed.gdp<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$GDP_Mean,method = "pearson") 
-print(rapeseed.gdp)
+#print(rapeseed.gdp)
 
 #Pest
 rapeseed.pest<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$Pesticide,method = "pearson") 
-print(rapeseed.pest)
+#print(rapeseed.pest)
 
 #Fertilizer
 rapeseed.fert<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$rapeseed_Fertilizer,method = "pearson")
-print(rapeseed.fert)
+#print(rapeseed.fert)
 
 ```
 
 ```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Rice
 rf.rice<-read.csv(file="Models/Rice_RF.csv", header = T, row.names = 1)
-rf.rice$Growing_Mean<-as.numeric(rf.rice$Growing_Mean)
 rf.rice<-na.omit(rf.rice)
 rf.rice<-log10(rf.rice+1)
 
 #AET
 rice.aet<-perm.relation(rf.rice$rice_HgHa,rf.rice$AET_mean,method = "pearson") 
-print(rice.aet)
+#print(rice.aet)
 
 #GDP
 rice.gdp<-perm.relation(rf.rice$rice_HgHa,rf.rice$GDP_Mean,method = "pearson") 
-print(rice.gdp)
+#print(rice.gdp)
 
 #Pest
 rice.pest<-perm.relation(rf.rice$rice_HgHa,rf.rice$Pesticide,method = "pearson") 
-print(rice.pest)
+#print(rice.pest)
 
 #Fertilizer
 rice.fert<-perm.relation(rf.rice$rice_HgHa,rf.rice$rice_Fertilizer,method = "pearson")
-print(rice.fert)
+#print(rice.fert)
 
 ```
 
 ```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Rye
 rf.rye<-read.csv(file="Models/Rye_RF.csv", header = T, row.names = 1)
-rf.rye$Growing_Mean<-as.numeric(rf.rye$Growing_Mean)
 rf.rye<-na.omit(rf.rye)
 rf.rye<-log10(rf.rye+1)
 
 #AET
 rye.aet<-perm.relation(rf.rye$rye_HgHa,rf.rye$AET_mean,method = "pearson") 
-print(rye.aet)
+#print(rye.aet)
 
 #GDP
 rye.gdp<-perm.relation(rf.rye$rye_HgHa,rf.rye$GDP_Mean,method = "pearson") 
-print(rye.gdp)
+#print(rye.gdp)
 
 #Pest
 rye.pest<-perm.relation(rf.rye$rye_HgHa,rf.rye$Pesticide,method = "pearson") 
-
-print(rye.pest)
+#print(rye.pest)
 
 #Fertilizer
 rye.fert<-perm.relation(rf.rye$rye_HgHa,rf.rye$rye_Fertilizer,method = "pearson")
-
-print(rye.fert)
+#print(rye.fert)
 ```
 
 ```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Sorghum
 rf.sorghum<-read.csv(file="Models/Sorghum_RF.csv", header = T, row.names = 1)
-rf.sorghum$Growing.Season<-as.numeric(rf.sorghum$Growing.Season)
 rf.sorghum<-na.omit(rf.sorghum)
 rf.sorghum<-log10(rf.sorghum+1)
 
 #AET
 sorghum.aet<-perm.relation(rf.sorghum$Yield,rf.sorghum$Evapotranspiraton,method = "pearson") 
-print(sorghum.aet)
+#print(sorghum.aet)
 
 #GDP
 sorghum.gdp<-perm.relation(rf.sorghum$Yield,rf.sorghum$GDP,method = "pearson") 
-print(sorghum.gdp)
+#print(sorghum.gdp)
 
 #Pest
 sorghum.pest<-perm.relation(rf.sorghum$Yield,rf.sorghum$Pesticide,method = "pearson") 
-print(sorghum.pest)
+#print(sorghum.pest)
 
 #Fertilizer
 sorghum.fert<-perm.relation(rf.sorghum$Yield,rf.sorghum$sorghum_Fertilizer,method = "pearson")
-print(sorghum.fert)
+#print(sorghum.fert)
 ```
 
 ```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Soybean
 rf.soybean<-read.csv(file="Models/Soybean_RF.csv", header = T, row.names = 1)
-rf.soybean$Growing_Mean<-as.numeric(rf.soybean$Growing_Mean)
 rf.soybean<-na.omit(rf.soybean)
 rf.soybean<-log10(rf.soybean+1)
 
 #AET
 soybean.aet<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$AET_mean,method = "pearson") 
-print(soybean.aet)
+#print(soybean.aet)
 
 #GDP
 soybean.gdp<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$GDP_Mean,method = "pearson") 
-print(soybean.gdp)
+#print(soybean.gdp)
 
 #Pest
 soybean.pest<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$Pesticide,method = "pearson") 
-print(soybean.pest)
+#print(soybean.pest)
 
 #Fertilizer
 soybean.fert<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$soybean_Fertilizer,method = "pearson")
-print(soybean.fert)
+#print(soybean.fert)
 ```
 
 ```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Sunflower
 rf.sunflower<-read.csv(file="Models/Sunflower_RF.csv", header = T, row.names = 1)
-rf.sunflower$Growing_Mean<-as.numeric(rf.sunflower$Growing_Mean)
 rf.sunflower<-na.omit(rf.sunflower)
 rf.sunflower<-log10(rf.sunflower+1)
 
 #AET
 sunflower.aet<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$AET_mean,method = "pearson") 
-print(sunflower.aet)
+#print(sunflower.aet)
 
 #GDP
 sunflower.gdp<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$GDP_Mean,method = "pearson")
-print(sunflower.gdp)
+#print(sunflower.gdp)
 
 #Pest
 sunflower.pest<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$Pesticide,method = "pearson") 
-print(sunflower.pest)
+#print(sunflower.pest)
 
 #Fertilizer
 sunflower.fert<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$sunflower_Fertilizer,method = "pearson")
-print(sunflower.fert)
+#print(sunflower.fert)
 ```
 
 ```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Wheat
 rf.wheat<-read.csv(file="Models/Wheat_RF.csv", header = T, row.names = 1)
-rf.wheat$Growing_Mean<-as.numeric(rf.wheat$Growing_Mean)
 rf.wheat<-na.omit(rf.wheat)
 rf.wheat<-log10(rf.wheat+1)
 
 #AET
 wheat.aet<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$AET_mean,method = "pearson") 
-print(wheat.aet)
+#print(wheat.aet)
 
 #GDP
 wheat.gdp<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$GDP_Mean,method = "pearson") 
-print(wheat.gdp)
+#print(wheat.gdp)
 
 #Pest
 wheat.pest<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$Pesticide,method = "pearson")
-print(wheat.pest)
+#print(wheat.pest)
 
 #Fertilizer
 wheat.fert<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$wheat_Fertilizer,method = "pearson")
-print(wheat.fert)
+#print(wheat.fert)
 ```
 
 #Variable Direction Heatmap
@@ -1805,7 +1797,7 @@ ggplot(vard.m, aes(x=vard.m$Crop, y=vard.m$variable, fill=vard.m$value)) +geom_t
     panel.grid.minor = element_blank(),
     panel.border = element_blank(),
     panel.background = element_blank()) + 
-  ylab("Crop") +xlab("Variable") + labs(color='Rho') +scale_fill_gradient(low="white", high="#006669") +theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  ylab("Crop") +xlab("Variable") + labs(color='Rho') +scale_fill_gradient(low="white", high="#1B3C7C") +theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 
 ```
