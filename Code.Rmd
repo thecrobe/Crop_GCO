@@ -1782,7 +1782,7 @@ wheat.fert<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$wheat_Fertilizer,method =
 ```
 
 #Variable Direction Heatmap
-```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE, fig.cap="Heatmap of Rho coefficients for each variable by crop. The final version of this is found in the manuscript and is annotated with Bonforonni corrected significance"}
+```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE, fig.cap="Heatmap of R2 coefficients for each variable by crop"}
 
 vard<-read.csv(file="Models/VariableDirection/VariableDirection.csv", header=T)
 
@@ -1802,3 +1802,18 @@ ggplot(vard.m, aes(x=vard.m$Crop, y=vard.m$variable, fill=vard.m$value)) +geom_t
 
 ```
 
+## Prediction Outlier Removal
+
+<div class = "col-md-4">
+<br><br> **What Was Tested:** What is the distribution of predictions from RF models? The models overpredict in a small number of pixels. Identfying them and remomving them is important as it allows  
+</div>
+
+<div class = "col-md-4">
+<br><br> **What This Allows Me To Do:** The models overpredict in a small number of pixels. Identfying them and remomving them is important as it allows for vizualization of quantiles that are centered closer to the mean. Outliers will be coded in black on the maps. 
+</div>
+
+<div class = "col-md-4">
+<br><br> **What Are The Model Assumptions:** Model means are normall
+</div>
+```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
+```
