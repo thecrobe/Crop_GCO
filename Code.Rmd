@@ -797,7 +797,7 @@ ggplot(rye.near, aes(x=log10(NEAR_DIST), y=log10(rye.near$mean_rye_Y))) +
   ylab("Log10 Yield (Hg/Ha)") +xlab("Log 10 Distance") + labs(color='GCO')
 
 ### Sorghum ###
-sorghum.near<-read.csv(file = "Near_Coded/Sorghum_near.csv", header=T)
+sorghum.near<-read.csv(file = "Near_Coded/Sorghum_Near.csv", header=T)
 
 #Outlier Removal
 sorghum.filter<-sorghum.near %>% filter(between(mean_sorgh, quantile(mean_sorgh, .01), quantile(mean_sorgh, .99))) #remove top and bottom 1% 
@@ -820,7 +820,7 @@ ggplot(sorghum.near, aes(x=log10(NEAR_DIST), y=log10(sorghum.near$mean_sorgh))) 
   ylab("Log10 Yield (Hg/Ha)") +xlab("Log 10 Distance") + labs(color='GCO')
 
 ### Soybean ###
-soybean.near<-read.csv(file = "Near_Coded/Soybean_near.csv", header=T)
+soybean.near<-read.csv(file = "Near_Coded/Soybean_Near.csv", header=T)
 
 #Outlier Removal
 soybean.filter<-soybean.near %>% filter(between(mean_soybe, quantile(mean_soybe, .01), quantile(mean_soybe, .99))) #remove top and bottom 1% 
@@ -842,13 +842,11 @@ ggplot(soybean.near, aes(x=log10(NEAR_DIST), y=log10(soybean.near$mean_soybe))) 
   ylab("Log10 Yield (Hg/Ha)") +xlab("Log 10 Distance") + labs(color='GCO')
 
 ### Sunflower ###
-sunflower.near<-read.csv(file = "Near_Coded/Sunflower_near.csv", header=T)
+sunflower.near<-read.csv(file = "Near_Coded/Sunflower_Near.csv", header=T)
 
 #Outlier Removal
 sunflower.filter<-sunflower.near %>% filter(between(mean_sunfl, quantile(mean_sunfl, .01), quantile(mean_sunfl, .99))) #remove top and bottom 1% 
 sunflower.near<-sunflower.filter
-
-
 
 #Permutational Spearman Correlation
 near.sunflower<-perm.relation(x = log10(sunflower.near$NEAR_DIST),sunflower.near$mean_sunfl,method = "pearson")
@@ -867,7 +865,7 @@ ggplot(sunflower.near, aes(x=log10(NEAR_DIST), y=log10(sunflower.near$mean_sunfl
 
 
 ### Wheat ### 
-wheat.near<-read.csv(file = "Near_Coded/Wheat_near.csv", header=T)
+wheat.near<-read.csv(file = "Near_Coded/Wheat_Near.csv", header=T)
 
 #Outlier Removal
 wheat.filter<-wheat.near %>% filter(between(mean_wheat, quantile(mean_wheat, .01), quantile(mean_wheat, .99))) #remove top and bottom 1% 
