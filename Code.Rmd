@@ -1800,18 +1800,29 @@ ggplot(vard.m, aes(x=vard.m$Crop, y=vard.m$variable, fill=vard.m$value)) +geom_t
 
 ```
 
-## Prediction Outlier Removal
+barley<-read.csv(file = "Models/Error/Barley_Error.csv", header=T)
+barley3sd<-read.csv(file="Models/Error/Barley_Error_3SD.csv", header=T)
+dim(barley)-dim(barley3sd)
 
-<div class = "col-md-4">
-<br><br> **What Was Tested:** What is the distribution of predictions from RF models? The models overpredict in a small number of pixels. Identfying them and remomving them is important as it allows  
-</div>
 
-<div class = "col-md-4">
-<br><br> **What This Allows Me To Do:** The models overpredict in a small number of pixels. Identfying them and remomving them is important as it allows for vizualization of quantiles that are centered closer to the mean. Outliers will be coded in black on the maps. 
-</div>
+ggplot(barley, aes(x=log10(Barley_Error_Ratio)))+geom_density(size=0.9, color="#004F86")+geom_vline(xintercept = 1,size=1.5, color="#CE271D") +theme_bw() +theme(axis.line = element_line(colour = "black"),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),panel.background = element_blank()) +xlab("Model Error") +ylab ("Kernal Density")
 
-<div class = "col-md-4">
-<br><br> **What Are The Model Assumptions:** Model means are normall
-</div>
-```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
-```
+
+cassava<-read.csv(file = "Models/Error/Cassava_Error.csv", header=T)
+
+cassava3sd<-read.csv(file = "Models/Error/Cassava_Error_3SD.csv", header=T)
+
+dim(cassava)-dim(cassava3sd)
+
+
+ggplot(cassava3sd, aes(x=Cassava_Error_Ratio))+geom_density(size=0.9, color="#004F86")+geom_vline(xintercept = 1,size=1.5, color="#CE271D") +theme_bw() +theme(axis.line = element_line(colour = "black"),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),panel.background = element_blank()) +xlab("Model Error") +ylab ("Kernal Density")
+
+
+groundnut3sd<-read.csv(file = "Models/Error/Groundnut_Error_3SD.csv", header=T)
+
+groundnut<-read.csv(file = "Models/Error/Groundnut_Error.csv", header=T)
+
+dim(groundnut)-dim(groundnut3sd)
+
+ggplot(groundnut, aes(x=Groundnut_Error_Ratio))+geom_density(size=0.9, color="#004F86")+geom_vline(xintercept = 1,size=1.5, color="#CE271D") +theme_bw() +theme(axis.line = element_line(colour = "black"),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),panel.background = element_blank()) +xlab("Model Error") +ylab ("Kernal Density")
+
