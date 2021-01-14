@@ -1800,6 +1800,71 @@ ggplot(vard.m, aes(x=vard.m$Crop, y=vard.m$variable, fill=vard.m$value)) +geom_t
 
 ```
 
+```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
+#Barley 
+barley.error<-read.csv(file = "Models/Error/Barley_Error.csv", header = T)
+barley.error.filter<-barley.error %>% filter(between(Barley_Error_Ratio, quantile(Barley_Error_Ratio, .01), quantile(Barley_Error_Ratio, .99))) #remove top and bottom 1% 
+dim(barley.error)-dim(barley.error.filter) #number of pixels removed
+#write.csv(barley.error.filter,file = "Models/Error/Barley_Error_Filtered.csv")
 
-ggplot(groundnut, aes(x=Groundnut_Error_Ratio))+geom_density(size=0.9, color="#004F86")+geom_vline(xintercept = 1,size=1.5, color="#CE271D") +theme_bw() +theme(axis.line = element_line(colour = "black"),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),panel.background = element_blank()) +xlab("Model Error") +ylab ("Kernal Density")
+#Full Plot
+ggplot(barley.error, aes(x=Barley_Error_Ratio))+geom_density(size=0.9, color="#004F86")+geom_vline(xintercept = 1,size=1.5, color="#CE271D") +theme_bw() +theme(axis.line = element_line(colour = "black"),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),panel.background = element_blank()) +xlab("Model Error") +ylab ("Kernal Density")
+
+#Outlier Removed Plot
+ggplot(barley.error.filter, aes(x=Barley_Error_Ratio))+geom_density(size=0.9, color="#004F86")+geom_vline(xintercept = 1,size=1.5, color="#CE271D") +theme_bw() +theme(axis.line = element_line(colour = "black"),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),panel.background = element_blank()) +xlab("Model Error") +ylab ("Kernal Density")
+
+#Cassava 
+Cassava.error<-read.csv(file = "Models/Error/Cassava_Error.csv", header = T)
+Cassava.error.filter<-Cassava.error %>% filter(between(Cassava_Error_Ratio, quantile(Cassava_Error_Ratio, .01), quantile(Cassava_Error_Ratio, .99))) #remove top and bottom 1% 
+dim(Cassava.error)-dim(Cassava.error.filter) #number of pixels removed
+#write.csv(Cassava.error.filter,file = "Models/Error/Cassava_Error_Filtered.csv")
+
+#Full Plot
+ggplot(Cassava.error, aes(x=Cassava_Error_Ratio))+geom_density(size=0.9, color="#004F86")+geom_vline(xintercept = 1,size=1.5, color="#CE271D") +theme_bw() +theme(axis.line = element_line(colour = "black"),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),panel.background = element_blank()) +xlab("Model Error") +ylab ("Kernal Density")
+
+#Outlier Removed Plot
+ggplot(Cassava.error.filter, aes(x=Cassava_Error_Ratio))+geom_density(size=0.9, color="#004F86")+geom_vline(xintercept = 1,size=1.5, color="#CE271D") +theme_bw() +theme(axis.line = element_line(colour = "black"),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),panel.background = element_blank()) +xlab("Model Error") +ylab ("Kernal Density")
+
+
+#Groundnut 
+Groundnut.error<-read.csv(file = "Models/Error/Groundnut_Error.csv", header = T)
+Groundnut.error.filter<-Groundnut.error %>% filter(between(Groundnut_Error_Ratio, quantile(Groundnut_Error_Ratio, .01), quantile(Groundnut_Error_Ratio, .99))) #remove top and bottom 1% 
+dim(Groundnut.error)-dim(Groundnut.error.filter) #number of pixels removed
+#write.csv(Groundnut.error.filter,file = "Models/Error/Groundnut_Error_Filtered.csv")
+
+#Full Plot
+ggplot(Groundnut.error, aes(x=Groundnut_Error_Ratio))+geom_density(size=0.9, color="#004F86")+geom_vline(xintercept = 1,size=1.5, color="#CE271D") +theme_bw() +theme(axis.line = element_line(colour = "black"),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),panel.background = element_blank()) +xlab("Model Error") +ylab ("Kernal Density")
+
+#Outlier Removed Plot
+ggplot(Groundnut.error.filter, aes(x=Groundnut_Error_Ratio))+geom_density(size=0.9, color="#004F86")+geom_vline(xintercept = 1,size=1.5, color="#CE271D") +theme_bw() +theme(axis.line = element_line(colour = "black"),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),panel.background = element_blank()) +xlab("Model Error") +ylab ("Kernal Density")
+
+barley.5<-barley.error %>% filter(Barley_Error_Ratio < 5)
+dim(barley.error)-dim(barley.5)
+#write.csv(barley.5,file = "Models/Error/Barley_Error_5.csv")
+
+#Outlier Removed Plot - 5
+ggplot(barley.5, aes(x=Barley_Error_Ratio))+geom_density(size=0.9, color="#004F86")+geom_vline(xintercept = 1,size=1.5, color="#CE271D") +theme_bw() +theme(axis.line = element_line(colour = "black"),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),panel.background = element_blank()) +xlab("Model Error") +ylab ("Kernal Density")
+
+cassava.5<-Cassava.error %>% filter(Cassava_Error_Ratio < 5)
+dim(Cassava.error)-dim(cassava.5)
+#write.csv(cassava.5,file = "Models/Error/Cassava_Error_5.csv")
+
+#Outlier Removed Plot - 5
+ggplot(cassava.5, aes(x=Cassava_Error_Ratio))+geom_density(size=0.9, color="#004F86")+geom_vline(xintercept = 1,size=1.5, color="#CE271D") +theme_bw() +theme(axis.line = element_line(colour = "black"),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),panel.background = element_blank()) +xlab("Model Error") +ylab ("Kernal Density")
+
+groundnut.5<-Groundnut.error %>% filter(Groundnut_Error_Ratio < 5)
+dim(Groundnut.error)-dim(groundnut.5)
+1-(6972/7643)
+
+#Outlier Removed Plot - 5
+ggplot(groundnut.5, aes(x=Groundnut_Error_Ratio))+geom_density(size=0.9, color="#004F86")+geom_vline(xintercept = 1,size=1.5, color="#CE271D") +theme_bw() +theme(axis.line = element_line(colour = "black"),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),panel.background = element_blank()) +xlab("Model Error") +ylab ("Kernal Density")
+#write.csv(groundnut.5,file = "Models/Error/Groundnut_Error_5.csv")
+
+#Maize
+maize.error<-read.csv(file = "Models/Error/Maize_Error.csv", header = T)
+
+ggplot(maize, aes(x=Groundnut_Error_Ratio))+geom_density(size=0.9, color="#004F86")+geom_vline(xintercept = 1,size=1.5, color="#CE271D") +theme_bw() +theme(axis.line = element_line(colour = "black"),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),panel.background = element_blank()) +xlab("Model Error") +ylab ("Kernal Density")
+
+```
+
 
