@@ -1754,6 +1754,8 @@ wheat.fert<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$wheat_Fertilizer,method =
 
 ```{r, Variable Direction Estimation - GLS, fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 
+library(rcompanion)
+library(nlme)
 ##### Barley #####
 barley.near<-read.csv(file = "Near_Coded/Barley_Near.csv", header=T)
 summary(barley.near) #check for NAs
@@ -1768,14 +1770,12 @@ plot(barley.near.ols)
 hist(residuals(barley.near.ols))
 AIC(barley.near.ols) #AIC = 36206.46
 
-### GLS Regression
-library(nlme)
 
-#Exponential - No Transformation
-barley.gls.exp <- gls(mean_barle ~ NEAR_DIST,, data = barley.near, weights = varExp())
-summary(barley.gls.exp) #AIC = 36225.58
-plot(barley.gls.exp) #plot residuals
-hist(residuals(barley.gls.exp)) #residual histogram
+#Cassava - Null Model (No Variance Structure)
+barley.null<-gls(log10(mean_barle)~ NEAR_DIST, data=barley.near)
+summary(barley.null) #AIC = 	6329.558	
+plot(barley.null) #plot residuals
+hist(residuals(barley.null)) #residual histogram
 
 #Exponential - Log Transformation
 barley.near$logYield<-log10(barley.near$mean_barle)
@@ -1784,15 +1784,7 @@ summary(barley.gls.exp.log) #AIC = 18521.71
 plot(barley.gls.exp.log) #plot residuals
 hist(residuals(barley.gls.exp.log)) #residual histogram
 
-#Identity - Log Transformation
-barley.near$logYield<-log10(barley.near$mean_barle)
-barley.gls.exp.ident <- gls(logYield ~ NEAR_DIST,, data = barley.near, weights = varIdent())
-summary(barley.gls.exp.ident) #AIC = 18587.88
-plot(barley.gls.exp.ident) #plot residuals
-hist(residuals(barley.gls.exp.ident)) #residual histogram
-
 # Pseud-R2 - Used model with lowest AIC and Best Residual Distribution
-library(rcompanion)
 barley.r2<-nagelkerke(barley.gls.exp.log, restrictNobs = FALSE)
 print(barley.r2)
 
@@ -1800,24 +1792,20 @@ print(barley.r2)
 ##### Cassava #####
 cassava.near<-read.csv(file = "Near_Coded/Cassava_Near.csv", header=T)
 summary(cassava.near) #check for NAs
-
 plot(density(cassava.near$mean_cassa)) #check distribution
 plot(density(cassava.near$NEAR_DIST)) #check distribution
 
 ### OLS regression
-cassava.near.ols<-lm(mean_cassa ~ NEAR_DIST,, data = cassava.near)
+cassava.near.ols<-lm(log10(mean_cassa) ~ NEAR_DIST,, data = cassava.near)
 summary(cassava.near.ols)
 plot(cassava.near.ols)
 hist(residuals(cassava.near.ols))
-AIC(cassava.near.ols) #AIC = 28314.04
+AIC(cassava.near.ols) #AIC = 6282.759
 
-### GLS Regression
-library(nlme)
-
-#Exponential - No Transformation
-cassava.gls.exp <- gls(mean_cassa ~ NEAR_DIST,, data = cassava.near, weights = varExp())
-summary(cassava.gls.exp) #AIC = 28309.16	
-plot(cassava.gls.exp) #plot residuals
+#Cassava - Null Model (No Variance Structure)
+cassava.null<-gls(log10(mean_cassa)~ NEAR_DIST, data=cassava.near)
+summary(cassava.null) #AIC = 	6329.558	
+plot(cassava.null) #plot residuals
 hist(residuals(cassava.gls.exp)) #residual histogram
 
 #Exponential - Log Transformation
@@ -1826,13 +1814,6 @@ cassava.gls.exp.log <- gls(logYield ~ NEAR_DIST,, data = cassava.near, weights =
 summary(cassava.gls.exp.log) #AIC = 6049.93	
 plot(cassava.gls.exp.log) #plot residuals
 hist(residuals(cassava.gls.exp.log)) #residual histogram
-
-#Identity - Log Transformation
-cassava.near$logYield<-log10(cassava.near$mean_cassa)
-cassava.gls.exp.ident <- gls(logYield ~ NEAR_DIST,, data = cassava.near, weights = varIdent())
-summary(cassava.gls.exp.ident) #AIC = 6329.558	
-plot(cassava.gls.exp.ident) #plot residuals
-hist(residuals(cassava.gls.exp.ident)) #residual histogram
 
 # Pseud-R2 - Used model with lowest AIC and Best Residual Distribution
 library(rcompanion)
