@@ -1512,9 +1512,7 @@ barley.pest<-perm.relation(rf.barley$barley_HgHa,rf.barley$Pesticide,method = "p
 
 #Fertilizer
 barley.fert<-perm.relation(rf.barley$barley_HgHa,rf.barley$Barley_Fertilizer,method = "pearson") #print(barley.fert)
-```
 
-```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Cassava
 rf.cassava<-read.csv(file="Models/Cassava_RF.csv", header = T, row.names = 1)
 rf.cassava$Growing_Mean<-as.numeric(rf.cassava$Growing_Mean)
@@ -1537,10 +1535,6 @@ cassava.pest<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$Pesticide,method 
 cassava.fert<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$cassava_Fertilizer,method = "pearson")
 #print(cassava.fert)
 
-```
-
-
-```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Groundnut
 rf.groundnut<-read.csv(file="Models/Groundnut_RF.csv", header = T, row.names = 1)
 rf.groundnut$Growing_Mean<-as.numeric(rf.groundnut$Growing_Mean)
@@ -1563,10 +1557,6 @@ groundnut.pest<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$Pesticide
 groundnut.fert<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$groundnut_Fertilizer,method = "pearson")
 #print(groundnut.fert)
 
-
-```
-
-```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Maize
 rf.maize<-read.csv(file="Models/Maize_RF.csv", header = T, row.names = 1)
 rf.maize$Growing_Mean<-as.numeric(rf.maize$Growing_Mean)
@@ -1589,9 +1579,6 @@ maize.pest<-perm.relation(rf.maize$maize_HgHa,rf.maize$Pesticide,method = "pears
 maize.fert<-perm.relation(rf.maize$maize_HgHa,rf.maize$maize_Fertilizer,method = "pearson")
 #print(maize.fert)
 
-```
-
-```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Millet
 
 rf.millet<-read.csv(file="Models/Millet_RF.csv", header = T, row.names = 1)
@@ -1614,9 +1601,7 @@ millet.pest<-perm.relation(rf.millet$millet_HgHa,rf.millet$Pesticide,method = "p
 #Fertilizer
 millet.fert<-perm.relation(rf.millet$millet_HgHa,rf.millet$millet_Fertilizer,method = "pearson")
 #print(millet.fert)
-```
 
-```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Rapeseed
 rf.rapeseed<-read.csv(file="Models/Rapeseed_RF.csv", header = T, row.names = 1)
 rf.rapeseed<-na.omit(rf.rapeseed)
@@ -1638,9 +1623,6 @@ rapeseed.pest<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$Pesticide,met
 rapeseed.fert<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$rapeseed_Fertilizer,method = "pearson")
 #print(rapeseed.fert)
 
-```
-
-```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Rice
 rf.rice<-read.csv(file="Models/Rice_RF.csv", header = T, row.names = 1)
 rf.rice<-na.omit(rf.rice)
@@ -1662,9 +1644,6 @@ rice.pest<-perm.relation(rf.rice$rice_HgHa,rf.rice$Pesticide,method = "pearson")
 rice.fert<-perm.relation(rf.rice$rice_HgHa,rf.rice$rice_Fertilizer,method = "pearson")
 #print(rice.fert)
 
-```
-
-```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Rye
 rf.rye<-read.csv(file="Models/Rye_RF.csv", header = T, row.names = 1)
 rf.rye<-na.omit(rf.rye)
@@ -1685,9 +1664,7 @@ rye.pest<-perm.relation(rf.rye$rye_HgHa,rf.rye$Pesticide,method = "pearson")
 #Fertilizer
 rye.fert<-perm.relation(rf.rye$rye_HgHa,rf.rye$rye_Fertilizer,method = "pearson")
 #print(rye.fert)
-```
 
-```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Sorghum
 rf.sorghum<-read.csv(file="Models/Sorghum_RF.csv", header = T, row.names = 1)
 rf.sorghum<-na.omit(rf.sorghum)
@@ -1708,9 +1685,7 @@ sorghum.pest<-perm.relation(rf.sorghum$Yield,rf.sorghum$Pesticide,method = "pear
 #Fertilizer
 sorghum.fert<-perm.relation(rf.sorghum$Yield,rf.sorghum$sorghum_Fertilizer,method = "pearson")
 #print(sorghum.fert)
-```
 
-```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Soybean
 rf.soybean<-read.csv(file="Models/Soybean_RF.csv", header = T, row.names = 1)
 rf.soybean<-na.omit(rf.soybean)
@@ -1731,9 +1706,7 @@ soybean.pest<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$Pesticide,method 
 #Fertilizer
 soybean.fert<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$soybean_Fertilizer,method = "pearson")
 #print(soybean.fert)
-```
 
-```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Sunflower
 rf.sunflower<-read.csv(file="Models/Sunflower_RF.csv", header = T, row.names = 1)
 rf.sunflower<-na.omit(rf.sunflower)
@@ -1754,9 +1727,7 @@ sunflower.pest<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$Pesticide
 #Fertilizer
 sunflower.fert<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$sunflower_Fertilizer,method = "pearson")
 #print(sunflower.fert)
-```
 
-```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Wheat
 rf.wheat<-read.csv(file="Models/Wheat_RF.csv", header = T, row.names = 1)
 rf.wheat<-na.omit(rf.wheat)
@@ -1778,6 +1749,100 @@ wheat.pest<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$Pesticide,method = "pears
 wheat.fert<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$wheat_Fertilizer,method = "pearson")
 #print(wheat.fert)
 ```
+
+#Near Analysis - GLS
+
+```{r, Variable Direction Estimation - GLS, fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
+
+##### Barley #####
+barley.near<-read.csv(file = "Near_Coded/Barley_Near.csv", header=T)
+summary(barley.near) #check for NAs
+
+plot(density(barley.near$mean_barle)) #check distribution
+plot(density(barley.near$NEAR_DIST)) #check distribution
+
+### OLS regression
+barley.near.ols<-lm(mean_barle ~ NEAR_DIST,, data = barley.near)
+summary(barley.near.ols)
+plot(barley.near.ols)
+hist(residuals(barley.near.ols))
+AIC(barley.near.ols) #AIC = 36206.46
+
+### GLS Regression
+library(nlme)
+
+#Exponential - No Transformation
+barley.gls.exp <- gls(mean_barle ~ NEAR_DIST,, data = barley.near, weights = varExp())
+summary(barley.gls.exp) #AIC = 36225.58
+plot(barley.gls.exp) #plot residuals
+hist(residuals(barley.gls.exp)) #residual histogram
+
+#Exponential - Log Transformation
+barley.near$logYield<-log10(barley.near$mean_barle)
+barley.gls.exp.log <- gls(logYield ~ NEAR_DIST,, data = barley.near, weights = varExp())
+summary(barley.gls.exp.log) #AIC = 18521.71
+plot(barley.gls.exp.log) #plot residuals
+hist(residuals(barley.gls.exp.log)) #residual histogram
+
+#Identity - Log Transformation
+barley.near$logYield<-log10(barley.near$mean_barle)
+barley.gls.exp.ident <- gls(logYield ~ NEAR_DIST,, data = barley.near, weights = varIdent())
+summary(barley.gls.exp.ident) #AIC = 18587.88
+plot(barley.gls.exp.ident) #plot residuals
+hist(residuals(barley.gls.exp.ident)) #residual histogram
+
+# Pseud-R2 - Used model with lowest AIC and Best Residual Distribution
+library(rcompanion)
+barley.r2<-nagelkerke(barley.gls.exp.log, restrictNobs = FALSE)
+print(barley.r2)
+
+
+##### Cassava #####
+cassava.near<-read.csv(file = "Near_Coded/Cassava_Near.csv", header=T)
+summary(cassava.near) #check for NAs
+
+plot(density(cassava.near$mean_cassa)) #check distribution
+plot(density(cassava.near$NEAR_DIST)) #check distribution
+
+### OLS regression
+cassava.near.ols<-lm(mean_cassa ~ NEAR_DIST,, data = cassava.near)
+summary(cassava.near.ols)
+plot(cassava.near.ols)
+hist(residuals(cassava.near.ols))
+AIC(cassava.near.ols) #AIC = 28314.04
+
+### GLS Regression
+library(nlme)
+
+#Exponential - No Transformation
+cassava.gls.exp <- gls(mean_cassa ~ NEAR_DIST,, data = cassava.near, weights = varExp())
+summary(cassava.gls.exp) #AIC = 28309.16	
+plot(cassava.gls.exp) #plot residuals
+hist(residuals(cassava.gls.exp)) #residual histogram
+
+#Exponential - Log Transformation
+cassava.near$logYield<-log10(cassava.near$mean_cassa)
+cassava.gls.exp.log <- gls(logYield ~ NEAR_DIST,, data = cassava.near, weights = varExp())
+summary(cassava.gls.exp.log) #AIC = 6049.93	
+plot(cassava.gls.exp.log) #plot residuals
+hist(residuals(cassava.gls.exp.log)) #residual histogram
+
+#Identity - Log Transformation
+cassava.near$logYield<-log10(cassava.near$mean_cassa)
+cassava.gls.exp.ident <- gls(logYield ~ NEAR_DIST,, data = cassava.near, weights = varIdent())
+summary(cassava.gls.exp.ident) #AIC = 6329.558	
+plot(cassava.gls.exp.ident) #plot residuals
+hist(residuals(cassava.gls.exp.ident)) #residual histogram
+
+# Pseud-R2 - Used model with lowest AIC and Best Residual Distribution
+library(rcompanion)
+cassava.r2<-nagelkerke(cassava.gls.exp.log, restrictNobs = FALSE)
+print(cassava.r2)
+
+```
+
+
+
 
 #Variable Direction Heatmap
 ```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE, fig.cap="Heatmap of R2 coefficients for each variable by crop"}
@@ -1864,6 +1929,8 @@ ggplot(groundnut.5, aes(x=Groundnut_Error_Ratio))+geom_density(size=0.9, color="
 maize.error<-read.csv(file = "Models/Error/Maize_Error.csv", header = T)
 
 ggplot(maize, aes(x=Groundnut_Error_Ratio))+geom_density(size=0.9, color="#004F86")+geom_vline(xintercept = 1,size=1.5, color="#CE271D") +theme_bw() +theme(axis.line = element_line(colour = "black"),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),panel.background = element_blank()) +xlab("Model Error") +ylab ("Kernal Density")
+
+
 
 ```
 
