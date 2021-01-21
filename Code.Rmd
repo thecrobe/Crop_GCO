@@ -8,79 +8,85 @@ output:
 editor_options:
   chunk_output_type: inline
 ---
+
+# Introduction
+```{r Introduction, echo=FALSE}
+
 # The goal of this study is to answer:
 
-"Are crop yields greater inside or outside the crop's geographic center of origin as a function of escaping pest and pathogen pressure?"
+#"Are crop yields greater inside or outside the crop's geographic center of origin as a function of escaping pest and pathogen pressure?"
 
 # Reproducibility
 
-This document can be regenerated using Rmarkdown and the associated R-script (Analyses_Figures.R). This R-script, in combination with the supplementary data files (available online at github.com/thecrobe) also allows for full reproducibility of all the the figures and analyses conducted in R. All other analyses are conducted in ArcMap by ESRI. 
+#This document can be regenerated using Rmarkdown and the associated R-script (Analyses_Figures.R). This R-script, in combination with the supplementary data files (available online at github.com/thecrobe) also allows for full reproducibility of all the the figures and analyses conducted in R. All other analyses are conducted in ArcMap by ESRI. 
 
 ## Focal Crops (n=12) Barley, Cassava, Groundnuts, Maize, Millet, Rapeseed, Rice, Rye, Sorghum, Soybean, Sunflower, Wheat
   
 ## Data Sources:
 ### Crop Yields:
-Resolution: Five minute by five minute (~10km x 10km at equator)) 
+#Resolution: Five minute by five minute (~10km x 10km at equator)) 
   
-Data is extracted from EarthStat for average yields per hectare from 1997-2003 as raster images and then the mean value per country is then calculated using zonal statistics. Data is derived from United Nations Food and Agriculture Organization (FAO), the International Food Policy Research Institute (IFPRI), the Center for Sustainability and the Global Environment (SAGE). When subnational statistics were unavailable, national figures from the Food and Agriculture Organization’s statistical database were used. List of all sources is available on EarthStat 
+#Data is extracted from EarthStat for average yields per hectare from 1997-2003 as raster images and then the mean value per country is then calculated using zonal statistics. Data is derived from United Nations Food and Agriculture Organization (FAO), the International Food Policy Research Institute (IFPRI), the Center for Sustainability and the Global Environment (SAGE). When subnational statistics were unavailable, national figures from the Food and Agriculture Organization’s statistical database were used. List of all sources is available on EarthStat 
 
 
 ### Inputs
 
-Fertilizer 
-Resolution: Five minute by five minute (~10km x 10km at equator)) 
+#Fertilizer 
+#Resolution: Five minute by five minute (~10km x 10km at equator)) 
   
-List of all sources is available on EarthStat.A major source of data was the fifth edition of “Fertilizer Use by Crop” (the FUBC5 dataset), a joint publication from the International Fertilizer Industry Association (IFA), the International Fertilizer Development Center (IFDC), the International Potash Institute (IPI), the Phosphate and Potash Institute (PPI), and the Food and Agriculture Organization of the United Nations (FAO). 
+#List of all sources is available on EarthStat.A major source of data was the fifth edition of “Fertilizer Use by Crop” (the FUBC5 dataset), a joint publication from the International Fertilizer Industry Association (IFA), the International Fertilizer Development Center (IFDC), the International Potash Institute (IPI), the Phosphate and Potash Institute (PPI), and the Food and Agriculture Organization of the United Nations (FAO). 
 
-The publication contains national-level application rate data by crop for 42 countries, compiled from the following data sources: FAO questionnaires given to member countries; IFA questionnaires given to industry companies, research institutes, and fertilizer associations; IFDC questionnaires sent to experts attending courses, seminars, and professional meetings; and IPI and PPI communications with experts. Most of the application rate data from the FUBC5 dataset are for the years 1999 or 2000, but data for some countries are as old as 1994 and as recent as 2001. 
+#The publication contains national-level application rate data by crop for 42 countries, compiled from the following data sources: FAO questionnaires given to member countries; IFA questionnaires given to industry companies, research institutes, and fertilizer associations; IFDC questionnaires sent to experts attending courses, seminars, and professional meetings; and IPI and PPI communications with experts. Most of the application rate data from the FUBC5 dataset are for the years 1999 or 2000, but data for some countries are as old as 1994 and as recent as 2001. 
 
 ## Drivers to test
   
 ### Climate: 
-Resolution: ~4-km (1/24th degree) spatial resolution averaged across 1997-2003. 
-TerraClimate uses climatically aided interpolation, combining high-spatial resolution climatological normals from the WorldClim dataset, with coarser spatial resolution, but time-varying data from CRU Ts4.0 and the Japanese 55-year Reanalysis (JRA55). 
+#Resolution: ~4-km (1/24th degree) spatial resolution averaged across 1997-2003. 
+#TerraClimate uses climatically aided interpolation, combining high-spatial resolution climatological normals from the WorldClim dataset, with coarser spatial resolution, but time-varying data from CRU Ts4.0 and the Japanese 55-year Reanalysis (JRA55). 
 
 #### Pests: 
-Resolution: Resolution: Country level. Mean from 1997-2003 derived from FAO
+#Resolution: Resolution: Country level. Mean from 1997-2003 derived from FAO
 
 ### GDP: 
-Resolution: Country level. Mean from 1997-2003 derived from WorldBank
+#Resolution: Country level. Mean from 1997-2003 derived from WorldBank
 
 ## Geographic Centers of Origin: 
 ###These are defined at the country level for each crop with regions being taken from FAOSTAT labels and publications of origins from a mixture of molecular and archaeological studies.
   
 ### Near East
-  * Barley
-  * Wheat
+#  * Barley
+#  * Wheat
     
 ### South America
-  * Cassava
-  * Groundnuts
+#  * Cassava
+#  * Groundnuts
 
 ### Central America 
-  * Maize
+#  * Maize
     
 ### China + SE Asia + India
-  * Rice
+#  * Rice
   
 ### China
-  * Soybean
-  * Millet
+#  * Soybean
+#  * Millet
   
 ### North America 
-  * Sunflower
+#  * Sunflower
 
 ### North East Africa
-  * Sorghum
+#  * Sorghum
 
 ### Central Asia, Turkey, Transcaucasia,and Iran  
-  * Rye
+#  * Rye
   
 ### Central Europe 
-  * Rapeseed
+#  * Rapeseed
   
+```
 
-```{r, Packages, include=TRUE, echo=FALSE, message=FALSE, eval=TRUE, warning=FALSE}
+
+```{r Packages, include=TRUE, echo=FALSE, message=FALSE, eval=TRUE, warning=FALSE}
 
 #models
 library(wPerm)
@@ -101,34 +107,32 @@ library(dplyr)
 library(Hmisc)
 ```
 
-## Yields Inside and Outside GCO 
+## Boxplots: Inside-Outside GCO
 
 <div class = "col-md-4">
-<br><br> **What Was Tested:** Do crop yields vary inside and outside GCO?
+<br><br> **What Was Tested:** Do crop yields vary inside and outside GCO? How do they vary across distance?
 </div>
 
 <div class = "col-md-4">
-<br><br> **What This Allows Me To Do:** Identify the distribution of yields inside and outside GCO and if they statistically differ 
+<br><br> **What This Allows Me To Do:** Identify the distribution of yields inside and outside GCO and if they statistically differ.
 </div>
 
 <div class = "col-md-4">
-<br><br> **What Are The Model Assumptions:** Permutations T-Tests were used to test if there is a significant difference in the means of each crop separated by inside/outside GCO. These tests were chosen as they have few assumptions about the distribution and independence of the data (i.e. exchangability is th only assumption however there is no way to test for this as we do not know the true distribution). Likewise permutational tests destroy the spatial-autocorrelation structure that influences test results. Plots are solely visual.
+<br><br> **What Are The Model Assumptions:** Permutations T-Tests were used to test if there is a significant difference in the means of each crop separated by inside/outside GCO. These tests were chosen as they have few assumptions about the distribution and independence of the data (i.e. exchangability is th only assumption however there is no way to test for this as we do not know the true distribution). Likewise permutational tests destroy the spatial-autocorrelation structure that influences test results. Plots are solely visual. 
 </div>
 
 <div class = "col-md-12">
 <br><br> **What Are The Model Assumptions:** Permutations T-Tests were used to test if there is a significant difference in the means of each crop separated by inside/outside GCO. These tests were chosen as they have few assumptions about the distribution and independence of the data (i.e. exchangability is th only assumption however there is no way to test for this as we do not know the true distribution). Likewise permutational tests destroy the spatial-autocorrelation structure that influences test results. Plots are solely visual.
+
+
 </div>
 
-```{r, Merge Mapping,echo=FALSE}
+```{r Boxplots, Merge Mapping,echo=FALSE}
 mapping<-read.csv("Fishnets/mapping_GCOfishnet.csv", header=T, fileEncoding = "UTF-8-BOM")
 yield<-read.csv("Fishnets/yield_fishnet.csv", header=T)
-yield.mapping<-merge(yield,mapping, by="Fishnet_ID")
-```
 
-
-
-## Barley 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Barley yield with individual colors", cache=TRUE}
+# Barley 
+```{Barley r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Barley yield with individual colors", cache=TRUE}
 barley<-na.omit(yield.mapping %>% dplyr::select(barley_HgHa,barley_GCO))
 
 #Outlier removal
@@ -165,12 +169,8 @@ ggplot(barley.m, aes(x=barley.m$barley_GCO, y=barley.m$value, color=barley.m$bar
 set.seed(8675309)
 barley.perm<-perm.t.test(barley.inside$barley_HgHa,barley.outside$barley_HgHa,progress=FALSE)
 print(barley.perm)
-```
 
 ## Cassava 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Cassava yield with individual colors,", cache=TRUE}
-cassava<-na.omit(yield.mapping %>% dplyr::select(cassava_HgHa,cassava_GCO))
-
 #Outlier removal
 hist(cassava$cassava_HgHa)
 qqnorm(cassava$cassava_HgHa)
@@ -205,11 +205,8 @@ ggplot(cassava.m, aes(x=cassava.m$cassava_GCO, y=cassava.m$value, color=cassava.
 set.seed(8675309)
 cassava.perm<-perm.t.test(cassava.inside$cassava_HgHa,cassava.outside$cassava_HgHa,progress=FALSE)
 print(cassava.perm)
-```
-## Groundnut 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Groundnut yield with individual colors", cache=TRUE}
-groundnut<-na.omit(yield.mapping %>% dplyr::select(groundnut_HgHa,groundnut_GCO))
 
+## Groundnut 
 #Outlier removal
 hist(groundnut$groundnut_HgHa)
 qqnorm(groundnut$groundnut_HgHa)
@@ -245,11 +242,8 @@ set.seed(8675309)
 groundnut.perm<-perm.t.test(groundnut.inside$groundnut_HgHa,groundnut.outside$groundnut_HgHa, progress=FALSE)
 print(groundnut.perm)
 
-```
 ## Maize 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Maize yield with individual colors", cache=TRUE}
 maize<-na.omit(yield.mapping %>% dplyr::select(maize_HgHa,maize_GCO))
-
 #Outlier removal
 hist(maize$maize_HgHa)
 qqnorm(maize$maize_HgHa)
@@ -285,11 +279,9 @@ set.seed(8675309)
 maize.perm<-perm.t.test(maize.inside$maize_HgHa,maize.outside$maize_HgHa, progress=FALSE)
 print(maize.perm)
 
-```
-## Millet 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Millet yield with individual colors", cache=TRUE}
-millet<-na.omit(yield.mapping %>% dplyr::select(millet_HgHa,millet_GCO))
 
+## Millet 
+millet<-na.omit(yield.mapping %>% dplyr::select(millet_HgHa,millet_GCO))
 #Outlier removal
 hist(millet$millet_HgHa)
 qqnorm(millet$millet_HgHa)
@@ -324,11 +316,9 @@ ggplot(millet.m, aes(x=millet.m$millet_GCO, y=millet.m$value, color=millet.m$mil
 set.seed(8675309)
 millet.perm<-perm.t.test(millet.inside$millet_HgHa,millet.outside$millet_HgHa, progress=FALSE)
 print(millet.perm)
-```
-## Rapeseed 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Rapeseed yield with individual colors", cache=TRUE}
-rapeseed<-na.omit(yield.mapping %>% dplyr::select(rapeseed_HgHa,rapeseed_GCO))
 
+## Rapeseed 
+rapeseed<-na.omit(yield.mapping %>% dplyr::select(rapeseed_HgHa,rapeseed_GCO))
 #Outlier removal
 hist(rapeseed$rapeseed_HgHa)
 qqnorm(rapeseed$rapeseed_HgHa)
@@ -363,11 +353,9 @@ ggplot(rapeseed.m, aes(x=rapeseed.m$rapeseed_GCO, y=rapeseed.m$value, color=rape
 set.seed(8675309)
 rapeseed.perm<-perm.t.test(rapeseed.inside$rapeseed_HgHa,rapeseed.outside$rapeseed_HgHa, progress=FALSE)
 print(rapeseed.perm)
-```
-## Rice 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Rice yield with individual colors", cache=TRUE}
-rice<-na.omit(yield.mapping %>% dplyr::select(rice_HgHa,rice_GCO))
 
+## Rice 
+rice<-na.omit(yield.mapping %>% dplyr::select(rice_HgHa,rice_GCO))
 #Outlier removal
 hist(rice$rice_HgHa)
 qqnorm(rice$rice_HgHa)
@@ -401,11 +389,9 @@ ggplot(rice.m, aes(x=rice.m$rice_GCO, y=rice.m$value, color=rice.m$rice_GCO)) + 
 set.seed(8675309)
 rice.perm<-perm.t.test(rice.inside$rice_HgHa,rice.outside$rice_HgHa, progress=FALSE)
 print(rice.perm)
-```
-## Rye 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Rye yield with individual colors", cache=TRUE}
-rye<-na.omit(yield.mapping %>% dplyr::select(rye_HgHa,rye_GCO))
 
+## Rye 
+rye<-na.omit(yield.mapping %>% dplyr::select(rye_HgHa,rye_GCO))
 #Outlier removal
 hist(rye$rye_HgHa)
 qqnorm(rye$rye_HgHa)
@@ -440,10 +426,8 @@ ggplot(rye.m, aes(x=rye.m$rye_GCO, y=rye.m$value, color=rye.m$rye_GCO)) +
 set.seed(8675309)
 rye.perm<-perm.t.test(rye.inside$rye_HgHa,rye.outside$rye_HgHa,progress=FALSE)
 print(rye.perm)
-```
-## Sorghum 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Sorghum yield with individual colors", cache=TRUE}
 
+## Sorghum 
 sorghum<-na.omit(yield.mapping %>% dplyr::select(sorghum_HgHa,sorghum_GCO))
 
 #Outlier Removal
@@ -481,11 +465,9 @@ ggplot(sorghum.m, aes(x=sorghum.m$sorghum_GCO, y=sorghum.m$value, color=sorghum.
 set.seed(8675309)
 sorghum.perm<-perm.t.test(sorghum.inside$sorghum_HgHa,sorghum.outside$sorghum_HgHa, progress=FALSE)
 print(sorghum.perm)
-```
-## Soybean 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Soybean yield with individual colors", cache=TRUE}
-soybean<-na.omit(yield.mapping %>% dplyr::select(soybean_HgHa,soybean_GCO))
 
+## Soybean 
+soybean<-na.omit(yield.mapping %>% dplyr::select(soybean_HgHa,soybean_GCO))
 #Outlier Removal
 hist(soybean$soybean_HgHa)
 qqnorm(soybean$soybean_HgHa)
@@ -522,11 +504,9 @@ ggplot(soybean.m, aes(x=soybean.m$soybean_GCO, y=soybean.m$value, color=soybean.
 set.seed(8675309)
 soybean.perm<-perm.t.test(soybean.inside$soybean_HgHa,soybean.outside$soybean_HgHa, progress=FALSE)
 print(soybean.perm)
-```
-## Sunflower 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Sunflower yield with individual colors", cache=TRUE}
-sunflower<-na.omit(yield.mapping %>% dplyr::select(sunflower_HgHa,sunflower_GCO))
 
+## Sunflower 
+sunflower<-na.omit(yield.mapping %>% dplyr::select(sunflower_HgHa,sunflower_GCO))
 #Outlier Removal
 hist(sunflower$sunflower_HgHa)
 qqnorm(sunflower$sunflower_HgHa)
@@ -561,11 +541,9 @@ ggplot(sunflower.m, aes(x=sunflower.m$sunflower_GCO, y=sunflower.m$value, color=
 # Permutational T Test
 sunflower.perm<-perm.t.test(sunflower.inside$sunflower_HgHa,sunflower.outside$sunflower_HgHa, progress=FALSE)
 print(sunflower.perm)
-```
-## Wheat 
-```{r,fig.align='center',message=FALSE, warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Wheat yield with individual colors", cache=TRUE}
-wheat<-na.omit(yield.mapping %>% dplyr::select(wheat_HgHa,wheat_GCO))
 
+## Wheat 
+wheat<-na.omit(yield.mapping %>% dplyr::select(wheat_HgHa,wheat_GCO))
 #Outlier Removal
 hist(wheat$wheat_HgHa)
 qqnorm(wheat$wheat_HgHa)
@@ -616,21 +594,21 @@ print(wheat.perm)
 <br><br> **What Are The Model Assumptions:**For generating the near table (a table of the distance centroid of each pixel outside of the GCO and crop yield) a geodesic approach was used to be more accurate at the equator and the poles. Likewise, permutational Spearman correlations are used and are non-parametric (rank ordered) and permutational. The nature of permutation means that the spatio-temporal autocorrelative structure in the data is removed. 
 </div>
 
-```{r message=TRUE, warning=FALSE, cache=TRUE}
+```{r Near Analysis, message=TRUE, warning=FALSE, cache=TRUE}
 ### Barley ###
-barley.near<-read.csv(file = "Near_Coded/Barley_Near.csv", header=T)
+barley.near<-read.csv(file = "Near_All/Barley_Near_Centroid.csv", header=T)
 
 #Outlier Removal
 barley.filter<-barley.near %>% filter(between(mean_barle, quantile(mean_barle, .01), quantile(mean_barle, .99))) #remove top and bottom 1% 
 barley.near<-barley.filter
 
 #Permutational  Correlation
-near.barley<-perm.relation(x = log10(barley.near$NEAR_DIST),barley.near$mean_barle,method = "pearson")
+near.barley<-cor.test(x = log10(barley.near$Rapeseed_Near_Centroid.NEAR_DIST+1),log10(barley.near$Rapeseed_Solo.mean_rapes),method = "pearson")
 print(near.barley$Observed) #coefficient
 print(near.barley$P.value) # p-value
 #Plot
-ggplot(barley.near, aes(x=log10(NEAR_DIST), y=log10(barley.near$mean_barle))) +
-  geom_point(alpha=0.2, color="#00A9B4") + geom_smooth(method = "lm",color="#DB3500") +
+ggplot(barley.near, aes(x=log10(Rapeseed_Near_Centroid.NEAR_DIST), y=log10(barley.near$Rapeseed_Solo.mean_rapes))) +
+  geom_point(alpha=0.1, color="#00A9B4") + geom_smooth(method = "loess",color="#DB3500") +
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
         panel.grid.major = element_blank(),
@@ -891,6 +869,81 @@ ggplot(wheat.near, aes(x=log10(NEAR_DIST), y=log10(wheat.near$mean_wheat))) +
 ```
 
 
+```{r GLS - Near Analysis, Variable Direction Estimation - GLS, fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
+
+library(rcompanion)
+library(nlme)
+library(MASS)
+
+
+
+##Barley
+barley.near<-read.csv(file = "Near_Coded/Barley_Near.csv", header=T)
+summary(barley.near) #check for NAs
+
+plot(density(barley.near$mean_barle)) #check distribution
+plot(density(barley.near$NEAR_DIST)) #check distribution
+
+### OLS regression
+barley.near.ols<-lm(mean_barle ~ NEAR_DIST,, data = barley.near)
+summary(barley.near.ols)
+plot(barley.near.ols)
+hist(residuals(barley.near.ols))
+AIC(barley.near.ols) #AIC = 36206.46
+
+
+#Barley - Null Model (No Variance Structure)
+barley.null<-gls(log10(mean_barle)~ NEAR_DIST, data=barley.near)
+summary(barley.null) #AIC = 	6329.558	
+plot(barley.null) #plot residuals
+hist(residuals(barley.null)) #residual histogram
+
+#Exponential - Log Transformation
+barley.near$logYield<-log10(barley.near$mean_barle)
+barley.gls.exp.log <- gls(logYield ~ NEAR_DIST,, data = barley.near, weights = varExp())
+summary(barley.gls.exp.log) #AIC = 18521.71
+plot(barley.gls.exp.log) #plot residuals
+hist(residuals(barley.gls.exp.log)) #residual histogram
+
+
+# Pseud-R2 - Used model with lowest AIC and Best Residual Distribution
+barley.r2<-nagelkerke(barley.gls.exp.log, restrictNobs = FALSE)
+print(barley.r2)
+
+
+## Cassava
+cassava.near<-read.csv(file = "Near_Coded/Cassava_Near.csv", header=T)
+summary(cassava.near) #check for NAs
+plot(density(cassava.near$mean_cassa)) #check distribution
+plot(density(cassava.near$NEAR_DIST)) #check distribution
+
+### OLS regression
+cassava.near.ols<-lm(log10(mean_cassa) ~ NEAR_DIST,, data = cassava.near)
+summary(cassava.near.ols)
+plot(cassava.near.ols)
+hist(residuals(cassava.near.ols))
+AIC(cassava.near.ols) #AIC = 6282.759
+
+#Cassava - Null Model (No Variance Structure)
+cassava.null<-gls(log10(mean_cassa)~ NEAR_DIST, data=cassava.near)
+summary(cassava.null) #AIC = 	6329.558	
+plot(cassava.null) #plot residuals
+hist(residuals(cassava.gls.exp)) #residual histogram
+
+#Exponential - Log Transformation
+cassava.near$logYield<-log10(cassava.near$mean_cassa)
+cassava.gls.exp.log <- gls(logYield ~ NEAR_DIST,, data = cassava.near, weights = varExp())
+summary(cassava.gls.exp.log) #AIC = 6049.93	
+plot(cassava.gls.exp.log) #plot residuals
+hist(residuals(cassava.gls.exp.log)) #residual histogram
+
+# Pseud-R2 - Used model with lowest AIC and Best Residual Distribution
+library(rcompanion)
+cassava.r2<-nagelkerke(cassava.gls.exp.log, restrictNobs = FALSE)
+print(cassava.r2)
+
+```
+
 ## Random Forest Regression (RFR)
 
 <div class = "col-md-4">
@@ -905,9 +958,8 @@ ggplot(wheat.near, aes(x=log10(NEAR_DIST), y=log10(wheat.near$mean_wheat))) +
 <br><br> **What Are The Model Assumptions:** The sampling is representative of the population; which is not unique and applies to all models. RFR was chosen as it has no formal distributional assumptions, random forests are non-parametric and can thus handle skewed, multimodal, and spatio-temporally autocorrelated data.
 </div>
 
+```{r Random Forest Regression, Analysis: Barley RFR, cache=TRUE} 
 ### Barley RFR 
-```{r, Analysis: Barley RFR, cache=TRUE} 
-
 rf.barley<-read.csv(file="Models/Barley_RF.csv", header = T, row.names = 1)
 rf<-na.omit(rf.barley)
 rf<-log10(rf+1)
@@ -952,11 +1004,8 @@ summary(modelerror) #make sure it worked honeyyyy
 
 #write.csv(modelerror,file="Models/Predictions/barley_predictions.csv") # export for mapping
 
-```
 
 ### Cassava RFR
-```{r, Analysis: Cassava RFR, cache=TRUE}
-
 rf.cassava<-read.csv(file="Models/Cassava_RF.csv", header = T, row.names = 1)
 rf<-na.omit(rf.cassava)
 rf<-log10(rf+1)
@@ -1001,11 +1050,9 @@ modelerror <- exp(predict(fit.rf.cassava, rf )-1) #predict on whole dataset
 summary(modelerror) #make sure it worked honeyyyy
 #write.csv(modelerror,file="Models/Predictions/cassava_predictions.csv") # export for mapping
 
-```
+
 
 ### Groundnut RFR
-```{r, Analysis: Groundnut RFR, cache=TRUE}
-
 rf.groundnut<-read.csv(file="Models/Groundnut_RF.csv", header = T, row.names = 1)
 rf<-na.omit(rf.groundnut)
 rf<-log10(rf+1)
@@ -1048,11 +1095,8 @@ modelerror <- exp(predict(fit.rf.groundnut, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
 #write.csv(modelerror,file="Models/Predictions/groundnut_predictions.csv") # export for mapping
 
-```
 
 ### Maize RFR
-```{r, Analysis: Maize RFR, cache=TRUE}
-
 rf.maize<-read.csv(file="Models/Maize_RF.csv", header = T, row.names = 1)
 rf<-na.omit(rf.maize)
 rf<-log10(rf+1)
@@ -1095,11 +1139,9 @@ modelerror <- exp(predict(fit.rf.maize, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
 #write.csv(modelerror,file="Models/Predictions/maize_predictions.csv") # export for mapping
 
-```
+
 
 ### Millet RFR 
-```{r, Analysis: Millet RFR, cache=TRUE}
-
 rf.millet<-read.csv(file="Models/Millet_RF.csv", header = T, row.names = 1)
 rf<-na.omit(rf.millet)
 rf<-log10(rf+1)
@@ -1143,11 +1185,8 @@ modelerror <- exp(predict(fit.rf.millet, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
 #write.csv(modelerror,file="Models/Predictions/millet_predictions.csv") # export for mapping
 
-```
 
 ### Rapeseed RFR
-```{r, Analysis: Rapeseed RFR, cache=TRUE}
-
 rf.rapeseed<-read.csv(file="Models/Rapeseed_RF.csv", header = T, row.names = 1)
 rf<-na.omit(rf.rapeseed)
 rf<-log10(rf+1)
@@ -1190,11 +1229,7 @@ modelerror <- exp(predict(fit.rf.rapeseed, rf )-1) #predict on whole dataset
 summary(modelerror) #make sure it worked honeyyyy
 #write.csv(modelerror,file="Models/Predictions/rapeseed_predictions.csv") # export for mapping
 
-```
-
 ### Rice RFR 
-```{r, Analysis: Rice RFR, cache=TRUE}
-
 rf.rice<-read.csv(file="Models/Rice_RF.csv", header = T, row.names = 1)
 rf<-na.omit(rf.rice)
 rf<-log10(rf+1)
@@ -1237,11 +1272,8 @@ modelerror <- exp(predict(fit.rf.rice, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
 #write.csv(modelerror,file="Models/Predictions/rice_predictions.csv") # export for mapping
 
-```
 
 ### Rye RFR
-```{r, Analysis: Rye RFR, cache=TRUE}
-
 rf.rye<-read.csv(file="Models/Rye_RF.csv", header = T, row.names = 1)
 rf<-na.omit(rf.rye)
 rf<-log10(rf+1)
@@ -1285,11 +1317,8 @@ modelerror <- exp(predict(fit.rf.rye, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
 #write.csv(modelerror,file="Models/Predictions/rye_predictions.csv") # export for mapping
 
-```
 
 ### Sorghum RFR
-```{r, Analysis: Random Forest Trial, cache=TRUE}
-
 rf.Sorghum<-read.csv(file="Models/Sorghum_RF.csv", header = T, row.names = 1)
 rf<-na.omit(rf.Sorghum)
 rf<-log10(rf+1)
@@ -1332,11 +1361,8 @@ modelerror <- exp(predict(fit.rf.Sorghum, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
 #write.csv(modelerror,file="Models/Predictions/Sorghum_predictions.csv") # export for mapping
 
-```
 
 ### Soybean RFR
-```{r, Analysis: Soybean RFR, cache=TRUE}
-
 rf.Soybean<-read.csv(file="Models/Soybean_RF.csv", header = T, row.names = 1)
 rf<-na.omit(rf.Soybean)
 rf<-log10(rf+1)
@@ -1380,11 +1406,8 @@ modelerror <- exp(predict(fit.rf.Soybean, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
 #write.csv(modelerror,file="Models/Predictions/Soybean_predictions.csv") # export for mapping
 
-```
 
 ### Sunflower RFR
-```{r, Analysis: Sunflower RFR, cache=TRUE}
-
 rf.Sunflower<-read.csv(file="Models/Sunflower_RF.csv", header = T, row.names = 1)
 rf<-na.omit(rf.Sunflower)
 rf<-log10(rf+1)
@@ -1427,11 +1450,8 @@ modelerror <- exp(predict(fit.rf.Sunflower, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
 #write.csv(modelerror,file="Models/Predictions/Sunflower_predictions.csv") # export for mapping
 
-```
 
 ### Wheat RFR
-```{r, Analysis: Wheat RFR, cache=TRUE}
-
 rf.Wheat<-read.csv(file="Models/Wheat_RF.csv", header = T, row.names = 1)
 rf<-na.omit(rf.Wheat)
 rf<-log10(rf+1)
@@ -1491,8 +1511,7 @@ head(modelerror) #make sure it worked honeyyyy
 <br><br> **What Are The Model Assumptions:** Permutational Spearman rank-order correlations are used as they will identify monotonic relationships.Permutational tests were chosen as they have few assumptions about the distribution and independence of the data (i.e. exchangability is th only assumption however there is no way to test for this as we do not know the true distribution). Likewise permutational tests destroy the spatial-autocorrelation structure that influences test results. Plots are solely visual.
 </div>
 
-
-```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
+```{r Variable Direction Estimation,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ## Barley
 rf.barley<-read.csv(file="Models/Barley_RF.csv", header = T, row.names = 1)
 rf.barley<-na.omit(rf.barley)
@@ -1512,9 +1531,7 @@ barley.pest<-perm.relation(rf.barley$barley_HgHa,rf.barley$Pesticide,method = "p
 
 #Fertilizer
 barley.fert<-perm.relation(rf.barley$barley_HgHa,rf.barley$Barley_Fertilizer,method = "pearson") #print(barley.fert)
-```
 
-```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Cassava
 rf.cassava<-read.csv(file="Models/Cassava_RF.csv", header = T, row.names = 1)
 rf.cassava$Growing_Mean<-as.numeric(rf.cassava$Growing_Mean)
@@ -1537,10 +1554,6 @@ cassava.pest<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$Pesticide,method 
 cassava.fert<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$cassava_Fertilizer,method = "pearson")
 #print(cassava.fert)
 
-```
-
-
-```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Groundnut
 rf.groundnut<-read.csv(file="Models/Groundnut_RF.csv", header = T, row.names = 1)
 rf.groundnut$Growing_Mean<-as.numeric(rf.groundnut$Growing_Mean)
@@ -1563,10 +1576,6 @@ groundnut.pest<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$Pesticide
 groundnut.fert<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$groundnut_Fertilizer,method = "pearson")
 #print(groundnut.fert)
 
-
-```
-
-```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Maize
 rf.maize<-read.csv(file="Models/Maize_RF.csv", header = T, row.names = 1)
 rf.maize$Growing_Mean<-as.numeric(rf.maize$Growing_Mean)
@@ -1589,9 +1598,6 @@ maize.pest<-perm.relation(rf.maize$maize_HgHa,rf.maize$Pesticide,method = "pears
 maize.fert<-perm.relation(rf.maize$maize_HgHa,rf.maize$maize_Fertilizer,method = "pearson")
 #print(maize.fert)
 
-```
-
-```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Millet
 
 rf.millet<-read.csv(file="Models/Millet_RF.csv", header = T, row.names = 1)
@@ -1614,9 +1620,7 @@ millet.pest<-perm.relation(rf.millet$millet_HgHa,rf.millet$Pesticide,method = "p
 #Fertilizer
 millet.fert<-perm.relation(rf.millet$millet_HgHa,rf.millet$millet_Fertilizer,method = "pearson")
 #print(millet.fert)
-```
 
-```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Rapeseed
 rf.rapeseed<-read.csv(file="Models/Rapeseed_RF.csv", header = T, row.names = 1)
 rf.rapeseed<-na.omit(rf.rapeseed)
@@ -1638,9 +1642,6 @@ rapeseed.pest<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$Pesticide,met
 rapeseed.fert<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$rapeseed_Fertilizer,method = "pearson")
 #print(rapeseed.fert)
 
-```
-
-```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Rice
 rf.rice<-read.csv(file="Models/Rice_RF.csv", header = T, row.names = 1)
 rf.rice<-na.omit(rf.rice)
@@ -1662,9 +1663,6 @@ rice.pest<-perm.relation(rf.rice$rice_HgHa,rf.rice$Pesticide,method = "pearson")
 rice.fert<-perm.relation(rf.rice$rice_HgHa,rf.rice$rice_Fertilizer,method = "pearson")
 #print(rice.fert)
 
-```
-
-```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Rye
 rf.rye<-read.csv(file="Models/Rye_RF.csv", header = T, row.names = 1)
 rf.rye<-na.omit(rf.rye)
@@ -1685,9 +1683,7 @@ rye.pest<-perm.relation(rf.rye$rye_HgHa,rf.rye$Pesticide,method = "pearson")
 #Fertilizer
 rye.fert<-perm.relation(rf.rye$rye_HgHa,rf.rye$rye_Fertilizer,method = "pearson")
 #print(rye.fert)
-```
 
-```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Sorghum
 rf.sorghum<-read.csv(file="Models/Sorghum_RF.csv", header = T, row.names = 1)
 rf.sorghum<-na.omit(rf.sorghum)
@@ -1708,9 +1704,7 @@ sorghum.pest<-perm.relation(rf.sorghum$Yield,rf.sorghum$Pesticide,method = "pear
 #Fertilizer
 sorghum.fert<-perm.relation(rf.sorghum$Yield,rf.sorghum$sorghum_Fertilizer,method = "pearson")
 #print(sorghum.fert)
-```
 
-```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Soybean
 rf.soybean<-read.csv(file="Models/Soybean_RF.csv", header = T, row.names = 1)
 rf.soybean<-na.omit(rf.soybean)
@@ -1731,9 +1725,7 @@ soybean.pest<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$Pesticide,method 
 #Fertilizer
 soybean.fert<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$soybean_Fertilizer,method = "pearson")
 #print(soybean.fert)
-```
 
-```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Sunflower
 rf.sunflower<-read.csv(file="Models/Sunflower_RF.csv", header = T, row.names = 1)
 rf.sunflower<-na.omit(rf.sunflower)
@@ -1754,9 +1746,7 @@ sunflower.pest<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$Pesticide
 #Fertilizer
 sunflower.fert<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$sunflower_Fertilizer,method = "pearson")
 #print(sunflower.fert)
-```
 
-```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Wheat
 rf.wheat<-read.csv(file="Models/Wheat_RF.csv", header = T, row.names = 1)
 rf.wheat<-na.omit(rf.wheat)
@@ -1777,15 +1767,17 @@ wheat.pest<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$Pesticide,method = "pears
 #Fertilizer
 wheat.fert<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$wheat_Fertilizer,method = "pearson")
 #print(wheat.fert)
-```
 
-#Variable Direction Heatmap
-```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE, fig.cap="Heatmap of R2 coefficients for each variable by crop"}
+# Tabulate in Excel and then import
+vard<-read.csv(file="Models/VariableDirection/VariableDirection.csv", header=T, row.names = 1)
 
-vard<-read.csv(file="Models/VariableDirection/VariableDirection.csv", header=T)
+distance<-dist(vard, method = "euclidean")
+vard.hc<-hclust(distance)
+plot(vard.hc) #reorder in excel 
 
+#reimport
+vard<-read.csv(file="Models/VariableDirection/VariableDirection_FertStandard.csv", header=T)
 
-#values
 vard$Crop<-factor(vard$Crop, levels=vard$Crop) #set factor
 vard.m<-melt(vard) #melt
 
@@ -1795,34 +1787,9 @@ ggplot(vard.m, aes(x=vard.m$Crop, y=vard.m$variable, fill=vard.m$value)) +geom_t
     panel.grid.minor = element_blank(),
     panel.border = element_blank(),
     panel.background = element_blank()) + 
-  ylab("Crop") +xlab("Variable") + labs(color='Rho') +scale_fill_gradient(low="white", high="#1B3C7C") +theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  ylab("Crop") +xlab("Variable") + labs(color='Rho') +scale_fill_gradient(low = "white", high="black") +theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 
 ```
 
-barley<-read.csv(file = "Models/Error/Barley_Error.csv", header=T)
-barley3sd<-read.csv(file="Models/Error/Barley_Error_3SD.csv", header=T)
-dim(barley)-dim(barley3sd)
-
-
-ggplot(barley, aes(x=log10(Barley_Error_Ratio)))+geom_density(size=0.9, color="#004F86")+geom_vline(xintercept = 1,size=1.5, color="#CE271D") +theme_bw() +theme(axis.line = element_line(colour = "black"),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),panel.background = element_blank()) +xlab("Model Error") +ylab ("Kernal Density")
-
-
-cassava<-read.csv(file = "Models/Error/Cassava_Error.csv", header=T)
-
-cassava3sd<-read.csv(file = "Models/Error/Cassava_Error_3SD.csv", header=T)
-
-dim(cassava)-dim(cassava3sd)
-
-
-ggplot(cassava3sd, aes(x=Cassava_Error_Ratio))+geom_density(size=0.9, color="#004F86")+geom_vline(xintercept = 1,size=1.5, color="#CE271D") +theme_bw() +theme(axis.line = element_line(colour = "black"),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),panel.background = element_blank()) +xlab("Model Error") +ylab ("Kernal Density")
-
-
-groundnut3sd<-read.csv(file = "Models/Error/Groundnut_Error_3SD.csv", header=T)
-
-groundnut<-read.csv(file = "Models/Error/Groundnut_Error.csv", header=T)
-
-dim(groundnut)-dim(groundnut3sd)
-
-ggplot(groundnut, aes(x=Groundnut_Error_Ratio))+geom_density(size=0.9, color="#004F86")+geom_vline(xintercept = 1,size=1.5, color="#CE271D") +theme_bw() +theme(axis.line = element_line(colour = "black"),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),panel.background = element_blank()) +xlab("Model Error") +ylab ("Kernal Density")
 
