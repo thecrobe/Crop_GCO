@@ -91,9 +91,9 @@ editor_options:
 #models
 library(wPerm)
 library(caret)
-library(spatialEco)
-library(rgdal)
 library(wPerm)
+#library(spatialEco)
+#library(rgdal)
 library(RVAideMemoire)
 
 #plots
@@ -127,23 +127,17 @@ library(Hmisc)
 
 </div>
 
-```{r Boxplots, Merge Mapping,echo=FALSE}
+```{r Boxplots, Merge Mapping,echo=FALSE,warning=FALSE}
 mapping<-read.csv("Fishnets/mapping_GCOfishnet.csv", header=T, fileEncoding = "UTF-8-BOM")
 yield<-read.csv("Fishnets/yield_fishnet.csv", header=T)
+sighigh<-"#00ADB6"
+siglow<-
+insig<-"#38474E"
+
+yield.mapping<-merge(mapping,yield)
 
 # Barley 
-```{Barley r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Barley yield with individual colors", cache=TRUE}
 barley<-na.omit(yield.mapping %>% dplyr::select(barley_HgHa,barley_GCO))
-
-#Outlier removal
-hist(barley$barley_HgHa)
-qqnorm(barley$barley_HgHa)
-barley.filter<-barley %>% filter(between(barley_HgHa, quantile(barley_HgHa, .01), quantile(barley_HgHa, .99))) #remove top and bottom 1% 
-hist(barley.filter$barley_HgHa)
-qqnorm(barley.filter$barley_HgHa)
-dim(barley) - dim(barley.filter) # Num Outliers Removed
-summary(barley.filter)
-barley<-barley.filter
 
 #Inside vs Outside GCO 
 barley.inside<-filter(barley, barley_GCO == "Inside")
@@ -152,11 +146,14 @@ barley.m<-melt(barley)
 summary(barley.inside)
 summary(barley.outside)
 
+# Permutational T Test
+set.seed(8675309)
+barley.perm<-perm.t.test(barley.inside$barley_HgHa,barley.outside$barley_HgHa,progress=FALSE)
+print(barley.perm)
+
 #Plot
-ggplot(barley.m, aes(x=barley.m$barley_GCO, y=barley.m$value, color=barley.m$barley_GCO)) + 
-  geom_jitter(alpha=0.4, width=0.2) + 
-  geom_boxplot(color="black", fill="transparent", width=0.4)+
-  scale_color_manual(values = wes_palette("Darjeeling1",type = "discrete")) + 
+ggplot(barley.m, aes(x=barley.m$barley_GCO, y=barley.m$value)) + 
+  geom_boxplot(fill=sighigh, fill="transparent", width=0.4)+
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
     panel.grid.major = element_blank(),
@@ -165,21 +162,8 @@ ggplot(barley.m, aes(x=barley.m$barley_GCO, y=barley.m$value, color=barley.m$bar
     panel.background = element_blank()) + 
   ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
 
-# Permutational T Test
-set.seed(8675309)
-barley.perm<-perm.t.test(barley.inside$barley_HgHa,barley.outside$barley_HgHa,progress=FALSE)
-print(barley.perm)
 
 ## Cassava 
-#Outlier removal
-hist(cassava$cassava_HgHa)
-qqnorm(cassava$cassava_HgHa)
-cassava.filter<-cassava %>% filter(between(cassava_HgHa, quantile(cassava_HgHa, .01), quantile(cassava_HgHa, .99))) #remove top and bottom 1% 
-hist(cassava.filter$cassava_HgHa)
-qqnorm(cassava.filter$cassava_HgHa)
-dim(cassava) - dim(cassava.filter) # Num Outliers Removed
-summary(cassava.filter)
-cassava<-cassava.filter
 
 #Inside vs Outside GCO 
 cassava.inside<-filter(cassava, cassava_GCO == "Inside")
@@ -187,6 +171,11 @@ cassava.outside<-filter(cassava, cassava_GCO == "Outside")
 cassava.m<-melt(cassava)
 summary(cassava.inside)
 summary(cassava.outside)
+
+# Permutational T Test
+set.seed(8675309)
+cassava.perm<-perm.t.test(cassava.inside$cassava_HgHa,cassava.outside$cassava_HgHa,progress=FALSE)
+print(cassava.perm)
 
 #Plot
 ggplot(cassava.m, aes(x=cassava.m$cassava_GCO, y=cassava.m$value, color=cassava.m$cassava_GCO)) + 
@@ -201,21 +190,8 @@ ggplot(cassava.m, aes(x=cassava.m$cassava_GCO, y=cassava.m$value, color=cassava.
     panel.background = element_blank()) + 
   ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
 
-# Permutational T Test
-set.seed(8675309)
-cassava.perm<-perm.t.test(cassava.inside$cassava_HgHa,cassava.outside$cassava_HgHa,progress=FALSE)
-print(cassava.perm)
 
 ## Groundnut 
-#Outlier removal
-hist(groundnut$groundnut_HgHa)
-qqnorm(groundnut$groundnut_HgHa)
-groundnut.filter<-groundnut %>% filter(between(groundnut_HgHa, quantile(groundnut_HgHa, .01), quantile(groundnut_HgHa, .99))) #remove top and bottom 1% 
-hist(groundnut.filter$groundnut_HgHa)
-qqnorm(groundnut.filter$groundnut_HgHa)
-dim(groundnut) - dim(groundnut.filter) # Num Outliers Removed
-summary(groundnut.filter)
-groundnut<-groundnut.filter
 
 #Inside vs Outside GCO 
 groundnut.inside<-filter(groundnut, groundnut_GCO == "Inside")
@@ -244,15 +220,6 @@ print(groundnut.perm)
 
 ## Maize 
 maize<-na.omit(yield.mapping %>% dplyr::select(maize_HgHa,maize_GCO))
-#Outlier removal
-hist(maize$maize_HgHa)
-qqnorm(maize$maize_HgHa)
-maize.filter<-maize %>% filter(between(maize_HgHa, quantile(maize_HgHa, .01), quantile(maize_HgHa, .99))) #remove top and bottom 1% 
-hist(maize.filter$maize_HgHa)
-qqnorm(maize.filter$maize_HgHa)
-dim(maize) - dim(maize.filter) # Num Outliers Removed
-summary(maize.filter)
-maize<-maize.filter
 
 #Inside vs Outside GCO 
 maize.inside<-filter(maize, maize_GCO == "Inside")
@@ -282,15 +249,6 @@ print(maize.perm)
 
 ## Millet 
 millet<-na.omit(yield.mapping %>% dplyr::select(millet_HgHa,millet_GCO))
-#Outlier removal
-hist(millet$millet_HgHa)
-qqnorm(millet$millet_HgHa)
-millet.filter<-millet %>% filter(between(millet_HgHa, quantile(millet_HgHa, .01), quantile(millet_HgHa, .99))) #remove top and bottom 1% 
-hist(millet.filter$millet_HgHa)
-qqnorm(millet.filter$millet_HgHa)
-dim(millet) - dim(millet.filter) # Num Outliers Removed
-summary(millet.filter)
-millet<-millet.filter
 
 #Inside vs Outside GCO 
 millet.inside<-filter(millet, millet_GCO == "Inside")
@@ -319,15 +277,6 @@ print(millet.perm)
 
 ## Rapeseed 
 rapeseed<-na.omit(yield.mapping %>% dplyr::select(rapeseed_HgHa,rapeseed_GCO))
-#Outlier removal
-hist(rapeseed$rapeseed_HgHa)
-qqnorm(rapeseed$rapeseed_HgHa)
-rapeseed.filter<-rapeseed %>% filter(between(rapeseed_HgHa, quantile(rapeseed_HgHa, .01), quantile(rapeseed_HgHa, .99))) #remove top and bottom 1% 
-hist(rapeseed.filter$rapeseed_HgHa)
-qqnorm(rapeseed.filter$rapeseed_HgHa)
-dim(rapeseed) - dim(rapeseed.filter) # Num Outliers Removed
-summary(rapeseed.filter)
-rapeseed<-rapeseed.filter
 
 #Inside vs Outside GCO 
 rapeseed.inside<-filter(rapeseed, rapeseed_GCO == "Inside")
@@ -356,15 +305,6 @@ print(rapeseed.perm)
 
 ## Rice 
 rice<-na.omit(yield.mapping %>% dplyr::select(rice_HgHa,rice_GCO))
-#Outlier removal
-hist(rice$rice_HgHa)
-qqnorm(rice$rice_HgHa)
-rice.filter<-rice %>% filter(between(rice_HgHa, quantile(rice_HgHa, .01), quantile(rice_HgHa, .99))) #remove top and bottom 1% 
-hist(rice.filter$rice_HgHa)
-qqnorm(rice.filter$rice_HgHa)
-dim(rice) - dim(rice.filter) # Num Outliers Removed
-summary(rice.filter)
-rice<-rice.filter
 
 #Filter
 rice.inside<-filter(rice, rice_GCO == "Inside")
@@ -392,15 +332,6 @@ print(rice.perm)
 
 ## Rye 
 rye<-na.omit(yield.mapping %>% dplyr::select(rye_HgHa,rye_GCO))
-#Outlier removal
-hist(rye$rye_HgHa)
-qqnorm(rye$rye_HgHa)
-rye.filter<-rye %>% filter(between(rye_HgHa, quantile(rye_HgHa, .01), quantile(rye_HgHa, .99))) #remove top and bottom 1% 
-hist(rye.filter$rye_HgHa)
-qqnorm(rye.filter$rye_HgHa)
-dim(rye) - dim(rye.filter) # Num Outliers Removed
-summary(rye.filter)
-rye<-rye.filter
 
 #Inside vs Outside GCO 
 rye.inside<-filter(rye, rye_GCO == "Inside")
@@ -430,16 +361,6 @@ print(rye.perm)
 ## Sorghum 
 sorghum<-na.omit(yield.mapping %>% dplyr::select(sorghum_HgHa,sorghum_GCO))
 
-#Outlier Removal
-hist(sorghum$sorghum_HgHa)
-qqnorm(sorghum$sorghum_HgHa)
-sorghum.filter<-sorghum %>% filter(between(sorghum_HgHa, quantile(sorghum_HgHa, .01), quantile(sorghum_HgHa, .99))) #remove top and bottom 1% 
-hist(sorghum.filter$sorghum_HgHa)
-qqnorm(sorghum.filter$sorghum_HgHa)
-dim(sorghum) - dim(sorghum.filter) # Num Outliers Removed
-summary(sorghum)
-summary(sorghum.filter)
-sorghum<-sorghum.filter
 
 #Inside vs Outside GCO 
 sorghum.inside<-filter(sorghum, sorghum_GCO == "Inside")
@@ -468,17 +389,6 @@ print(sorghum.perm)
 
 ## Soybean 
 soybean<-na.omit(yield.mapping %>% dplyr::select(soybean_HgHa,soybean_GCO))
-#Outlier Removal
-hist(soybean$soybean_HgHa)
-qqnorm(soybean$soybean_HgHa)
-soybean.filter<-soybean %>% filter(between(soybean_HgHa, quantile(soybean_HgHa, .01), quantile(soybean_HgHa, .99))) #remove top and bottom 1% 
-hist(soybean.filter$soybean_HgHa)
-qqnorm(soybean.filter$soybean_HgHa)
-dim(soybean) - dim(soybean.filter) # Num Outliers Removed
-summary(soybean)
-summary(soybean.filter)
-soybean<-soybean.filter
-
 
 #Inside vs Outside GCO 
 soybean.inside<-filter(soybean, soybean_GCO == "Inside")
@@ -507,16 +417,6 @@ print(soybean.perm)
 
 ## Sunflower 
 sunflower<-na.omit(yield.mapping %>% dplyr::select(sunflower_HgHa,sunflower_GCO))
-#Outlier Removal
-hist(sunflower$sunflower_HgHa)
-qqnorm(sunflower$sunflower_HgHa)
-sunflower.filter<-sunflower %>% filter(between(sunflower_HgHa, quantile(sunflower_HgHa, .01), quantile(sunflower_HgHa, .99))) #remove top and bottom 1% 
-hist(sunflower.filter$sunflower_HgHa)
-qqnorm(sunflower.filter$sunflower_HgHa)
-dim(sunflower) - dim(sunflower.filter) # Num Outliers Removed
-summary(sunflower)
-summary(sunflower.filter)
-sunflower<-sunflower.filter
 
 #Inside vs Outside GCO 
 sunflower.inside<-filter(sunflower, sunflower_GCO == "Inside")
@@ -544,16 +444,6 @@ print(sunflower.perm)
 
 ## Wheat 
 wheat<-na.omit(yield.mapping %>% dplyr::select(wheat_HgHa,wheat_GCO))
-#Outlier Removal
-hist(wheat$wheat_HgHa)
-qqnorm(wheat$wheat_HgHa)
-wheat.filter<-wheat %>% filter(between(wheat_HgHa, quantile(wheat_HgHa, .01), quantile(wheat_HgHa, .99))) #remove top and bottom 1% 
-hist(wheat.filter$wheat_HgHa)
-qqnorm(wheat.filter$wheat_HgHa)
-dim(wheat) - dim(wheat.filter) # Num Outliers Removed
-summary(wheat)
-summary(wheat.filter)
-wheat<-wheat.filter
 
 #Inside vs Outside GCO 
 wheat.inside<-filter(wheat, wheat_GCO == "Inside")
@@ -601,14 +491,13 @@ barley.near<-read.csv(file = "Near_All/Barley_Near_Centroid.csv", header=T)
 #Outlier Removal
 barley.filter<-barley.near %>% filter(between(mean_barle, quantile(mean_barle, .01), quantile(mean_barle, .99))) #remove top and bottom 1% 
 barley.near<-barley.filter
-
+summary(barley.near)
 #Permutational  Correlation
-near.barley<-cor.test(x = log10(barley.near$Rapeseed_Near_Centroid.NEAR_DIST+1),log10(barley.near$Rapeseed_Solo.mean_rapes),method = "pearson")
-print(near.barley$Observed) #coefficient
-print(near.barley$P.value) # p-value
+cor.test(x = log10(barley.near$mean_barle),log10(barley.near$NEAR_DIST),method = "pearson")
+
 #Plot
-ggplot(barley.near, aes(x=log10(Rapeseed_Near_Centroid.NEAR_DIST), y=log10(barley.near$Rapeseed_Solo.mean_rapes))) +
-  geom_point(alpha=0.1, color="#00A9B4") + geom_smooth(method = "loess",color="#DB3500") +
+ggplot(barley.near, aes(x=log10(NEAR_DIST), y=log10(mean_barle))) +
+  geom_point(alpha=0.1, color="#00A9B4") + geom_smooth(method = "glm",color="#DB3500") +
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
         panel.grid.major = element_blank(),
@@ -869,7 +758,7 @@ ggplot(wheat.near, aes(x=log10(NEAR_DIST), y=log10(wheat.near$mean_wheat))) +
 ```
 
 
-```{r GLS - Near Analysis, Variable Direction Estimation - GLS, fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
+```{r GLS - Near Analysis, fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 
 library(rcompanion)
 library(nlme)
@@ -941,6 +830,20 @@ hist(residuals(cassava.gls.exp.log)) #residual histogram
 library(rcompanion)
 cassava.r2<-nagelkerke(cassava.gls.exp.log, restrictNobs = FALSE)
 print(cassava.r2)
+
+```
+
+```{r Spatial Regression - Near Analysis, fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
+
+### Barley ###
+barley.near<-read.csv(file="./Near_All/Barley_Near_Centroid.csv", header=T)
+barley.merge<-merge(mapping,barley.near,by="Fishnet_ID")
+barley.coord<-data.frame(cbind(barley.merge$FROM_X,barley.merge$FROM_Y))
+# Spatial Correlation
+barley.sp.corr<-modified.ttest(log10(barley.merge$NEAR_DIST), log10(barley.merge$mean_barle),coords = barley.coord, nclass = 8) #Queens Case
+print(barley.sp.corr)
+
+
 
 ```
 
