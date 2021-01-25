@@ -843,7 +843,10 @@ barley.coord<-data.frame(cbind(barley.merge$FROM_X,barley.merge$FROM_Y))
 barley.sp.corr<-modified.ttest(log10(barley.merge$NEAR_DIST), log10(barley.merge$mean_barle),coords = barley.coord, nclass = 8) #Queens Case
 print(barley.sp.corr)
 
+(barley.sp.corr)
 
+
+library(SpatialPack)
 
 ```
 
@@ -1397,6 +1400,19 @@ exp(pred.error) #put in yield values
 modelerror <- exp(predict(fit.rf.Wheat, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
 #write.csv(modelerror,file="Models/Predictions/Wheat_predictions.csv") # export for mapping
+
+#### Make Pretty Plot of Variable Importance
+importance<-read.csv(file = "Models/VariableDirection/VariableIMP_Pivot_Graph.csv", header=T)
+imp.m<-melt(importance)
+
+#With Fertilizer
+pal<-wes_palette("Zissou1", 21, type = "continuous")
+ggplot(imp.m, aes(x=imp.m$variable,y=imp.m$Crop, fill=log10(imp.m$value)))  +
+  geom_tile() + 
+  scale_fill_gradientn(colours = pal) + 
+  scale_x_discrete(expand = c(0, 0)) +
+  scale_y_discrete(expand = c(0, 0))  + 
+  coord_equal() +xlab("Variable") +ylab("Crop") 
 
 ```
 
