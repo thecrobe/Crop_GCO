@@ -1405,14 +1405,17 @@ head(modelerror) #make sure it worked honeyyyy
 importance<-read.csv(file = "Models/VariableDirection/VariableIMP_Pivot_Graph.csv", header=T)
 imp.m<-melt(importance)
 
-#With Fertilizer
+plot(density(imp.m$value))
+plot(density(log10(imp.m$value))) #better on log scale
+#do on a log scale
 pal<-wes_palette("Zissou1", 21, type = "continuous")
 ggplot(imp.m, aes(x=imp.m$variable,y=imp.m$Crop, fill=log10(imp.m$value)))  +
   geom_tile() + 
   scale_fill_gradientn(colours = pal) + 
   scale_x_discrete(expand = c(0, 0)) +
   scale_y_discrete(expand = c(0, 0))  + 
-  coord_equal() +xlab("Variable") +ylab("Crop") 
+  coord_equal() +xlab("Variable") +ylab("Crop")  +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 ```
 
@@ -1701,13 +1704,12 @@ vard$Crop<-factor(vard$Crop, levels=vard$Crop) #set factor
 vard.m<-melt(vard) #melt
 
 #heatmap
-ggplot(vard.m, aes(x=vard.m$Crop, y=vard.m$variable, fill=vard.m$value)) +geom_tile() + theme_bw() +theme(axis.line = element_line(colour = "black"),
+ggplot(vard.m, aes(x=vard.m$variable, y=vard.m$Crop, fill=vard.m$value)) +geom_tile() + theme_bw() +theme(axis.line = element_line(colour = "black"),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
     panel.border = element_blank(),
     panel.background = element_blank()) + 
-  ylab("Crop") +xlab("Variable") + labs(color='Rho') +scale_fill_gradient(low = "white", high="black") +theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-
+  ylab("Crop") +xlab("Variable") + labs(color='Rho') +theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + scale_fill_viridis(name="Temperature")
 
 ```
 
