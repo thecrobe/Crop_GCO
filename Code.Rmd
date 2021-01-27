@@ -8,86 +8,92 @@ output:
 editor_options:
   chunk_output_type: inline
 ---
+
+```{r Introduction, echo=FALSE}
+
 # The goal of this study is to answer:
 
-"Are crop yields greater inside or outside the crop's geographic center of origin as a function of escaping pest and pathogen pressure?"
+#"Are crop yields greater inside or outside the crop's geographic center of origin as a function of escaping pest and pathogen pressure?"
 
 # Reproducibility
 
-This document can be regenerated using Rmarkdown and the associated R-script (Analyses_Figures.R). This R-script, in combination with the supplementary data files (available online at github.com/thecrobe) also allows for full reproducibility of all the the figures and analyses conducted in R. All other analyses are conducted in ArcMap by ESRI. 
+#This document can be regenerated using Rmarkdown and the associated R-script (Analyses_Figures.R). This R-script, in combination with the supplementary data files (available online at github.com/thecrobe) also allows for full reproducibility of all the the figures and analyses conducted in R. All other analyses are conducted in ArcMap by ESRI. 
 
 ## Focal Crops (n=12) Barley, Cassava, Groundnuts, Maize, Millet, Rapeseed, Rice, Rye, Sorghum, Soybean, Sunflower, Wheat
   
 ## Data Sources:
 ### Crop Yields:
-Resolution: Five minute by five minute (~10km x 10km at equator)) 
+#Resolution: Five minute by five minute (~10km x 10km at equator)) 
   
-Data is extracted from EarthStat for average yields per hectare from 1997-2003 as raster images and then the mean value per country is then calculated using zonal statistics. Data is derived from United Nations Food and Agriculture Organization (FAO), the International Food Policy Research Institute (IFPRI), the Center for Sustainability and the Global Environment (SAGE). When subnational statistics were unavailable, national figures from the Food and Agriculture Organization’s statistical database were used. List of all sources is available on EarthStat 
+#Data is extracted from EarthStat for average yields per hectare from 1997-2003 as raster images and then the mean value per country is then calculated using zonal statistics. Data is derived from United Nations Food and Agriculture Organization (FAO), the International Food Policy Research Institute (IFPRI), the Center for Sustainability and the Global Environment (SAGE). When subnational statistics were unavailable, national figures from the Food and Agriculture Organization’s statistical database were used. List of all sources is available on EarthStat 
 
 
 ### Inputs
 
-Fertilizer 
-Resolution: Five minute by five minute (~10km x 10km at equator)) 
+#Fertilizer 
+#Resolution: Five minute by five minute (~10km x 10km at equator)) 
   
-List of all sources is available on EarthStat.A major source of data was the fifth edition of “Fertilizer Use by Crop” (the FUBC5 dataset), a joint publication from the International Fertilizer Industry Association (IFA), the International Fertilizer Development Center (IFDC), the International Potash Institute (IPI), the Phosphate and Potash Institute (PPI), and the Food and Agriculture Organization of the United Nations (FAO). 
+#List of all sources is available on EarthStat.A major source of data was the fifth edition of “Fertilizer Use by Crop” (the FUBC5 dataset), a joint publication from the International Fertilizer Industry Association (IFA), the International Fertilizer Development Center (IFDC), the International Potash Institute (IPI), the Phosphate and Potash Institute (PPI), and the Food and Agriculture Organization of the United Nations (FAO). 
 
-The publication contains national-level application rate data by crop for 42 countries, compiled from the following data sources: FAO questionnaires given to member countries; IFA questionnaires given to industry companies, research institutes, and fertilizer associations; IFDC questionnaires sent to experts attending courses, seminars, and professional meetings; and IPI and PPI communications with experts. Most of the application rate data from the FUBC5 dataset are for the years 1999 or 2000, but data for some countries are as old as 1994 and as recent as 2001. 
+#The publication contains national-level application rate data by crop for 42 countries, compiled from the following data sources: FAO questionnaires given to member countries; IFA questionnaires given to industry companies, research institutes, and fertilizer associations; IFDC questionnaires sent to experts attending courses, seminars, and professional meetings; and IPI and PPI communications with experts. Most of the application rate data from the FUBC5 dataset are for the years 1999 or 2000, but data for some countries are as old as 1994 and as recent as 2001. 
 
 ## Drivers to test
   
 ### Climate: 
-Resolution: ~4-km (1/24th degree) spatial resolution averaged across 1997-2003. 
-TerraClimate uses climatically aided interpolation, combining high-spatial resolution climatological normals from the WorldClim dataset, with coarser spatial resolution, but time-varying data from CRU Ts4.0 and the Japanese 55-year Reanalysis (JRA55). 
+#Resolution: ~4-km (1/24th degree) spatial resolution averaged across 1997-2003. 
+#TerraClimate uses climatically aided interpolation, combining high-spatial resolution climatological normals from the WorldClim dataset, with coarser spatial resolution, but time-varying data from CRU Ts4.0 and the Japanese 55-year Reanalysis (JRA55). 
 
 #### Pests: 
-Resolution: Resolution: Country level. Mean from 1997-2003 derived from FAO
+#Resolution: Resolution: Country level. Mean from 1997-2003 derived from FAO
 
 ### GDP: 
-Resolution: Country level. Mean from 1997-2003 derived from WorldBank
+#Resolution: Country level. Mean from 1997-2003 derived from WorldBank
 
 ## Geographic Centers of Origin: 
 ###These are defined at the country level for each crop with regions being taken from FAOSTAT labels and publications of origins from a mixture of molecular and archaeological studies.
   
 ### Near East
-  * Barley
-  * Wheat
+#  * Barley
+#  * Wheat
     
 ### South America
-  * Cassava
-  * Groundnuts
+#  * Cassava
+#  * Groundnuts
 
 ### Central America 
-  * Maize
+#  * Maize
     
 ### China + SE Asia + India
-  * Rice
+#  * Rice
   
 ### China
-  * Soybean
-  * Millet
+#  * Soybean
+#  * Millet
   
 ### North America 
-  * Sunflower
+#  * Sunflower
 
 ### North East Africa
-  * Sorghum
+#  * Sorghum
 
 ### Central Asia, Turkey, Transcaucasia,and Iran  
-  * Rye
+#  * Rye
   
 ### Central Europe 
-  * Rapeseed
+#  * Rapeseed
   
+```
 
-```{r, Packages, include=TRUE, echo=FALSE, message=FALSE, eval=TRUE, warning=FALSE}
+
+```{r Packages, include=TRUE, echo=FALSE, message=FALSE, eval=TRUE, warning=FALSE}
+
 
 #models
 library(wPerm)
 library(caret)
-library(spatialEco)
-library(rgdal)
 library(wPerm)
+#library(spatialEco)
+#library(rgdal)
 library(RVAideMemoire)
 
 #plots
@@ -101,45 +107,40 @@ library(dplyr)
 library(Hmisc)
 ```
 
-## Yields Inside and Outside GCO 
+## Boxplots: Inside-Outside GCO
 
 <div class = "col-md-4">
-<br><br> **What Was Tested:** Do crop yields vary inside and outside GCO?
+<br><br> **What Was Tested:** Do crop yields vary inside and outside GCO? How do they vary across distance?
 </div>
 
 <div class = "col-md-4">
-<br><br> **What This Allows Me To Do:** Identify the distribution of yields inside and outside GCO and if they statistically differ 
+<br><br> **What This Allows Me To Do:** Identify the distribution of yields inside and outside GCO and if they statistically differ.
 </div>
 
 <div class = "col-md-4">
-<br><br> **What Are The Model Assumptions:** Permutations T-Tests were used to test if there is a significant difference in the means of each crop separated by inside/outside GCO. These tests were chosen as they have few assumptions about the distribution and independence of the data (i.e. exchangability is th only assumption however there is no way to test for this as we do not know the true distribution). Likewise permutational tests destroy the spatial-autocorrelation structure that influences test results. Plots are solely visual.
+<br><br> **What Are The Model Assumptions:** Permutations T-Tests were used to test if there is a significant difference in the means of each crop separated by inside/outside GCO. These tests were chosen as they have few assumptions about the distribution and independence of the data (i.e. exchangability is th only assumption however there is no way to test for this as we do not know the true distribution). Likewise permutational tests destroy the spatial-autocorrelation structure that influences test results. Plots are solely visual. 
 </div>
 
 <div class = "col-md-12">
 <br><br> **What Are The Model Assumptions:** Permutations T-Tests were used to test if there is a significant difference in the means of each crop separated by inside/outside GCO. These tests were chosen as they have few assumptions about the distribution and independence of the data (i.e. exchangability is th only assumption however there is no way to test for this as we do not know the true distribution). Likewise permutational tests destroy the spatial-autocorrelation structure that influences test results. Plots are solely visual.
+
+
 </div>
 
-```{r, Merge Mapping,echo=FALSE}
+
+```{r Boxplots, Merge Mapping,echo=FALSE,warning=FALSE}
 mapping<-read.csv("Fishnets/mapping_GCOfishnet.csv", header=T, fileEncoding = "UTF-8-BOM")
 yield<-read.csv("Fishnets/yield_fishnet.csv", header=T)
-yield.mapping<-merge(yield,mapping, by="Fishnet_ID")
-```
 
+#colors
+sighigh<-"#00ADB6"
+siglow<-"#FFA800"
+insig<-"#38474E"
 
+yield.mapping<-merge(mapping,yield)
 
-## Barley 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Barley yield with individual colors", cache=TRUE}
+# Barley 
 barley<-na.omit(yield.mapping %>% dplyr::select(barley_HgHa,barley_GCO))
-
-#Outlier removal
-hist(barley$barley_HgHa)
-qqnorm(barley$barley_HgHa)
-barley.filter<-barley %>% filter(between(barley_HgHa, quantile(barley_HgHa, .01), quantile(barley_HgHa, .99))) #remove top and bottom 1% 
-hist(barley.filter$barley_HgHa)
-qqnorm(barley.filter$barley_HgHa)
-dim(barley) - dim(barley.filter) # Num Outliers Removed
-summary(barley.filter)
-barley<-barley.filter
 
 #Inside vs Outside GCO 
 barley.inside<-filter(barley, barley_GCO == "Inside")
@@ -148,11 +149,14 @@ barley.m<-melt(barley)
 summary(barley.inside)
 summary(barley.outside)
 
+# Permutational T Test
+set.seed(8675309)
+barley.perm<-perm.t.test(barley.inside$barley_HgHa,barley.outside$barley_HgHa,progress=FALSE)
+print(barley.perm)
+
 #Plot
-ggplot(barley.m, aes(x=barley.m$barley_GCO, y=barley.m$value, color=barley.m$barley_GCO)) + 
-  geom_jitter(alpha=0.4, width=0.2) + 
-  geom_boxplot(color="black", fill="transparent", width=0.4)+
-  scale_color_manual(values = wes_palette("Darjeeling1",type = "discrete")) + 
+ggplot(barley.m, aes(x=barley.m$barley_GCO, y=barley.m$value)) + 
+  geom_boxplot(fill=sighigh, fill="transparent", width=0.4)+
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
     panel.grid.major = element_blank(),
@@ -161,14 +165,8 @@ ggplot(barley.m, aes(x=barley.m$barley_GCO, y=barley.m$value, color=barley.m$bar
     panel.background = element_blank()) + 
   ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
 
-# Permutational T Test
-set.seed(8675309)
-barley.perm<-perm.t.test(barley.inside$barley_HgHa,barley.outside$barley_HgHa,progress=FALSE)
-print(barley.perm)
-```
 
-## Cassava 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Cassava yield with individual colors,", cache=TRUE}
+# Cassava 
 cassava<-na.omit(yield.mapping %>% dplyr::select(cassava_HgHa,cassava_GCO))
 
 #Outlier removal
@@ -181,6 +179,7 @@ dim(cassava) - dim(cassava.filter) # Num Outliers Removed
 summary(cassava.filter)
 cassava<-cassava.filter
 
+
 #Inside vs Outside GCO 
 cassava.inside<-filter(cassava, cassava_GCO == "Inside")
 cassava.outside<-filter(cassava, cassava_GCO == "Outside")
@@ -188,28 +187,25 @@ cassava.m<-melt(cassava)
 summary(cassava.inside)
 summary(cassava.outside)
 
-#Plot
-ggplot(cassava.m, aes(x=cassava.m$cassava_GCO, y=cassava.m$value, color=cassava.m$cassava_GCO)) + 
-  geom_jitter(alpha=0.4, width=0.2) + 
-  geom_boxplot(color="black", fill="transparent", width=0.4)+
-  scale_color_manual(values = wes_palette("Darjeeling1",type = "discrete")) + 
-  theme_bw() +
-  theme(axis.line = element_line(colour = "black"),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    panel.border = element_blank(),
-    panel.background = element_blank()) + 
-  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
-
 # Permutational T Test
-set.seed(8675309)
+set.seed(12345)
 cassava.perm<-perm.t.test(cassava.inside$cassava_HgHa,cassava.outside$cassava_HgHa,progress=FALSE)
 print(cassava.perm)
-```
-## Groundnut 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Groundnut yield with individual colors", cache=TRUE}
-groundnut<-na.omit(yield.mapping %>% dplyr::select(groundnut_HgHa,groundnut_GCO))
 
+#Plot
+ggplot(cassava.m, aes(x=cassava.m$cassava_GCO, y=cassava.m$value)) +  geom_boxplot(fill=sighigh, fill="transparent", width=0.4)+
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+
+
+## Groundnut 
+groundnut<-na.omit(yield.mapping %>% dplyr::select(groundnut_HgHa,groundnut_GCO))
 #Outlier removal
 hist(groundnut$groundnut_HgHa)
 qqnorm(groundnut$groundnut_HgHa)
@@ -220,6 +216,7 @@ dim(groundnut) - dim(groundnut.filter) # Num Outliers Removed
 summary(groundnut.filter)
 groundnut<-groundnut.filter
 
+
 #Inside vs Outside GCO 
 groundnut.inside<-filter(groundnut, groundnut_GCO == "Inside")
 groundnut.outside<-filter(groundnut, groundnut_GCO == "Outside")
@@ -227,27 +224,23 @@ groundnut.m<-melt(groundnut)
 summary(groundnut.inside)
 summary(groundnut.outside)
 
-#Plot
-ggplot(groundnut.m, aes(x=groundnut.m$groundnut_GCO, y=groundnut.m$value, color=groundnut.m$groundnut_GCO)) + 
- geom_jitter(alpha=0.4, width=0.2) + 
-  geom_boxplot(color="black", fill="transparent", width=0.4)+
-  scale_color_manual(values = wes_palette("Darjeeling1",type = "discrete")) + 
-  theme_bw() +
-  theme(axis.line = element_line(colour = "black"),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    panel.border = element_blank(),
-    panel.background = element_blank()) + 
-  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
-
 # Permutational T Test
 set.seed(8675309)
 groundnut.perm<-perm.t.test(groundnut.inside$groundnut_HgHa,groundnut.outside$groundnut_HgHa, progress=FALSE)
 print(groundnut.perm)
 
-```
+#Plot
+ggplot(groundnut.m, aes(x=groundnut.m$groundnut_GCO, y=groundnut.m$value)) +  geom_boxplot(fill=sighigh, fill="transparent", width=0.4)+
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+
 ## Maize 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Maize yield with individual colors", cache=TRUE}
 maize<-na.omit(yield.mapping %>% dplyr::select(maize_HgHa,maize_GCO))
 
 #Outlier removal
@@ -259,6 +252,7 @@ qqnorm(maize.filter$maize_HgHa)
 dim(maize) - dim(maize.filter) # Num Outliers Removed
 summary(maize.filter)
 maize<-maize.filter
+ 
 
 #Inside vs Outside GCO 
 maize.inside<-filter(maize, maize_GCO == "Inside")
@@ -267,27 +261,22 @@ maize.m<-melt(maize)
 summary(maize.inside)
 summary(maize.outside)
 
-#Plot
-ggplot(maize.m, aes(x=maize.m$maize_GCO, y=maize.m$value, color=maize.m$maize_GCO)) + 
- geom_jitter(alpha=0.4, width=0.2) + 
-  geom_boxplot(color="black", fill="transparent", width=0.4)+
-  scale_color_manual(values = wes_palette("Darjeeling1",type = "discrete")) + 
-  theme_bw() +
-  theme(axis.line = element_line(colour = "black"),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    panel.border = element_blank(),
-    panel.background = element_blank()) + 
-  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
-
 # Permutational T Test
 set.seed(8675309)
 maize.perm<-perm.t.test(maize.inside$maize_HgHa,maize.outside$maize_HgHa, progress=FALSE)
 print(maize.perm)
 
-```
+#Plot
+ggplot(maize.m, aes(x=maize.m$maize_GCO, y=maize.m$value)) +  geom_boxplot(fill="#B9BEBE", fill="transparent", width=0.4)+
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
 ## Millet 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Millet yield with individual colors", cache=TRUE}
 millet<-na.omit(yield.mapping %>% dplyr::select(millet_HgHa,millet_GCO))
 
 #Outlier removal
@@ -300,6 +289,7 @@ dim(millet) - dim(millet.filter) # Num Outliers Removed
 summary(millet.filter)
 millet<-millet.filter
 
+
 #Inside vs Outside GCO 
 millet.inside<-filter(millet, millet_GCO == "Inside")
 millet.outside<-filter(millet, millet_GCO == "Outside")
@@ -307,26 +297,28 @@ millet.m<-melt(millet)
 summary(millet.inside)
 summary(millet.outside)
 
+# Permutational T Test
+set.seed(8675309)
+millet.perm<-perm.t.test(millet.inside$millet_HgHa,millet.outside$millet_HgHa, progress=FALSE)
+print(millet.perm)
+
 #Plot
-ggplot(millet.m, aes(x=millet.m$millet_GCO, y=millet.m$value, color=millet.m$millet_GCO)) +   
-  geom_jitter(alpha=0.4, width=0.2) + 
-  geom_boxplot(color="black", fill="transparent", width=0.4)+
-  scale_color_manual(values = wes_palette("Darjeeling1",type = "discrete")) + 
+ggplot(millet.m, aes(x=millet.m$millet_GCO, y=millet.m$value)) +  geom_boxplot(fill=siglow, fill="transparent", width=0.4)+
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    panel.border = element_blank(),
-    panel.background = element_blank()) + 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) + 
   ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
 
 # Permutational T Test
 set.seed(8675309)
 millet.perm<-perm.t.test(millet.inside$millet_HgHa,millet.outside$millet_HgHa, progress=FALSE)
 print(millet.perm)
-```
+
 ## Rapeseed 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Rapeseed yield with individual colors", cache=TRUE}
 rapeseed<-na.omit(yield.mapping %>% dplyr::select(rapeseed_HgHa,rapeseed_GCO))
 
 #Outlier removal
@@ -339,6 +331,7 @@ dim(rapeseed) - dim(rapeseed.filter) # Num Outliers Removed
 summary(rapeseed.filter)
 rapeseed<-rapeseed.filter
 
+
 #Inside vs Outside GCO 
 rapeseed.inside<-filter(rapeseed, rapeseed_GCO == "Inside")
 rapeseed.outside<-filter(rapeseed, rapeseed_GCO == "Outside")
@@ -346,26 +339,23 @@ rapeseed.m<-melt(rapeseed)
 summary(rapeseed.inside)
 summary(rapeseed.outside)
 
-#Plot
-ggplot(rapeseed.m, aes(x=rapeseed.m$rapeseed_GCO, y=rapeseed.m$value, color=rapeseed.m$rapeseed_GCO)) + 
-   geom_jitter(alpha=0.4, width=0.2) + 
-  geom_boxplot(color="black", fill="transparent", width=0.4)+
-  scale_color_manual(values = wes_palette("Darjeeling1",type = "discrete")) + 
-  theme_bw() +
-  theme(axis.line = element_line(colour = "black"),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    panel.border = element_blank(),
-    panel.background = element_blank()) + 
-  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
-
 # Permutational T Test
 set.seed(8675309)
 rapeseed.perm<-perm.t.test(rapeseed.inside$rapeseed_HgHa,rapeseed.outside$rapeseed_HgHa, progress=FALSE)
 print(rapeseed.perm)
-```
+
+#Plot
+ggplot(rapeseed.m, aes(x=rapeseed.m$rapeseed_GCO, y=rapeseed.m$value)) +  geom_boxplot(fill=siglow, fill="transparent", width=0.4)+
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+
 ## Rice 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Rice yield with individual colors", cache=TRUE}
 rice<-na.omit(yield.mapping %>% dplyr::select(rice_HgHa,rice_GCO))
 
 #Outlier removal
@@ -378,6 +368,7 @@ dim(rice) - dim(rice.filter) # Num Outliers Removed
 summary(rice.filter)
 rice<-rice.filter
 
+
 #Filter
 rice.inside<-filter(rice, rice_GCO == "Inside")
 rice.outside<-filter(rice, rice_GCO == "Outside")
@@ -385,25 +376,23 @@ rice.m<-melt(rice)
 summary(rice.inside)
 summary(rice.outside)
 
-#Plot
-ggplot(rice.m, aes(x=rice.m$rice_GCO, y=rice.m$value, color=rice.m$rice_GCO)) +   geom_jitter(alpha=0.4, width=0.2) + 
-  geom_boxplot(color="black", fill="transparent", width=0.4)+
-  scale_color_manual(values = wes_palette("Darjeeling1",type = "discrete")) + 
-  theme_bw() +
-  theme(axis.line = element_line(colour = "black"),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    panel.border = element_blank(),
-    panel.background = element_blank()) + 
-  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
-
 # Permutational T Test
 set.seed(8675309)
 rice.perm<-perm.t.test(rice.inside$rice_HgHa,rice.outside$rice_HgHa, progress=FALSE)
 print(rice.perm)
-```
+
+#Plot
+ggplot(rice.m, aes(x=rice.m$rice_GCO, y=rice.m$value)) +  geom_boxplot(fill=siglow, fill="transparent", width=0.4)+
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+
 ## Rye 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Rye yield with individual colors", cache=TRUE}
 rye<-na.omit(yield.mapping %>% dplyr::select(rye_HgHa,rye_GCO))
 
 #Outlier removal
@@ -416,6 +405,7 @@ dim(rye) - dim(rye.filter) # Num Outliers Removed
 summary(rye.filter)
 rye<-rye.filter
 
+
 #Inside vs Outside GCO 
 rye.inside<-filter(rye, rye_GCO == "Inside")
 rye.outside<-filter(rye, rye_GCO == "Outside")
@@ -423,37 +413,33 @@ rye.m<-melt(rye)
 summary(rye.inside)
 summary(rye.outside)
 
-#Plot
-ggplot(rye.m, aes(x=rye.m$rye_GCO, y=rye.m$value, color=rye.m$rye_GCO)) + 
-  geom_jitter(alpha=0.4, width=0.2) + 
-  geom_boxplot(color="black", fill="transparent", width=0.4)+
-  scale_color_manual(values = wes_palette("Darjeeling1",type = "discrete")) + 
-  theme_bw() +
-  theme(axis.line = element_line(colour = "black"),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    panel.border = element_blank(),
-    panel.background = element_blank()) + 
-  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
-
 # Permutational T Test
 set.seed(8675309)
 rye.perm<-perm.t.test(rye.inside$rye_HgHa,rye.outside$rye_HgHa,progress=FALSE)
 print(rye.perm)
-```
-## Sorghum 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Sorghum yield with individual colors", cache=TRUE}
 
+
+#Plot
+ggplot(rye.m, aes(x=rye.m$rye_GCO, y=rye.m$value)) +  geom_boxplot(fill=sighigh, fill="transparent", width=0.4)+
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+
+## Sorghum 
 sorghum<-na.omit(yield.mapping %>% dplyr::select(sorghum_HgHa,sorghum_GCO))
 
-#Outlier Removal
+#Outlier removal
 hist(sorghum$sorghum_HgHa)
 qqnorm(sorghum$sorghum_HgHa)
 sorghum.filter<-sorghum %>% filter(between(sorghum_HgHa, quantile(sorghum_HgHa, .01), quantile(sorghum_HgHa, .99))) #remove top and bottom 1% 
-hist(sorghum.filter$sorghum_HgHa)
-qqnorm(sorghum.filter$sorghum_HgHa)
+hist(sorghum$sorghum_HgHa)
+qqnorm(sorghum$sorghum_HgHa)
 dim(sorghum) - dim(sorghum.filter) # Num Outliers Removed
-summary(sorghum)
 summary(sorghum.filter)
 sorghum<-sorghum.filter
 
@@ -464,26 +450,24 @@ sorghum.m<-melt(sorghum)
 summary(sorghum.inside)
 summary(sorghum.outside)
 
-#Plot
-ggplot(sorghum.m, aes(x=sorghum.m$sorghum_GCO, y=sorghum.m$value, color=sorghum.m$sorghum_GCO)) + 
-  geom_jitter(alpha=0.4, width=0.2) + 
-  geom_boxplot(color="black", fill="transparent", width=0.4)+
-  scale_color_manual(values = wes_palette("Darjeeling1",type = "discrete")) + 
-  theme_bw() +
-  theme(axis.line = element_line(colour = "black"),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    panel.border = element_blank(),
-    panel.background = element_blank()) + 
-  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
-
 # Permutational T Test
-set.seed(8675309)
+set.seed(12345)
 sorghum.perm<-perm.t.test(sorghum.inside$sorghum_HgHa,sorghum.outside$sorghum_HgHa, progress=FALSE)
 print(sorghum.perm)
-```
+
+#Plot
+ggplot(sorghum.m, aes(x=sorghum.m$sorghum_GCO, y=sorghum.m$value)) +  geom_boxplot(fill=sighigh, fill="transparent", width=0.4)+
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+
+
 ## Soybean 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Soybean yield with individual colors", cache=TRUE}
 soybean<-na.omit(yield.mapping %>% dplyr::select(soybean_HgHa,soybean_GCO))
 
 #Outlier Removal
@@ -498,6 +482,7 @@ summary(soybean.filter)
 soybean<-soybean.filter
 
 
+
 #Inside vs Outside GCO 
 soybean.inside<-filter(soybean, soybean_GCO == "Inside")
 soybean.outside<-filter(soybean, soybean_GCO == "Outside")
@@ -505,26 +490,23 @@ soybean.m<-melt(soybean)
 summary(soybean.inside)
 summary(soybean.outside)
 
-#Plot
-ggplot(soybean.m, aes(x=soybean.m$soybean_GCO, y=soybean.m$value, color=soybean.m$soybean_GCO)) + 
- geom_jitter(alpha=0.4, width=0.2) + 
-  geom_boxplot(color="black", fill="transparent", width=0.4)+
-  scale_color_manual(values = wes_palette("Darjeeling1",type = "discrete")) + 
-  theme_bw() +
-  theme(axis.line = element_line(colour = "black"),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    panel.border = element_blank(),
-    panel.background = element_blank()) + 
-  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
-
 # Permutational T Test
 set.seed(8675309)
 soybean.perm<-perm.t.test(soybean.inside$soybean_HgHa,soybean.outside$soybean_HgHa, progress=FALSE)
 print(soybean.perm)
-```
+
+#Plot
+ggplot(soybean.m, aes(x=soybean.m$soybean_GCO, y=soybean.m$value)) +  geom_boxplot(fill=siglow, fill="transparent", width=0.4)+
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+
 ## Sunflower 
-```{r,fig.align='center',message=FALSE,warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Sunflower yield with individual colors", cache=TRUE}
 sunflower<-na.omit(yield.mapping %>% dplyr::select(sunflower_HgHa,sunflower_GCO))
 
 #Outlier Removal
@@ -538,12 +520,17 @@ summary(sunflower)
 summary(sunflower.filter)
 sunflower<-sunflower.filter
 
+
 #Inside vs Outside GCO 
 sunflower.inside<-filter(sunflower, sunflower_GCO == "Inside")
 sunflower.outside<-filter(sunflower, sunflower_GCO == "Outside")
 sunflower.m<-melt(sunflower)
 summary(sunflower.inside)
 summary(sunflower.outside)
+
+# Permutational T Test
+sunflower.perm<-perm.t.test(sunflower.inside$sunflower_HgHa,sunflower.outside$sunflower_HgHa, progress=FALSE)
+print(sunflower.perm)
 
 #Plot
 ggplot(sunflower.m, aes(x=sunflower.m$sunflower_GCO, y=sunflower.m$value, color=sunflower.m$sunflower_GCO)) + 
@@ -558,12 +545,8 @@ ggplot(sunflower.m, aes(x=sunflower.m$sunflower_GCO, y=sunflower.m$value, color=
     panel.background = element_blank()) + 
   ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
 
-# Permutational T Test
-sunflower.perm<-perm.t.test(sunflower.inside$sunflower_HgHa,sunflower.outside$sunflower_HgHa, progress=FALSE)
-print(sunflower.perm)
-```
+
 ## Wheat 
-```{r,fig.align='center',message=FALSE, warning=FALSE,fig.cap="Jittered Boxplot with mean and interquartile range shown of Wheat yield with individual colors", cache=TRUE}
 wheat<-na.omit(yield.mapping %>% dplyr::select(wheat_HgHa,wheat_GCO))
 
 #Outlier Removal
@@ -577,12 +560,17 @@ summary(wheat)
 summary(wheat.filter)
 wheat<-wheat.filter
 
+
 #Inside vs Outside GCO 
 wheat.inside<-filter(wheat, wheat_GCO == "Inside")
 wheat.outside<-filter(wheat, wheat_GCO == "Outside")
 wheat.m<-melt(wheat)
 summary(wheat.inside)
 summary(wheat.outside)
+
+# Permutational T Test
+wheat.perm<-perm.t.test(wheat.inside$wheat_HgHa,wheat.outside$wheat_HgHa, progress=FALSE)
+print(wheat.perm)
 
 #Plot
 ggplot(wheat.m, aes(x=wheat.m$wheat_GCO, y=wheat.m$value, color=wheat.m$wheat_GCO)) + 
@@ -597,9 +585,6 @@ ggplot(wheat.m, aes(x=wheat.m$wheat_GCO, y=wheat.m$value, color=wheat.m$wheat_GC
     panel.background = element_blank()) + 
   ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
 
-# Permutational T Test
-wheat.perm<-perm.t.test(wheat.inside$wheat_HgHa,wheat.outside$wheat_HgHa, progress=FALSE)
-print(wheat.perm)
 ```
 
 ## Near Analysis 
@@ -616,22 +601,24 @@ print(wheat.perm)
 <br><br> **What Are The Model Assumptions:**For generating the near table (a table of the distance centroid of each pixel outside of the GCO and crop yield) a geodesic approach was used to be more accurate at the equator and the poles. Likewise, permutational Spearman correlations are used and are non-parametric (rank ordered) and permutational. The nature of permutation means that the spatio-temporal autocorrelative structure in the data is removed. 
 </div>
 
-```{r message=TRUE, warning=FALSE, cache=TRUE}
+ 
+```{r Near Analysis, message=TRUE, warning=FALSE, cache=TRUE}
+
 ### Barley ###
-barley.near<-read.csv(file = "Near_Coded/Barley_Near.csv", header=T)
+barley.near<-read.csv(file = "Near_All/Barley_Near_Centroid.csv", header=T)
 
 #Outlier Removal
 barley.filter<-barley.near %>% filter(between(mean_barle, quantile(mean_barle, .01), quantile(mean_barle, .99))) #remove top and bottom 1% 
 barley.near<-barley.filter
-
+summary(barley.near)
 #Permutational  Correlation
-near.barley<-perm.relation(x = log10(barley.near$NEAR_DIST),barley.near$mean_barle,method = "pearson")
-print(near.barley$Observed) #coefficient
-print(near.barley$P.value) # p-value
+ 
+cor.test(x = log10(barley.near$mean_barle),log10(barley.near$NEAR_DIST),method = "pearson")
+
+
 #Plot
-ggplot(barley.near, aes(x=log10(NEAR_DIST), y=log10(barley.near$mean_barle))) +
-  geom_point(alpha=0.2, color="#00A9B4") + geom_smooth(method = "lm",color="#DB3500") +
-  theme_bw() +
+ggplot(barley.near, aes(x=log10(NEAR_DIST), y=log10(mean_barle))) +
+  geom_point(alpha=0.1, color="#00A9B4") + geom_smooth(method = "loess",color="#DB3500") + theme_bw() +
   theme(axis.line = element_line(colour = "black"),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
@@ -641,16 +628,15 @@ ggplot(barley.near, aes(x=log10(NEAR_DIST), y=log10(barley.near$mean_barle))) +
 
 
 ### Cassava ###
-cassava.near<-read.csv(file = "Near_Coded/Cassava_Near.csv", header=T)
+cassava.near<-read.csv(file = "Near_All/Cassava_Near_Centroid.csv", header=T)
 
 #Outlier Removal
 cassava.filter<-cassava.near %>% filter(between(mean_cassa, quantile(mean_cassa, .01), quantile(mean_cassa, .99))) #remove top and bottom 1% 
 cassava.near<-cassava.filter
 
 #Permutational  Correlartion
-near.cassava<-perm.relation(x = log10(cassava.near$NEAR_DIST),cassava.near$mean_cassa,method = "pearson")
-print(near.cassava$Observed) #coefficient
-print(near.cassava$P.value) # p-value
+cor.test(log10(cassava.near$NEAR_DIST+1), log10(cassava.near$mean_cassa), method = "pearson")
+
 #Plot
 ggplot(cassava.near, aes(x=log10(NEAR_DIST), y=log10(cassava.near$mean_cassa))) +
   geom_point(alpha=0.2, color="#00A9B4") + geom_smooth(method = "lm",color="#DB3500") +
@@ -664,16 +650,16 @@ ggplot(cassava.near, aes(x=log10(NEAR_DIST), y=log10(cassava.near$mean_cassa))) 
 
 
 ### Groundnut ###
-groundnut.near<-read.csv(file = "Near_Coded/Groundnut_Near.csv", header=T)
+groundnut.near<-read.csv(file = "Near_All/Groundnut_Near_Centroid.csv", header=T)
 
 #Outlier Removal
 groundnut.filter<-groundnut.near %>% filter(between(mean_groun, quantile(mean_groun, .01), quantile(mean_groun, .99))) #remove top and bottom 1% 
 groundnut.near<-groundnut.filter
 
-#Permutational  Correlartion
-near.groundnut<-perm.relation(x = log10(groundnut.near$NEAR_DIST),groundnut.near$mean_groun,method = "pearson")
-print(near.groundnut$Observed) #coefficient
-print(near.groundnut$P.value) # p-value
+#Correlartion
+
+cor.test(log10(groundnut.near$NEAR_DIST+1),log10(groundnut.near$mean_groun))
+
 #Plot
 ggplot(groundnut.near, aes(x=log10(NEAR_DIST), y=log10(groundnut.near$mean_groun))) +
   geom_point(alpha=0.2, color="#00A9B4") + geom_smooth(method = "lm",color="#DB3500") +
@@ -686,16 +672,15 @@ ggplot(groundnut.near, aes(x=log10(NEAR_DIST), y=log10(groundnut.near$mean_groun
   ylab("Log10 Yield (Hg/Ha)") +xlab("Log 10 Distance") + labs(color='GCO')
 
 ### Maize ###
-maize.near<-read.csv(file = "Near_Coded/Maize_Near.csv", header=T)
+maize.near<-read.csv(file = "Near_All/Maize_Near_Centroid.csv", header=T)
 
 #Outlier Removal
 maize.filter<-maize.near %>% filter(between(mean_maize, quantile(mean_maize, .01), quantile(mean_maize, .99))) #remove top and bottom 1% 
 maize.near<-maize.filter
 
 #Permutational  Correlation
-near.maize<-perm.relation(x = log10(maize.near$NEAR_DIST),maize.near$mean_maize,method = "pearson")
-print(near.maize$Observed) #coefficient
-print(near.maize$P.value) # p-value
+cor.test(x = log10(maize.near$NEAR_DIST+1),maize.near$mean_maize,method = "pearson")
+
 #Plot
 ggplot(maize.near, aes(x=log10(NEAR_DIST), y=log10(maize.near$mean_maize))) +
   geom_point(alpha=0.2, color="#F0AB00") +geom_smooth(method = "lm",color="#DB3500") +
@@ -708,19 +693,18 @@ ggplot(maize.near, aes(x=log10(NEAR_DIST), y=log10(maize.near$mean_maize))) +
   ylab("Log10 Yield (Hg/Ha)") +xlab("Log 10 Distance") + labs(color='GCO')
 
 ### Millet ###
-millet.near<-read.csv(file = "Near_Coded/Millet_Near.csv", header=T)
+millet.near<-read.csv(file = "Near_All/Millet_Near_Centroid.csv", header=T)
 
 #Outlier Removal
 millet.filter<-millet.near %>% filter(between(mean_mille, quantile(mean_mille, .01), quantile(mean_mille, .99))) #remove top and bottom 1% 
 millet.near<-millet.filter
 
 #Permutational  Correlation
-near.millet<-perm.relation(x = log10(millet.near$NEAR_DIST),millet.near$mean_mille,method = "pearson")
-print(near.millet$Observed) #coefficient
-print(near.millet$P.value) # p-value
+cor.test(x = log10(millet.near$NEAR_DIST+1),millet.near$mean_mille,method = "pearson")
+
 #Plot
 ggplot(millet.near, aes(x=log10(NEAR_DIST), y=log10(millet.near$mean_mille))) +
-  geom_point(alpha=0.2, color="#00A9B4") + geom_smooth(method = "lm",color="#DB3500") +
+  geom_point(alpha=0.2, color="#FFB100") + geom_smooth(method = "lm",color="#DB3500") +
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
         panel.grid.major = element_blank(),
@@ -731,19 +715,17 @@ ggplot(millet.near, aes(x=log10(NEAR_DIST), y=log10(millet.near$mean_mille))) +
 
 
 ### Rapeseed ###
-rapeseed.near<-read.csv(file = "Near_Coded/Rapeseed_Near.csv", header=T)
+rapeseed.near<-read.csv(file = "Near_All/Rapeseed_Near_Centroid.csv", header=T)
 
 #Outlier Removal
 rapeseed.filter<-rapeseed.near %>% filter(between(mean_rapes, quantile(mean_rapes, .01), quantile(mean_rapes, .99))) #remove top and bottom 1% 
 rapeseed.near<-rapeseed.filter
 
 #Permutational  Correlartion
-near.rapeseed<-perm.relation(x = log10(rapeseed.near$NEAR_DIST),rapeseed.near$mean_rapes,method = "pearson")
-print(near.rapeseed$Observed) #coefficient
-print(near.rapeseed$P.value) # p-value
-#Plot
+cor.test(x = log10(rapeseed.near$NEAR_DIST+1),rapeseed.near$mean_rapes,method = "pearson")
+
 ggplot(rapeseed.near, aes(x=log10(NEAR_DIST), y=log10(rapeseed.near$mean_rapes))) +
-  geom_point(alpha=0.2, color="#38474E") + geom_smooth(method = "lm",color="#DB3500") +
+  geom_point(alpha=0.2, color="#FFAF02") + geom_smooth(method = "lm",color="#DB3500") +
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
         panel.grid.major = element_blank(),
@@ -753,16 +735,15 @@ ggplot(rapeseed.near, aes(x=log10(NEAR_DIST), y=log10(rapeseed.near$mean_rapes))
   ylab("Log10 Yield (Hg/Ha)") +xlab("Log 10 Distance") + labs(color='GCO')
 
 ### Rice ###
-rice.near<-read.csv(file = "Near_Coded/Rice_Near.csv", header=T)
+rice.near<-read.csv(file = "Near_All/Rice_Near_Centroid.csv", header=T)
 
 #Outlier Removal
 rice.filter<-rice.near %>% filter(between(mean_rice, quantile(mean_rice, .01), quantile(mean_rice, .99))) #remove top and bottom 1% 
 rice.near<-rice.filter
 #Permutational  Correlation
 
-near.rice<-perm.relation(x = log10(rice.near$NEAR_DIST),rice.near$mean_rice,method = "pearson")
-print(near.rice$Observed) #coefficient
-print(near.rice$P.value) # p-value
+cor.test(x = log10(rice.near$NEAR_DIST+1),rice.near$mean_rice,method = "pearson")
+
 #Plot
 ggplot(rice.near, aes(x=log10(NEAR_DIST), y=log10(rice.near$mean_rice))) +
   geom_point(alpha=0.2, color="#FBA900") + geom_smooth(method = "lm",color="#DB3500") +
@@ -775,16 +756,15 @@ ggplot(rice.near, aes(x=log10(NEAR_DIST), y=log10(rice.near$mean_rice))) +
   ylab("Log10 Yield (Hg/Ha)") +xlab("Log 10 Distance") + labs(color='GCO')
 
 ### Rye ###
-rye.near<-read.csv(file = "Near_Coded/Rye_Near.csv", header=T)
+rye.near<-read.csv(file = "Near_All/Rye_Near_Centroid.csv", header=T)
 
 #Outlier Removal
 rye.filter<-rye.near %>% filter(between(mean_rye_Y, quantile(mean_rye_Y, .01), quantile(mean_rye_Y, .99))) #remove top and bottom 1% 
 rye.near<-rye.filter
 
 #Permutational  Correlation
-near.rye<-perm.relation(x = log10(rye.near$NEAR_DIST),rye.near$mean_rye_Y,method = "pearson")
-print(near.rye$Observed) #coefficient
-print(near.rye$P.value) # p-value
+cor.test(x = log10(rye.near$NEAR_DIST+1),rye.near$mean_rye_Y,method = "pearson")
+
 #Plot
 ggplot(rye.near, aes(x=log10(NEAR_DIST), y=log10(rye.near$mean_rye_Y))) +
   geom_point(alpha=0.2, color="#FFB200") +geom_smooth(method = "lm",color="#DB3500") +
@@ -797,22 +777,18 @@ ggplot(rye.near, aes(x=log10(NEAR_DIST), y=log10(rye.near$mean_rye_Y))) +
   ylab("Log10 Yield (Hg/Ha)") +xlab("Log 10 Distance") + labs(color='GCO')
 
 ### Sorghum ###
-sorghum.near<-read.csv(file = "Near_Coded/Sorghum_near.csv", header=T)
+sorghum.near<-read.csv(file = "Near_All/Sorghum_Near_Centroid.csv", header=T)
 
 #Outlier Removal
 sorghum.filter<-sorghum.near %>% filter(between(mean_sorgh, quantile(mean_sorgh, .01), quantile(mean_sorgh, .99))) #remove top and bottom 1% 
 sorghum.near<-sorghum.filter
 
 #Permutational  Correlartion
-near.sorghum<-perm.relation(x = log10(sorghum.near$NEAR_DIST),sorghum.near$mean_sorgh,method = "pearson")
-print(near.sorghum$Observed) #coefficient
-print(near.sorghum$P.value) # p-value
+cor.test(x = log10(sorghum.near$NEAR_DIST+1),sorghum.near$mean_sorgh,method = "pearson")
 
 #Plot
 ggplot(sorghum.near, aes(x=log10(NEAR_DIST), y=log10(sorghum.near$mean_sorgh))) +
-     geom_point(alpha=0.2, color="#00A9B4") +geom_smooth(method = "lm",color="#DB3500") +
-  theme_bw() +
-  theme(axis.line = element_line(colour = "black"),
+     geom_point(alpha=0.2, color="#00A9B4") +geom_smooth(method = "lm",color="#DB3500") + theme_bw() +theme(axis.line = element_line(colour = "black"),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.border = element_blank(),
@@ -820,16 +796,15 @@ ggplot(sorghum.near, aes(x=log10(NEAR_DIST), y=log10(sorghum.near$mean_sorgh))) 
   ylab("Log10 Yield (Hg/Ha)") +xlab("Log 10 Distance") + labs(color='GCO')
 
 ### Soybean ###
-soybean.near<-read.csv(file = "Near_Coded/Soybean_Near.csv", header=T)
+soybean.near<-read.csv(file = "Near_All/Soybean_Near_Centroid.csv", header=T)
 
 #Outlier Removal
 soybean.filter<-soybean.near %>% filter(between(mean_soybe, quantile(mean_soybe, .01), quantile(mean_soybe, .99))) #remove top and bottom 1% 
 soybean.near<-soybean.filter
 
 #Permutational  Correlation
-near.soybean<-perm.relation(x = log10(soybean.near$NEAR_DIST),soybean.near$mean_soybe,method = "pearson")
-print(near.soybean$Observed) #coefficient
-print(near.soybean$P.value) # p-value
+cor.test(x = log10(soybean.near$NEAR_DIST+1),soybean.near$mean_soybe,method = "pearson")
+
 #Plot
 ggplot(soybean.near, aes(x=log10(NEAR_DIST), y=log10(soybean.near$mean_soybe))) +
   geom_point(alpha=0.2, color="#00A9B4") +geom_smooth(method = "lm",color="#DB3500") +
@@ -842,14 +817,14 @@ ggplot(soybean.near, aes(x=log10(NEAR_DIST), y=log10(soybean.near$mean_soybe))) 
   ylab("Log10 Yield (Hg/Ha)") +xlab("Log 10 Distance") + labs(color='GCO')
 
 ### Sunflower ###
-sunflower.near<-read.csv(file = "Near_Coded/Sunflower_Near.csv", header=T)
+sunflower.near<-read.csv(file = "Near_All/Sunflower_Near_Centroid.csv", header=T)
 
 #Outlier Removal
 sunflower.filter<-sunflower.near %>% filter(between(mean_sunfl, quantile(mean_sunfl, .01), quantile(mean_sunfl, .99))) #remove top and bottom 1% 
 sunflower.near<-sunflower.filter
 
 #Permutational Spearman Correlation
-near.sunflower<-perm.relation(x = log10(sunflower.near$NEAR_DIST),sunflower.near$mean_sunfl,method = "pearson")
+cor.test(x = log10(sunflower.near$NEAR_DIST+1),sunflower.near$mean_sunfl,method = "pearson")
 print(near.sunflower$Observed) #coefficient
 print(near.sunflower$P.value) # p-value
 #Plot
@@ -865,20 +840,19 @@ ggplot(sunflower.near, aes(x=log10(NEAR_DIST), y=log10(sunflower.near$mean_sunfl
 
 
 ### Wheat ### 
-wheat.near<-read.csv(file = "Near_Coded/Wheat_near.csv", header=T)
+wheat.near<-read.csv(file = "Near_All/Wheat_Near_Centroid.csv", header=T)
 
 #Outlier Removal
 wheat.filter<-wheat.near %>% filter(between(mean_wheat, quantile(mean_wheat, .01), quantile(mean_wheat, .99))) #remove top and bottom 1% 
 wheat.near<-wheat.filter
 
 #Permutational  Correlartion
-near.wheat<-perm.relation(x = log10(wheat.near$NEAR_DIST),wheat.near$mean_wheat,method = "pearson")
-print(near.wheat$Observed) #coefficient
-print(near.wheat$P.value) # p-value
+cor.test(x = log10(wheat.near$NEAR_DIST+1),wheat.near$mean_wheat,method = "pearson")
+
 
 #Plot
 ggplot(wheat.near, aes(x=log10(NEAR_DIST), y=log10(wheat.near$mean_wheat))) +
-  geom_point(alpha=0.2, color="#00A9B4") + geom_smooth(method = "lm",color="#DB3500") +
+  geom_point(alpha=0.2, color="#0BAAB4") + geom_smooth(method = "lm",color="#DB3500") +
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
         panel.grid.major = element_blank(),
@@ -890,6 +864,85 @@ ggplot(wheat.near, aes(x=log10(NEAR_DIST), y=log10(wheat.near$mean_wheat))) +
 
 ```
 
+
+ 
+```{r GLS - Near Analysis, fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
+=======
+```{r: GLS - Near Analysis, Variable Direction Estimation - GLS, fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
+ 
+
+library(rcompanion)
+library(nlme)
+library(MASS)
+
+
+
+##Barley
+barley.near<-read.csv(file = "Near_Coded/Barley_Near.csv", header=T)
+summary(barley.near) #check for NAs
+
+plot(density(barley.near$mean_barle)) #check distribution
+plot(density(barley.near$NEAR_DIST)) #check distribution
+
+### OLS regression
+barley.near.ols<-lm(mean_barle ~ NEAR_DIST,, data = barley.near)
+summary(barley.near.ols)
+plot(barley.near.ols)
+hist(residuals(barley.near.ols))
+AIC(barley.near.ols) #AIC = 36206.46
+
+
+#Barley - Null Model (No Variance Structure)
+barley.null<-gls(log10(mean_barle)~ NEAR_DIST, data=barley.near)
+summary(barley.null) #AIC = 	6329.558	
+plot(barley.null) #plot residuals
+hist(residuals(barley.null)) #residual histogram
+
+#Exponential - Log Transformation
+barley.near$logYield<-log10(barley.near$mean_barle)
+barley.gls.exp.log <- gls(logYield ~ NEAR_DIST,, data = barley.near, weights = varExp())
+summary(barley.gls.exp.log) #AIC = 18521.71
+plot(barley.gls.exp.log) #plot residuals
+hist(residuals(barley.gls.exp.log)) #residual histogram
+
+
+# Pseud-R2 - Used model with lowest AIC and Best Residual Distribution
+barley.r2<-nagelkerke(barley.gls.exp.log, restrictNobs = FALSE)
+print(barley.r2)
+
+
+## Cassava
+cassava.near<-read.csv(file = "Near_Coded/Cassava_Near.csv", header=T)
+summary(cassava.near) #check for NAs
+plot(density(cassava.near$mean_cassa)) #check distribution
+plot(density(cassava.near$NEAR_DIST)) #check distribution
+
+### OLS regression
+cassava.near.ols<-lm(log10(mean_cassa) ~ NEAR_DIST,, data = cassava.near)
+summary(cassava.near.ols)
+plot(cassava.near.ols)
+hist(residuals(cassava.near.ols))
+AIC(cassava.near.ols) #AIC = 6282.759
+
+#Cassava - Null Model (No Variance Structure)
+cassava.null<-gls(log10(mean_cassa)~ NEAR_DIST, data=cassava.near)
+summary(cassava.null) #AIC = 	6329.558	
+plot(cassava.null) #plot residuals
+hist(residuals(cassava.gls.exp)) #residual histogram
+
+#Exponential - Log Transformation
+cassava.near$logYield<-log10(cassava.near$mean_cassa)
+cassava.gls.exp.log <- gls(logYield ~ NEAR_DIST,, data = cassava.near, weights = varExp())
+summary(cassava.gls.exp.log) #AIC = 6049.93	
+plot(cassava.gls.exp.log) #plot residuals
+hist(residuals(cassava.gls.exp.log)) #residual histogram
+
+# Pseud-R2 - Used model with lowest AIC and Best Residual Distribution
+library(rcompanion)
+cassava.r2<-nagelkerke(cassava.gls.exp.log, restrictNobs = FALSE)
+print(cassava.r2)
+
+```
 
 ## Random Forest Regression (RFR)
 
@@ -905,9 +958,8 @@ ggplot(wheat.near, aes(x=log10(NEAR_DIST), y=log10(wheat.near$mean_wheat))) +
 <br><br> **What Are The Model Assumptions:** The sampling is representative of the population; which is not unique and applies to all models. RFR was chosen as it has no formal distributional assumptions, random forests are non-parametric and can thus handle skewed, multimodal, and spatio-temporally autocorrelated data.
 </div>
 
+```{r Random Forest Regression, Analysis: Barley RFR, cache=TRUE} 
 ### Barley RFR 
-```{r, Analysis: Barley RFR, cache=TRUE} 
-
 rf.barley<-read.csv(file="Models/Barley_RF.csv", header = T, row.names = 1)
 rf<-na.omit(rf.barley)
 rf<-log10(rf+1)
@@ -952,11 +1004,8 @@ summary(modelerror) #make sure it worked honeyyyy
 
 #write.csv(modelerror,file="Models/Predictions/barley_predictions.csv") # export for mapping
 
-```
 
 ### Cassava RFR
-```{r, Analysis: Cassava RFR, cache=TRUE}
-
 rf.cassava<-read.csv(file="Models/Cassava_RF.csv", header = T, row.names = 1)
 rf<-na.omit(rf.cassava)
 rf<-log10(rf+1)
@@ -1001,11 +1050,9 @@ modelerror <- exp(predict(fit.rf.cassava, rf )-1) #predict on whole dataset
 summary(modelerror) #make sure it worked honeyyyy
 #write.csv(modelerror,file="Models/Predictions/cassava_predictions.csv") # export for mapping
 
-```
+
 
 ### Groundnut RFR
-```{r, Analysis: Groundnut RFR, cache=TRUE}
-
 rf.groundnut<-read.csv(file="Models/Groundnut_RF.csv", header = T, row.names = 1)
 rf<-na.omit(rf.groundnut)
 rf<-log10(rf+1)
@@ -1048,11 +1095,8 @@ modelerror <- exp(predict(fit.rf.groundnut, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
 #write.csv(modelerror,file="Models/Predictions/groundnut_predictions.csv") # export for mapping
 
-```
 
 ### Maize RFR
-```{r, Analysis: Maize RFR, cache=TRUE}
-
 rf.maize<-read.csv(file="Models/Maize_RF.csv", header = T, row.names = 1)
 rf<-na.omit(rf.maize)
 rf<-log10(rf+1)
@@ -1095,11 +1139,9 @@ modelerror <- exp(predict(fit.rf.maize, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
 #write.csv(modelerror,file="Models/Predictions/maize_predictions.csv") # export for mapping
 
-```
+
 
 ### Millet RFR 
-```{r, Analysis: Millet RFR, cache=TRUE}
-
 rf.millet<-read.csv(file="Models/Millet_RF.csv", header = T, row.names = 1)
 rf<-na.omit(rf.millet)
 rf<-log10(rf+1)
@@ -1143,11 +1185,8 @@ modelerror <- exp(predict(fit.rf.millet, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
 #write.csv(modelerror,file="Models/Predictions/millet_predictions.csv") # export for mapping
 
-```
 
 ### Rapeseed RFR
-```{r, Analysis: Rapeseed RFR, cache=TRUE}
-
 rf.rapeseed<-read.csv(file="Models/Rapeseed_RF.csv", header = T, row.names = 1)
 rf<-na.omit(rf.rapeseed)
 rf<-log10(rf+1)
@@ -1190,11 +1229,7 @@ modelerror <- exp(predict(fit.rf.rapeseed, rf )-1) #predict on whole dataset
 summary(modelerror) #make sure it worked honeyyyy
 #write.csv(modelerror,file="Models/Predictions/rapeseed_predictions.csv") # export for mapping
 
-```
-
 ### Rice RFR 
-```{r, Analysis: Rice RFR, cache=TRUE}
-
 rf.rice<-read.csv(file="Models/Rice_RF.csv", header = T, row.names = 1)
 rf<-na.omit(rf.rice)
 rf<-log10(rf+1)
@@ -1237,11 +1272,8 @@ modelerror <- exp(predict(fit.rf.rice, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
 #write.csv(modelerror,file="Models/Predictions/rice_predictions.csv") # export for mapping
 
-```
 
 ### Rye RFR
-```{r, Analysis: Rye RFR, cache=TRUE}
-
 rf.rye<-read.csv(file="Models/Rye_RF.csv", header = T, row.names = 1)
 rf<-na.omit(rf.rye)
 rf<-log10(rf+1)
@@ -1285,11 +1317,8 @@ modelerror <- exp(predict(fit.rf.rye, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
 #write.csv(modelerror,file="Models/Predictions/rye_predictions.csv") # export for mapping
 
-```
 
 ### Sorghum RFR
-```{r, Analysis: Random Forest Trial, cache=TRUE}
-
 rf.Sorghum<-read.csv(file="Models/Sorghum_RF.csv", header = T, row.names = 1)
 rf<-na.omit(rf.Sorghum)
 rf<-log10(rf+1)
@@ -1332,11 +1361,8 @@ modelerror <- exp(predict(fit.rf.Sorghum, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
 #write.csv(modelerror,file="Models/Predictions/Sorghum_predictions.csv") # export for mapping
 
-```
 
 ### Soybean RFR
-```{r, Analysis: Soybean RFR, cache=TRUE}
-
 rf.Soybean<-read.csv(file="Models/Soybean_RF.csv", header = T, row.names = 1)
 rf<-na.omit(rf.Soybean)
 rf<-log10(rf+1)
@@ -1380,11 +1406,8 @@ modelerror <- exp(predict(fit.rf.Soybean, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
 #write.csv(modelerror,file="Models/Predictions/Soybean_predictions.csv") # export for mapping
 
-```
 
 ### Sunflower RFR
-```{r, Analysis: Sunflower RFR, cache=TRUE}
-
 rf.Sunflower<-read.csv(file="Models/Sunflower_RF.csv", header = T, row.names = 1)
 rf<-na.omit(rf.Sunflower)
 rf<-log10(rf+1)
@@ -1427,11 +1450,8 @@ modelerror <- exp(predict(fit.rf.Sunflower, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
 #write.csv(modelerror,file="Models/Predictions/Sunflower_predictions.csv") # export for mapping
 
-```
 
 ### Wheat RFR
-```{r, Analysis: Wheat RFR, cache=TRUE}
-
 rf.Wheat<-read.csv(file="Models/Wheat_RF.csv", header = T, row.names = 1)
 rf<-na.omit(rf.Wheat)
 rf<-log10(rf+1)
@@ -1475,6 +1495,25 @@ modelerror <- exp(predict(fit.rf.Wheat, rf )-1) #predict on whole dataset
 head(modelerror) #make sure it worked honeyyyy
 #write.csv(modelerror,file="Models/Predictions/Wheat_predictions.csv") # export for mapping
 
+#### Make Pretty Plot of Variable Importance
+importance<-read.csv(file = "Models/VariableDirection/VariableIMP_Pivot_Graph.csv", header=T)
+importance$Crop<-factor(importance$Crop,levels=importance$Crop)
+imp.m<-melt(importance)
+
+
+plot(density(imp.m$value))
+plot(density(log10(imp.m$value))) #better on log scale
+
+
+pal<-wes_palette("Zissou1", 21, type = "continuous") #pal
+ggplot(imp.m, aes(x=imp.m$variable,y=imp.m$Crop, fill=log10(imp.m$value)))  +
+  geom_tile() + 
+  scale_fill_gradientn(colours = pal) + 
+  scale_x_discrete(expand = c(0, 0)) +
+  scale_y_discrete(expand = c(0, 0))  + 
+  coord_equal() +xlab("Variable") +ylab("Crop")  +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
 ```
 
 ## Variable Direction Estimation
@@ -1492,7 +1531,8 @@ head(modelerror) #make sure it worked honeyyyy
 </div>
 
 
-```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
+```{r Variable Direction Estimation,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
+
 ## Barley
 rf.barley<-read.csv(file="Models/Barley_RF.csv", header = T, row.names = 1)
 rf.barley<-na.omit(rf.barley)
@@ -1748,169 +1788,28 @@ wheat.pest<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$Pesticide,method = "pears
 #Fertilizer
 wheat.fert<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$wheat_Fertilizer,method = "pearson")
 #print(wheat.fert)
-```
 
-#Near Analysis - GLS
+# Tabulate in Excel and then import
+vard<-read.csv(file="Models/VariableDirection/VariableDirection.csv", header=T, row.names = 1)
 
-```{r, Variable Direction Estimation - GLS, fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
+distance<-dist(vard, method = "euclidean")
+vard.hc<-hclust(distance)
+plot(vard.hc) #reorder in excel 
 
-library(rcompanion)
-library(nlme)
-##### Barley #####
-barley.near<-read.csv(file = "Near_Coded/Barley_Near.csv", header=T)
-summary(barley.near) #check for NAs
+#reimport
+vard<-read.csv(file="Models/VariableDirection/VariableDirection_FertStandard.csv", header=T)
 
-plot(density(barley.near$mean_barle)) #check distribution
-plot(density(barley.near$NEAR_DIST)) #check distribution
-
-### OLS regression
-barley.near.ols<-lm(mean_barle ~ NEAR_DIST,, data = barley.near)
-summary(barley.near.ols)
-plot(barley.near.ols)
-hist(residuals(barley.near.ols))
-AIC(barley.near.ols) #AIC = 36206.46
-
-
-#Cassava - Null Model (No Variance Structure)
-barley.null<-gls(log10(mean_barle)~ NEAR_DIST, data=barley.near)
-summary(barley.null) #AIC = 	6329.558	
-plot(barley.null) #plot residuals
-hist(residuals(barley.null)) #residual histogram
-
-#Exponential - Log Transformation
-barley.near$logYield<-log10(barley.near$mean_barle)
-barley.gls.exp.log <- gls(logYield ~ NEAR_DIST,, data = barley.near, weights = varExp())
-summary(barley.gls.exp.log) #AIC = 18521.71
-plot(barley.gls.exp.log) #plot residuals
-hist(residuals(barley.gls.exp.log)) #residual histogram
-
-# Pseud-R2 - Used model with lowest AIC and Best Residual Distribution
-barley.r2<-nagelkerke(barley.gls.exp.log, restrictNobs = FALSE)
-print(barley.r2)
-
-
-##### Cassava #####
-cassava.near<-read.csv(file = "Near_Coded/Cassava_Near.csv", header=T)
-summary(cassava.near) #check for NAs
-plot(density(cassava.near$mean_cassa)) #check distribution
-plot(density(cassava.near$NEAR_DIST)) #check distribution
-
-### OLS regression
-cassava.near.ols<-lm(log10(mean_cassa) ~ NEAR_DIST,, data = cassava.near)
-summary(cassava.near.ols)
-plot(cassava.near.ols)
-hist(residuals(cassava.near.ols))
-AIC(cassava.near.ols) #AIC = 6282.759
-
-#Cassava - Null Model (No Variance Structure)
-cassava.null<-gls(log10(mean_cassa)~ NEAR_DIST, data=cassava.near)
-summary(cassava.null) #AIC = 	6329.558	
-plot(cassava.null) #plot residuals
-hist(residuals(cassava.gls.exp)) #residual histogram
-
-#Exponential - Log Transformation
-cassava.near$logYield<-log10(cassava.near$mean_cassa)
-cassava.gls.exp.log <- gls(logYield ~ NEAR_DIST,, data = cassava.near, weights = varExp())
-summary(cassava.gls.exp.log) #AIC = 6049.93	
-plot(cassava.gls.exp.log) #plot residuals
-hist(residuals(cassava.gls.exp.log)) #residual histogram
-
-# Pseud-R2 - Used model with lowest AIC and Best Residual Distribution
-library(rcompanion)
-cassava.r2<-nagelkerke(cassava.gls.exp.log, restrictNobs = FALSE)
-print(cassava.r2)
-
-```
-
-
-
-
-#Variable Direction Heatmap
-```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE, fig.cap="Heatmap of R2 coefficients for each variable by crop"}
-
-vard<-read.csv(file="Models/VariableDirection/VariableDirection.csv", header=T)
-
-
-#values
 vard$Crop<-factor(vard$Crop, levels=vard$Crop) #set factor
 vard.m<-melt(vard) #melt
 
 #heatmap
-ggplot(vard.m, aes(x=vard.m$Crop, y=vard.m$variable, fill=vard.m$value)) +geom_tile() + theme_bw() +theme(axis.line = element_line(colour = "black"),
+ggplot(vard.m, aes(x=vard.m$variable, y=vard.m$Crop, fill=vard.m$value)) +geom_tile() + theme_bw() +theme(axis.line = element_line(colour = "black"),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
     panel.border = element_blank(),
     panel.background = element_blank()) + 
-  ylab("Crop") +xlab("Variable") + labs(color='Rho') +scale_fill_gradient(low="white", high="#1B3C7C") +theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-
-
-```
-
-```{r,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
-#Barley 
-barley.error<-read.csv(file = "Models/Error/Barley_Error.csv", header = T)
-barley.error.filter<-barley.error %>% filter(between(Barley_Error_Ratio, quantile(Barley_Error_Ratio, .01), quantile(Barley_Error_Ratio, .99))) #remove top and bottom 1% 
-dim(barley.error)-dim(barley.error.filter) #number of pixels removed
-#write.csv(barley.error.filter,file = "Models/Error/Barley_Error_Filtered.csv")
-
-#Full Plot
-ggplot(barley.error, aes(x=Barley_Error_Ratio))+geom_density(size=0.9, color="#004F86")+geom_vline(xintercept = 1,size=1.5, color="#CE271D") +theme_bw() +theme(axis.line = element_line(colour = "black"),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),panel.background = element_blank()) +xlab("Model Error") +ylab ("Kernal Density")
-
-#Outlier Removed Plot
-ggplot(barley.error.filter, aes(x=Barley_Error_Ratio))+geom_density(size=0.9, color="#004F86")+geom_vline(xintercept = 1,size=1.5, color="#CE271D") +theme_bw() +theme(axis.line = element_line(colour = "black"),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),panel.background = element_blank()) +xlab("Model Error") +ylab ("Kernal Density")
-
-#Cassava 
-Cassava.error<-read.csv(file = "Models/Error/Cassava_Error.csv", header = T)
-Cassava.error.filter<-Cassava.error %>% filter(between(Cassava_Error_Ratio, quantile(Cassava_Error_Ratio, .01), quantile(Cassava_Error_Ratio, .99))) #remove top and bottom 1% 
-dim(Cassava.error)-dim(Cassava.error.filter) #number of pixels removed
-#write.csv(Cassava.error.filter,file = "Models/Error/Cassava_Error_Filtered.csv")
-
-#Full Plot
-ggplot(Cassava.error, aes(x=Cassava_Error_Ratio))+geom_density(size=0.9, color="#004F86")+geom_vline(xintercept = 1,size=1.5, color="#CE271D") +theme_bw() +theme(axis.line = element_line(colour = "black"),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),panel.background = element_blank()) +xlab("Model Error") +ylab ("Kernal Density")
-
-#Outlier Removed Plot
-ggplot(Cassava.error.filter, aes(x=Cassava_Error_Ratio))+geom_density(size=0.9, color="#004F86")+geom_vline(xintercept = 1,size=1.5, color="#CE271D") +theme_bw() +theme(axis.line = element_line(colour = "black"),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),panel.background = element_blank()) +xlab("Model Error") +ylab ("Kernal Density")
-
-
-#Groundnut 
-Groundnut.error<-read.csv(file = "Models/Error/Groundnut_Error.csv", header = T)
-Groundnut.error.filter<-Groundnut.error %>% filter(between(Groundnut_Error_Ratio, quantile(Groundnut_Error_Ratio, .01), quantile(Groundnut_Error_Ratio, .99))) #remove top and bottom 1% 
-dim(Groundnut.error)-dim(Groundnut.error.filter) #number of pixels removed
-#write.csv(Groundnut.error.filter,file = "Models/Error/Groundnut_Error_Filtered.csv")
-
-#Full Plot
-ggplot(Groundnut.error, aes(x=Groundnut_Error_Ratio))+geom_density(size=0.9, color="#004F86")+geom_vline(xintercept = 1,size=1.5, color="#CE271D") +theme_bw() +theme(axis.line = element_line(colour = "black"),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),panel.background = element_blank()) +xlab("Model Error") +ylab ("Kernal Density")
-
-#Outlier Removed Plot
-ggplot(Groundnut.error.filter, aes(x=Groundnut_Error_Ratio))+geom_density(size=0.9, color="#004F86")+geom_vline(xintercept = 1,size=1.5, color="#CE271D") +theme_bw() +theme(axis.line = element_line(colour = "black"),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),panel.background = element_blank()) +xlab("Model Error") +ylab ("Kernal Density")
-
-barley.5<-barley.error %>% filter(Barley_Error_Ratio < 5)
-dim(barley.error)-dim(barley.5)
-#write.csv(barley.5,file = "Models/Error/Barley_Error_5.csv")
-
-#Outlier Removed Plot - 5
-ggplot(barley.5, aes(x=Barley_Error_Ratio))+geom_density(size=0.9, color="#004F86")+geom_vline(xintercept = 1,size=1.5, color="#CE271D") +theme_bw() +theme(axis.line = element_line(colour = "black"),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),panel.background = element_blank()) +xlab("Model Error") +ylab ("Kernal Density")
-
-cassava.5<-Cassava.error %>% filter(Cassava_Error_Ratio < 5)
-dim(Cassava.error)-dim(cassava.5)
-#write.csv(cassava.5,file = "Models/Error/Cassava_Error_5.csv")
-
-#Outlier Removed Plot - 5
-ggplot(cassava.5, aes(x=Cassava_Error_Ratio))+geom_density(size=0.9, color="#004F86")+geom_vline(xintercept = 1,size=1.5, color="#CE271D") +theme_bw() +theme(axis.line = element_line(colour = "black"),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),panel.background = element_blank()) +xlab("Model Error") +ylab ("Kernal Density")
-
-groundnut.5<-Groundnut.error %>% filter(Groundnut_Error_Ratio < 5)
-dim(Groundnut.error)-dim(groundnut.5)
-1-(6972/7643)
-
-#Outlier Removed Plot - 5
-ggplot(groundnut.5, aes(x=Groundnut_Error_Ratio))+geom_density(size=0.9, color="#004F86")+geom_vline(xintercept = 1,size=1.5, color="#CE271D") +theme_bw() +theme(axis.line = element_line(colour = "black"),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),panel.background = element_blank()) +xlab("Model Error") +ylab ("Kernal Density")
-#write.csv(groundnut.5,file = "Models/Error/Groundnut_Error_5.csv")
-
-#Maize
-maize.error<-read.csv(file = "Models/Error/Maize_Error.csv", header = T)
-
-ggplot(maize, aes(x=Groundnut_Error_Ratio))+geom_density(size=0.9, color="#004F86")+geom_vline(xintercept = 1,size=1.5, color="#CE271D") +theme_bw() +theme(axis.line = element_line(colour = "black"),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),panel.border = element_blank(),panel.background = element_blank()) +xlab("Model Error") +ylab ("Kernal Density")
-
+  ylab("Crop") +xlab("Variable") + labs(color='Rho') +theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + scale_fill_viridis(name="Temperature")
+  ylab("Crop") +xlab("Variable") + labs(color='Rho') +scale_fill_gradient(low = "white", high="black") +theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 
 ```

@@ -1,0 +1,13 @@
+﻿Crop,Fertilizer ,Pesticide,Climate,Economy
+Wheat,1,0,0.2152,0.0713
+Sunflower,1,0.0784,0.319,0
+Soybean,1,0.2056,0.2883,0
+Sorghum,1,0.2474,0,0.026
+Rye,1,0.0411,0,0.4211
+Rice,1,0.048,0.0806,0
+Rapeseed,1,0,0.2898,0.2271
+Millet,1,0.3959,0.4917,0
+Maize,1,0,0.082,0.353
+Groundnut,1,0.1931,0.4064,0
+Cassava,1,9.403015075,10.05025126,0
+Barley,1,0.1012,0.1754,0
