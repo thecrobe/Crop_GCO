@@ -598,7 +598,7 @@ ggplot(wheat.m, aes(x=wheat.m$wheat_GCO, y=wheat.m$value, color=wheat.m$wheat_GC
 </div>
 
 <div class = "col-md-4">
-<br><br> **What Are The Model Assumptions:**For generating the near table (a table of the distance centroid of each pixel outside of the GCO and crop yield) a geodesic approach was used to be more accurate at the equator and the poles. Likewise, permutational Spearman correlations are used and are non-parametric (rank ordered) and permutational. The nature of permutation means that the spatio-temporal autocorrelative structure in the data is removed. 
+<br><br> **What Are The Model Assumptions:**For generating the near table (a table of the distance centroid of each pixel outside of the GCO and crop yield) a geodesic approach was used to be more accurate at the equator and the poles. Likewise, permutational
 </div>
 
  
@@ -1797,19 +1797,21 @@ vard.hc<-hclust(distance)
 plot(vard.hc) #reorder in excel 
 
 #reimport
-vard<-read.csv(file="Models/VariableDirection/VariableDirection_FertStandard.csv", header=T)
+vard<-read.csv(file="Models/VariableDirection/VariableDirection.csv", header=T)
 
 vard$Crop<-factor(vard$Crop, levels=vard$Crop) #set factor
 vard.m<-melt(vard) #melt
 
 #heatmap
-ggplot(vard.m, aes(x=vard.m$variable, y=vard.m$Crop, fill=vard.m$value)) +geom_tile() + theme_bw() +theme(axis.line = element_line(colour = "black"),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    panel.border = element_blank(),
-    panel.background = element_blank()) + 
-  ylab("Crop") +xlab("Variable") + labs(color='Rho') +theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + scale_fill_viridis(name="Temperature")
-  ylab("Crop") +xlab("Variable") + labs(color='Rho') +scale_fill_gradient(low = "white", high="black") +theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+library(reshape2)
+ggplot(vard.m, aes(x=vard.m$variable, y=vard.m$Crop, fill=vard.m$value)) + 
+  geom_tile() + 
+  scale_fill_gradientn(colours = pal) + 
+  scale_x_discrete(expand = c(0, 0)) +
+  scale_y_discrete(expand = c(0, 0))  + 
+  coord_equal() +xlab("Variable") +ylab("Crop")  +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+ scale_fill_viridis(option = "D") 
+
 
 
 ```
