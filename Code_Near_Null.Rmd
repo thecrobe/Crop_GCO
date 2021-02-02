@@ -52,7 +52,7 @@ theme_justin<-theme_bw() +theme(axis.line = element_line(colour = "black"),
 ## Near Analysis Null Models 
 
 <div class = "col-md-4">
-<br><br> **What Was Tested:** Do crop yields increase from randomply placed GCOs globally?
+<br><br> **What Was Tested:** Do crop yields increase from randomly placed GCOs globally? (T# indicated random GCO)
 </div>
 
 <div class = "col-md-4">
@@ -60,11 +60,11 @@ theme_justin<-theme_bw() +theme(axis.line = element_line(colour = "black"),
 </div>
 
 <div class = "col-md-4">
-<br><br> **What Are The Model Assumptions:** For generating the near table (a table of the distance centroid of each pixel outside of the GCO and crop yield) a geodesic approach was used to be more accurate at the equator and the poles. Likewise, permutational
+<br><br> **What Are The Model Assumptions:** GLS models are used as they have less assumptions about error structure and heteroscadicity. 
 </div>
 
- 
-```{r Near Analysis - Null T01, message=TRUE, warning=FALSE, cache=TRUE}
+#Barley -T01
+```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Barley Near Null Model, T01"}
 
 #Select Data and Rescale Distance
 null<-read.csv(file="./Near_Null/GCO_Near_T01.csv", header=T)
@@ -90,5 +90,327 @@ barley.ConstPower <- update(barley.ols, . ~., weights = varConstPower(form = ~ r
 # compare all models by AIC
 AIC(barley.ols, barley.fixed, barley.power, barley.ConstPower, barley.exp)
 #varPower
-summary(barley.exp)
+summary(barley.power)
 ```
+
+#Cassava -T01
+```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Cassava Near Null Model, T01"}
+
+#Select Data and Rescale Distance
+null<-read.csv(file="./Near_Null/GCO_Near_T01.csv", header=T)
+null$rescale_ND <- null$NEAR_DIST/(1000*1000)
+cassava.null<-null %>% select(mean_cassa,rescale_ND)
+cassava.null<-cassava.null %>% filter(mean_cassa > 0, na.rm=TRUE)
+cassava.null$logCassava<-log10(cassava.null$mean_cassa)
+
+#Plot
+ggplot(cassava.null, aes(x=rescale_ND, y=logCassava)) +geom_point() +geom_smooth(method="lm") +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+
+###  Model - Cassava T01
+# regular OLS no variance structure
+cassava.ols <- gls(logCassava ~ rescale_ND, data = cassava.null)
+# varFixed (variance changes linearly with X)
+cassava.fixed <- update(cassava.ols, .~., weights = varFixed(~rescale_ND))
+# varPower (variance changes as a power function with X)
+cassava.power <- update(cassava.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+# varExp (variance changes as an exponential function of x)
+cassava.exp <- update(cassava.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+# varConstPower (constant plus a power function of X (useful if X includes 0))
+cassava.ConstPower <- update(cassava.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+# compare all models by AIC
+AIC(cassava.ols, cassava.fixed, cassava.power, cassava.ConstPower, cassava.exp)
+#varExp
+summary(cassava.exp)
+```
+#Groundnut -T01
+```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Groundnut Near Null Model, T01"}
+
+#Select Data and Rescale Distance
+null<-read.csv(file="./Near_Null/GCO_Near_T01.csv", header=T)
+null$rescale_ND <- null$NEAR_DIST/(1000*1000)
+groundnut.null<-null %>% select(mean_groun,rescale_ND)
+groundnut.null<-groundnut.null %>% filter(mean_groun > 0, na.rm=TRUE)
+groundnut.null$logGroundnut<-log10(groundnut.null$mean_groun)
+
+#Plot
+ggplot(groundnut.null, aes(x=rescale_ND, y=logGroundnut)) +geom_point() +geom_smooth(method="lm") +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+
+###  Model - Groundnut T01
+# regular OLS no variance structure
+groundnut.ols <- gls(logGroundnut ~ rescale_ND, data = groundnut.null)
+# varFixed (variance changes linearly with X)
+groundnut.fixed <- update(groundnut.ols, .~., weights = varFixed(~rescale_ND))
+# varPower (variance changes as a power function with X)
+groundnut.power <- update(groundnut.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+# varExp (variance changes as an exponential function of x)
+groundnut.exp <- update(groundnut.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+# varConstPower (constant plus a power function of X (useful if X includes 0))
+groundnut.ConstPower <- update(groundnut.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+# compare all models by AIC
+AIC(groundnut.ols, groundnut.fixed, groundnut.power, groundnut.ConstPower, groundnut.exp)
+#varPower
+summary(groundnut.power)
+```
+#Maize -T01
+```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Maize Near Null Model, T01"}
+
+#Select Data and Rescale Distance
+null<-read.csv(file="./Near_Null/GCO_Near_T01.csv", header=T)
+null$rescale_ND <- null$NEAR_DIST/(1000*1000)
+maize.null<-null %>% select(mean_maize,rescale_ND)
+maize.null<-maize.null %>% filter(mean_maize > 0, na.rm=TRUE)
+maize.null$logMaize<-log10(maize.null$mean_maize)
+
+#Plot
+ggplot(maize.null, aes(x=rescale_ND, y=logMaize)) +geom_point() +geom_smooth(method="lm") +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+
+###  Model - Maize T01
+# regular OLS no variance structure
+maize.ols <- gls(logMaize ~ rescale_ND, data = maize.null)
+# varFixed (variance changes linearly with X)
+maize.fixed <- update(maize.ols, .~., weights = varFixed(~rescale_ND))
+# varPower (variance changes as a power function with X)
+maize.power <- update(maize.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+# varExp (variance changes as an exponential function of x) - Does not Converge
+#maize.exp <- update(maize.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+# varConstPower (constant plus a power function of X (useful if X includes 0))
+maize.ConstPower <- update(maize.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+# compare all models by AIC
+AIC(maize.ols, maize.fixed, maize.power, maize.ConstPower) #,maize.exp)
+#varPower
+summary(maize.power)
+```
+#Millet -T01
+```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Millet Near Null Model, T01"}
+
+#Select Data and Rescale Distance
+null<-read.csv(file="./Near_Null/GCO_Near_T01.csv", header=T)
+null$rescale_ND <- null$NEAR_DIST/(1000*1000)
+millet.null<-null %>% select(mean_mille,rescale_ND)
+millet.null<-millet.null %>% filter(mean_mille > 0, na.rm=TRUE)
+millet.null$logMillet<-log10(millet.null$mean_mille)
+
+#Plot
+ggplot(millet.null, aes(x=rescale_ND, y=logMillet)) +geom_point() +geom_smooth(method="lm") +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+
+###  Model - Millet T01
+# regular OLS no variance structure
+millet.ols <- gls(logMillet ~ rescale_ND, data = millet.null)
+# varFixed (variance changes linearly with X)
+millet.fixed <- update(millet.ols, .~., weights = varFixed(~rescale_ND))
+# varPower (variance changes as a power function with X)
+millet.power <- update(millet.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+# varExp (variance changes as an exponential function of x)
+millet.exp <- update(millet.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+# varConstPower (constant plus a power function of X (useful if X includes 0))
+millet.ConstPower <- update(millet.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+# compare all models by AIC
+AIC(millet.ols, millet.fixed, millet.power, millet.ConstPower, millet.exp)
+#varPower
+summary(millet.power)
+```
+#Rapeseed -T01
+```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Rapeseed Near Null Model, T01"}
+
+#Select Data and Rescale Distance
+null<-read.csv(file="./Near_Null/GCO_Near_T01.csv", header=T)
+null$rescale_ND <- null$NEAR_DIST/(1000*1000)
+rapeseed.null<-null %>% select(mean_rapes,rescale_ND)
+rapeseed.null<-rapeseed.null %>% filter(mean_rapes > 0, na.rm=TRUE)
+rapeseed.null$logRapeseed<-log10(rapeseed.null$mean_rapes)
+
+#Plot
+ggplot(rapeseed.null, aes(x=rescale_ND, y=logRapeseed)) +geom_point() +geom_smooth(method="lm") +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+
+###  Model - Rapeseed T01
+# regular OLS no variance structure
+rapeseed.ols <- gls(logRapeseed ~ rescale_ND, data = rapeseed.null)
+# varFixed (variance changes linearly with X)
+rapeseed.fixed <- update(rapeseed.ols, .~., weights = varFixed(~rescale_ND))
+# varPower (variance changes as a power function with X)
+rapeseed.power <- update(rapeseed.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+# varExp (variance changes as an exponential function of x)
+rapeseed.exp <- update(rapeseed.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+# varConstPower (constant plus a power function of X (useful if X includes 0))
+rapeseed.ConstPower <- update(rapeseed.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+# compare all models by AIC
+AIC(rapeseed.ols, rapeseed.fixed, rapeseed.power, rapeseed.ConstPower, rapeseed.exp)
+#varPower
+summary(rapeseed.power)
+```
+#Rice -T01
+```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Rice Near Null Model, T01"}
+
+#Select Data and Rescale Distance
+null$ric<-read.csv(file="./Near_Null/GCO_Near_T01.csv", header=T)
+null$rescale_ND <- null$NEAR_DIST/(1000*1000)
+rice.null<-null %>% select(mean_rice_,rescale_ND)
+rice.null<-rice.null %>% filter(mean_rice_ > 0, na.rm=TRUE)
+rice.null$logRice<-log10(rice.null$mean_rice_)
+
+#Plot
+ggplot(rice.null, aes(x=rescale_ND, y=logRice)) +geom_point() +geom_smooth(method="lm") +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+
+###  Model - Rice T01
+# regular OLS no variance structure
+rice.ols <- gls(logRice ~ rescale_ND, data = rice.null)
+# varFixed (variance changes linearly with X)
+rice.fixed <- update(rice.ols, .~., weights = varFixed(~rescale_ND))
+# varPower (variance changes as a power function with X)
+rice.power <- update(rice.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+# varExp (variance changes as an exponential function of x)
+rice.exp <- update(rice.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+# varConstPower (constant plus a power function of X (useful if X includes 0))
+rice.ConstPower <- update(rice.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+# compare all models by AIC
+AIC(rice.ols, rice.fixed, rice.power, rice.ConstPower, rice.exp)
+#varPower
+summary(rice.power)
+```
+#Rye -T01
+```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Rye Near Null Model, T01"}
+
+#Select Data and Rescale Distance
+null<-read.csv(file="./Near_Null/GCO_Near_T01.csv", header=T)
+null$rescale_ND <- null$NEAR_DIST/(1000*1000)
+rye.null<-null %>% select(mean_rye_Y,rescale_ND)
+rye.null<-rye.null %>% filter(mean_rye_Y > 0, na.rm=TRUE)
+rye.null$logRye<-log10(rye.null$mean_rye_Y)
+
+#Plot
+ggplot(rye.null, aes(x=rescale_ND, y=logRye)) +geom_point() +geom_smooth(method="lm") +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+
+###  Model - Rye T01
+# regular OLS no variance structure
+rye.ols <- gls(logRye ~ rescale_ND, data = rye.null)
+# varFixed (variance changes linearly with X)
+rye.fixed <- update(rye.ols, .~., weights = varFixed(~rescale_ND))
+# varPower (variance changes as a power function with X)
+rye.power <- update(rye.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+# varExp (variance changes as an exponential function of x)
+rye.exp <- update(rye.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+# varConstPower (constant plus a power function of X (useful if X includes 0))
+rye.ConstPower <- update(rye.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+# compare all models by AIC
+AIC(rye.ols, rye.fixed, rye.power, rye.ConstPower, rye.exp)
+#varPower
+summary(rye.power)
+```
+#Sorghum -T01
+```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Sorghum Near Null Model, T01"}
+
+#Select Data and Rescale Distance
+null<-read.csv(file="./Near_Null/GCO_Near_T01.csv", header=T)
+null$rescale_ND <- null$NEAR_DIST/(1000*1000)
+sorghum.null<-null %>% select(mean_sorgh,rescale_ND)
+sorghum.null<-sorghum.null %>% filter(mean_sorgh > 0, na.rm=TRUE)
+sorghum.null$logSorghum<-log10(sorghum.null$mean_sorgh)
+
+#Plot
+ggplot(sorghum.null, aes(x=rescale_ND, y=logSorghum)) +geom_point() +geom_smooth(method="lm") +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+
+###  Model - Sorghum T01
+# regular OLS no variance structure
+sorghum.ols <- gls(logSorghum ~ rescale_ND, data = sorghum.null)
+# varFixed (variance changes linearly with X)
+sorghum.fixed <- update(sorghum.ols, .~., weights = varFixed(~rescale_ND))
+# varPower (variance changes as a power function with X)
+sorghum.power <- update(sorghum.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+# varExp (variance changes as an exponential function of x)
+sorghum.exp <- update(sorghum.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+# varConstPower (constant plus a power function of X (useful if X includes 0))
+sorghum.ConstPower <- update(sorghum.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+# compare all models by AIC
+AIC(sorghum.ols, sorghum.fixed, sorghum.power, sorghum.ConstPower, sorghum.exp)
+#varPower
+summary(sorghum.power)
+```
+#Soybean -T01
+```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Soybean Near Null Model, T01"}
+
+#Select Data and Rescale Distance
+null<-read.csv(file="./Near_Null/GCO_Near_T01.csv", header=T)
+null$rescale_ND <- null$NEAR_DIST/(1000*1000)
+soybean.null<-null %>% select(mean_soybe,rescale_ND)
+soybean.null<-soybean.null %>% filter(mean_soybe > 0, na.rm=TRUE)
+soybean.null$logSoybean<-log10(soybean.null$mean_soybe)
+
+#Plot
+ggplot(soybean.null, aes(x=rescale_ND, y=logSoybean)) +geom_point() +geom_smooth(method="lm") +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+
+###  Model - Soybean T01
+# regular OLS no variance structure
+soybean.ols <- gls(logSoybean ~ rescale_ND, data = soybean.null)
+# varFixed (variance changes linearly with X)
+soybean.fixed <- update(soybean.ols, .~., weights = varFixed(~rescale_ND))
+# varPower (variance changes as a power function with X)
+soybean.power <- update(soybean.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+# varExp (variance changes as an exponential function of x)
+soybean.exp <- update(soybean.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+# varConstPower (constant plus a power function of X (useful if X includes 0))
+soybean.ConstPower <- update(soybean.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+# compare all models by AIC
+AIC(soybean.ols, soybean.fixed, soybean.power, soybean.ConstPower, soybean.exp)
+#varPower
+summary(soybean.power)
+```
+
+#Sunflower -T01
+```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Sunflower Near Null Model, T01"}
+
+#Select Data and Rescale Distance
+null<-read.csv(file="./Near_Null/GCO_Near_T01.csv", header=T)
+null$rescale_ND <- null$NEAR_DIST/(1000*1000)
+sunflower.null<-null %>% select(mean_sunfl,rescale_ND)
+sunflower.null<-sunflower.null %>% filter(mean_sunfl > 0, na.rm=TRUE)
+sunflower.null$logSunflower<-log10(sunflower.null$mean_sunfl)
+
+#Plot
+ggplot(sunflower.null, aes(x=rescale_ND, y=logSunflower)) +geom_point() +geom_smooth(method="lm") +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+
+###  Model - Sunflower T01
+# regular OLS no variance structure
+sunflower.ols <- gls(logSunflower ~ rescale_ND, data = sunflower.null)
+# varFixed (variance changes linearly with X)
+sunflower.fixed <- update(sunflower.ols, .~., weights = varFixed(~rescale_ND))
+# varPower (variance changes as a power function with X)
+sunflower.power <- update(sunflower.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+# varExp (variance changes as an exponential function of x)
+sunflower.exp <- update(sunflower.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+# varConstPower (constant plus a power function of X (useful if X includes 0))
+sunflower.ConstPower <- update(sunflower.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+# compare all models by AIC
+AIC(sunflower.ols, sunflower.fixed, sunflower.power, sunflower.ConstPower, sunflower.exp)
+#varPower
+summary(sunflower.power)
+```
+#Wheat -T01
+```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Wheat Near Null Model, T01"}
+
+#Select Data and Rescale Distance
+null<-read.csv(file="./Near_Null/GCO_Near_T01.csv", header=T)
+null$rescale_ND <- null$NEAR_DIST/(1000*1000)
+wheat.null<-null %>% select(mean_wheat,rescale_ND)
+wheat.null<-wheat.null %>% filter(mean_wheat > 0, na.rm=TRUE)
+wheat.null$logWheat<-log10(wheat.null$mean_wheat)
+
+#Plot
+ggplot(wheat.null, aes(x=rescale_ND, y=logWheat)) +geom_point() +geom_smooth(method="lm") +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+
+###  Model - Wheat T01
+# regular OLS no variance structure
+wheat.ols <- gls(logWheat ~ rescale_ND, data = wheat.null)
+# varFixed (variance changes linearly with X)
+wheat.fixed <- update(wheat.ols, .~., weights = varFixed(~rescale_ND))
+# varPower (variance changes as a power function with X)
+wheat.power <- update(wheat.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+# varExp (variance changes as an exponential function of x)
+wheat.exp <- update(wheat.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+# varConstPower (constant plus a power function of X (useful if X includes 0))
+wheat.ConstPower <- update(wheat.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+# compare all models by AIC
+AIC(wheat.ols, wheat.fixed, wheat.power, wheat.ConstPower, wheat.exp)
+#varPower
+summary(wheat.power)
+```
+
