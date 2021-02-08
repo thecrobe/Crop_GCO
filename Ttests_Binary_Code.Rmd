@@ -1,0 +1,587 @@
+
+---Boxplots and T-Tests"
+author: "JD Stewart (@thecrobe)"
+output:
+  html_document: default
+  pdf_document: default
+editor_options:
+  chunk_output_type: inline
+---
+
+```{r Introduction, echo=FALSE}
+
+# The goal of this study is to answer:
+
+#"Are crop yields greater inside or outside the crop's geographic center of origin as a function of escaping pest and pathogen pressure?"
+
+# Reproducibility
+
+#This document can be regenerated using Rmarkdown and the associated R-script (Analyses_Figures.R). This R-script, in combination with the supplementary data files (available online at github.com/thecrobe) also allows for full reproducibility of all the the figures and analyses conducted in R. All other analyses are conducted in ArcMap by ESRI. 
+
+## Focal Crops (n=12) Barley, Cassava, Groundnuts, Maize, Millet, Rapeseed, Rice, Rye, Sorghum, Soybean, Sunflower, Wheat
+  
+## Data Sources:
+### Crop Yields:
+#Resolution: Five minute by five minute (~10km x 10km at equator)) 
+  
+#Data is extracted from EarthStat for average yields per hectare from 1997-2003 as raster images and then the mean value per country is then calculated using zonal statistics. Data is derived from United Nations Food and Agriculture Organization (FAO), the International Food Policy Research Institute (IFPRI), the Center for Sustainability and the Global Environment (SAGE). When subnational statistics were unavailable, national figures from the Food and Agriculture Organization’s statistical database were used. List of all sources is available on EarthStat 
+
+
+### Inputs
+
+#Fertilizer 
+#Resolution: Five minute by five minute (~10km x 10km at equator)) 
+  
+#List of all sources is available on EarthStat.A major source of data was the fifth edition of “Fertilizer Use by Crop” (the FUBC5 dataset), a joint publication from the International Fertilizer Industry Association (IFA), the International Fertilizer Development Center (IFDC), the International Potash Institute (IPI), the Phosphate and Potash Institute (PPI), and the Food and Agriculture Organization of the United Nations (FAO). 
+
+#The publication contains national-level application rate data by crop for 42 countries, compiled from the following data sources: FAO questionnaires given to member countries; IFA questionnaires given to industry companies, research institutes, and fertilizer associations; IFDC questionnaires sent to experts attending courses, seminars, and professional meetings; and IPI and PPI communications with experts. Most of the application rate data from the FUBC5 dataset are for the years 1999 or 2000, but data for some countries are as old as 1994 and as recent as 2001. 
+
+## Drivers to test
+  
+### Climate: 
+#Resolution: ~4-km (1/24th degree) spatial resolution averaged across 1997-2003. 
+#TerraClimate uses climatically aided interpolation, combining high-spatial resolution climatological normals from the WorldClim dataset, with coarser spatial resolution, but time-varying data from CRU Ts4.0 and the Japanese 55-year Reanalysis (JRA55). 
+
+#### Pests: 
+#Resolution: Resolution: Country level. Mean from 1997-2003 derived from FAO
+
+### GDP: 
+#Resolution: Country level. Mean from 1997-2003 derived from WorldBank
+
+## Geographic Centers of Origin: 
+###These are defined at the country level for each crop with regions being taken from FAOSTAT labels and publications of origins from a mixture of molecular and archaeological studies.
+  
+### Near East
+#  * Barley
+#  * Wheat
+    
+### South America
+#  * Cassava
+#  * Groundnuts
+
+### Central America 
+#  * Maize
+    
+### China + SE Asia + India
+#  * Rice
+  
+### China
+#  * Soybean
+#  * Millet
+  
+### North America 
+#  * Sunflower
+
+### North East Africa
+#  * Sorghum
+
+### Central Asia, Turkey, Transcaucasia,and Iran  
+#  * Rye
+  
+### Central Europe 
+#  * Rapeseed
+  
+```
+
+
+```{r Packages, include=TRUE, echo=FALSE, message=FALSE, eval=TRUE, warning=FALSE}
+
+
+#models
+library(wPerm)
+library(caret)
+library(wPerm)
+#library(spatialEco)
+#library(rgdal)
+library(RVAideMemoire)
+
+#plots
+library(RColorBrewer)
+library(ggplot2)
+library(wesanderson)
+
+#data wrangling
+library(reshape2)
+library(dplyr)
+library(Hmisc)
+```
+
+## Boxplots: Inside-Outside GCO
+
+<div class = "col-md-4">
+<br><br> **What Was Tested:** Do crop yields vary inside and outside GCO? How do they vary across distance?
+</div>
+
+<div class = "col-md-4">
+<br><br> **What This Allows Me To Do:** Identify the distribution of yields inside and outside GCO and if they statistically differ.
+</div>
+
+<div class = "col-md-4">
+<br><br> **What Are The Model Assumptions:** Permutations T-Tests were used to test if there is a significant difference in the means of each crop separated by inside/outside GCO. These tests were chosen as they have few assumptions about the distribution and independence of the data (i.e. exchangability is th only assumption however there is no way to test for this as we do not know the true distribution). Likewise permutational tests destroy the spatial-autocorrelation structure that influences test results. Plots are solely visual. 
+</div>
+
+<div class = "col-md-12">
+<br><br> **What Are The Model Assumptions:** Permutations T-Tests were used to test if there is a significant difference in the means of each crop separated by inside/outside GCO. These tests were chosen as they have few assumptions about the distribution and independence of the data (i.e. exchangability is th only assumption however there is no way to test for this as we do not know the true distribution). Likewise permutational tests destroy the spatial-autocorrelation structure that influences test results. Plots are solely visual.
+
+
+</div>
+
+
+```{r Boxplots, Merge Mapping,echo=FALSE,warning=FALSE}
+mapping<-read.csv("Fishnets/mapping_GCOfishnet.csv", header=T, fileEncoding = "UTF-8-BOM")
+yield<-read.csv("Fishnets/yield_fishnet.csv", header=T)
+
+#colors
+sighigh<-"#00ADB6"
+siglow<-"#FFA800"
+insig<-"#38474E"
+
+yield.mapping<-merge(mapping,yield)
+
+# Barley 
+barley<-na.omit(yield.mapping %>% dplyr::select(barley_HgHa,barley_GCO))
+
+#Inside vs Outside GCO 
+barley.inside<-filter(barley, barley_GCO == "Inside")
+barley.outside<-filter(barley, barley_GCO == "Outside")
+barley.m<-melt(barley)
+summary(barley.inside)
+summary(barley.outside)
+
+# Permutational T Test
+set.seed(8675309)
+barley.perm<-perm.t.test(barley.inside$barley_HgHa,barley.outside$barley_HgHa,progress=FALSE)
+print(barley.perm)
+
+#Plot
+ggplot(barley.m, aes(x=barley.m$barley_GCO, y=barley.m$value)) + 
+  geom_boxplot(fill=sighigh, fill="transparent", width=0.4)+
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+
+# Cassava 
+cassava<-na.omit(yield.mapping %>% dplyr::select(cassava_HgHa,cassava_GCO))
+
+#Outlier removal
+hist(cassava$cassava_HgHa)
+qqnorm(cassava$cassava_HgHa)
+cassava.filter<-cassava %>% filter(between(cassava_HgHa, quantile(cassava_HgHa, .01), quantile(cassava_HgHa, .99))) #remove top and bottom 1% 
+hist(cassava.filter$cassava_HgHa)
+qqnorm(cassava.filter$cassava_HgHa)
+dim(cassava) - dim(cassava.filter) # Num Outliers Removed
+summary(cassava.filter)
+cassava<-cassava.filter
+
+
+#Inside vs Outside GCO 
+cassava.inside<-filter(cassava, cassava_GCO == "Inside")
+cassava.outside<-filter(cassava, cassava_GCO == "Outside")
+cassava.m<-melt(cassava)
+summary(cassava.inside)
+summary(cassava.outside)
+
+# Permutational T Test
+set.seed(12345)
+cassava.perm<-perm.t.test(cassava.inside$cassava_HgHa,cassava.outside$cassava_HgHa,progress=FALSE)
+print(cassava.perm)
+
+#Plot
+ggplot(cassava.m, aes(x=cassava.m$cassava_GCO, y=cassava.m$value)) +  geom_boxplot(fill=sighigh, fill="transparent", width=0.4)+
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+
+
+## Groundnut 
+groundnut<-na.omit(yield.mapping %>% dplyr::select(groundnut_HgHa,groundnut_GCO))
+#Outlier removal
+hist(groundnut$groundnut_HgHa)
+qqnorm(groundnut$groundnut_HgHa)
+groundnut.filter<-groundnut %>% filter(between(groundnut_HgHa, quantile(groundnut_HgHa, .01), quantile(groundnut_HgHa, .99))) #remove top and bottom 1% 
+hist(groundnut.filter$groundnut_HgHa)
+qqnorm(groundnut.filter$groundnut_HgHa)
+dim(groundnut) - dim(groundnut.filter) # Num Outliers Removed
+summary(groundnut.filter)
+groundnut<-groundnut.filter
+
+
+#Inside vs Outside GCO 
+groundnut.inside<-filter(groundnut, groundnut_GCO == "Inside")
+groundnut.outside<-filter(groundnut, groundnut_GCO == "Outside")
+groundnut.m<-melt(groundnut)
+summary(groundnut.inside)
+summary(groundnut.outside)
+
+# Permutational T Test
+set.seed(8675309)
+groundnut.perm<-perm.t.test(groundnut.inside$groundnut_HgHa,groundnut.outside$groundnut_HgHa, progress=FALSE)
+print(groundnut.perm)
+
+#Plot
+ggplot(groundnut.m, aes(x=groundnut.m$groundnut_GCO, y=groundnut.m$value)) +  geom_boxplot(fill=sighigh, fill="transparent", width=0.4)+
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+
+## Maize 
+maize<-na.omit(yield.mapping %>% dplyr::select(maize_HgHa,maize_GCO))
+
+#Outlier removal
+hist(maize$maize_HgHa)
+qqnorm(maize$maize_HgHa)
+maize.filter<-maize %>% filter(between(maize_HgHa, quantile(maize_HgHa, .01), quantile(maize_HgHa, .99))) #remove top and bottom 1% 
+hist(maize.filter$maize_HgHa)
+qqnorm(maize.filter$maize_HgHa)
+dim(maize) - dim(maize.filter) # Num Outliers Removed
+summary(maize.filter)
+maize<-maize.filter
+ 
+
+#Inside vs Outside GCO 
+maize.inside<-filter(maize, maize_GCO == "Inside")
+maize.outside<-filter(maize, maize_GCO == "Outside")
+maize.m<-melt(maize)
+summary(maize.inside)
+summary(maize.outside)
+
+# Permutational T Test
+set.seed(8675309)
+maize.perm<-perm.t.test(maize.inside$maize_HgHa,maize.outside$maize_HgHa, progress=FALSE)
+print(maize.perm)
+
+#Plot
+ggplot(maize.m, aes(x=maize.m$maize_GCO, y=maize.m$value)) +  geom_boxplot(fill="#B9BEBE", fill="transparent", width=0.4)+
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+## Millet 
+millet<-na.omit(yield.mapping %>% dplyr::select(millet_HgHa,millet_GCO))
+
+#Outlier removal
+hist(millet$millet_HgHa)
+qqnorm(millet$millet_HgHa)
+millet.filter<-millet %>% filter(between(millet_HgHa, quantile(millet_HgHa, .01), quantile(millet_HgHa, .99))) #remove top and bottom 1% 
+hist(millet.filter$millet_HgHa)
+qqnorm(millet.filter$millet_HgHa)
+dim(millet) - dim(millet.filter) # Num Outliers Removed
+summary(millet.filter)
+millet<-millet.filter
+
+
+#Inside vs Outside GCO 
+millet.inside<-filter(millet, millet_GCO == "Inside")
+millet.outside<-filter(millet, millet_GCO == "Outside")
+millet.m<-melt(millet)
+summary(millet.inside)
+summary(millet.outside)
+
+# Permutational T Test
+set.seed(8675309)
+millet.perm<-perm.t.test(millet.inside$millet_HgHa,millet.outside$millet_HgHa, progress=FALSE)
+print(millet.perm)
+
+#Plot
+ggplot(millet.m, aes(x=millet.m$millet_GCO, y=millet.m$value)) +  geom_boxplot(fill=siglow, fill="transparent", width=0.4)+
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+
+# Permutational T Test
+set.seed(8675309)
+millet.perm<-perm.t.test(millet.inside$millet_HgHa,millet.outside$millet_HgHa, progress=FALSE)
+print(millet.perm)
+
+## Rapeseed 
+rapeseed<-na.omit(yield.mapping %>% dplyr::select(rapeseed_HgHa,rapeseed_GCO))
+
+#Outlier removal
+hist(rapeseed$rapeseed_HgHa)
+qqnorm(rapeseed$rapeseed_HgHa)
+rapeseed.filter<-rapeseed %>% filter(between(rapeseed_HgHa, quantile(rapeseed_HgHa, .01), quantile(rapeseed_HgHa, .99))) #remove top and bottom 1% 
+hist(rapeseed.filter$rapeseed_HgHa)
+qqnorm(rapeseed.filter$rapeseed_HgHa)
+dim(rapeseed) - dim(rapeseed.filter) # Num Outliers Removed
+summary(rapeseed.filter)
+rapeseed<-rapeseed.filter
+
+
+#Inside vs Outside GCO 
+rapeseed.inside<-filter(rapeseed, rapeseed_GCO == "Inside")
+rapeseed.outside<-filter(rapeseed, rapeseed_GCO == "Outside")
+rapeseed.m<-melt(rapeseed)
+summary(rapeseed.inside)
+summary(rapeseed.outside)
+
+# Permutational T Test
+set.seed(8675309)
+rapeseed.perm<-perm.t.test(rapeseed.inside$rapeseed_HgHa,rapeseed.outside$rapeseed_HgHa, progress=FALSE)
+print(rapeseed.perm)
+
+#Plot
+ggplot(rapeseed.m, aes(x=rapeseed.m$rapeseed_GCO, y=rapeseed.m$value)) +  geom_boxplot(fill=siglow, fill="transparent", width=0.4)+
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+
+## Rice 
+rice<-na.omit(yield.mapping %>% dplyr::select(rice_HgHa,rice_GCO))
+
+#Outlier removal
+hist(rice$rice_HgHa)
+qqnorm(rice$rice_HgHa)
+rice.filter<-rice %>% filter(between(rice_HgHa, quantile(rice_HgHa, .01), quantile(rice_HgHa, .99))) #remove top and bottom 1% 
+hist(rice.filter$rice_HgHa)
+qqnorm(rice.filter$rice_HgHa)
+dim(rice) - dim(rice.filter) # Num Outliers Removed
+summary(rice.filter)
+rice<-rice.filter
+
+
+#Filter
+rice.inside<-filter(rice, rice_GCO == "Inside")
+rice.outside<-filter(rice, rice_GCO == "Outside")
+rice.m<-melt(rice)
+summary(rice.inside)
+summary(rice.outside)
+
+# Permutational T Test
+set.seed(8675309)
+rice.perm<-perm.t.test(rice.inside$rice_HgHa,rice.outside$rice_HgHa, progress=FALSE)
+print(rice.perm)
+
+#Plot
+ggplot(rice.m, aes(x=rice.m$rice_GCO, y=rice.m$value)) +  geom_boxplot(fill=siglow, fill="transparent", width=0.4)+
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+
+## Rye 
+rye<-na.omit(yield.mapping %>% dplyr::select(rye_HgHa,rye_GCO))
+
+#Outlier removal
+hist(rye$rye_HgHa)
+qqnorm(rye$rye_HgHa)
+rye.filter<-rye %>% filter(between(rye_HgHa, quantile(rye_HgHa, .01), quantile(rye_HgHa, .99))) #remove top and bottom 1% 
+hist(rye.filter$rye_HgHa)
+qqnorm(rye.filter$rye_HgHa)
+dim(rye) - dim(rye.filter) # Num Outliers Removed
+summary(rye.filter)
+rye<-rye.filter
+
+
+#Inside vs Outside GCO 
+rye.inside<-filter(rye, rye_GCO == "Inside")
+rye.outside<-filter(rye, rye_GCO == "Outside")
+rye.m<-melt(rye)
+summary(rye.inside)
+summary(rye.outside)
+
+# Permutational T Test
+set.seed(8675309)
+rye.perm<-perm.t.test(rye.inside$rye_HgHa,rye.outside$rye_HgHa,progress=FALSE)
+print(rye.perm)
+
+
+#Plot
+ggplot(rye.m, aes(x=rye.m$rye_GCO, y=rye.m$value)) +  geom_boxplot(fill=sighigh, fill="transparent", width=0.4)+
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+
+## Sorghum 
+sorghum<-na.omit(yield.mapping %>% dplyr::select(sorghum_HgHa,sorghum_GCO))
+
+#Outlier removal
+hist(sorghum$sorghum_HgHa)
+qqnorm(sorghum$sorghum_HgHa)
+sorghum.filter<-sorghum %>% filter(between(sorghum_HgHa, quantile(sorghum_HgHa, .01), quantile(sorghum_HgHa, .99))) #remove top and bottom 1% 
+hist(sorghum$sorghum_HgHa)
+qqnorm(sorghum$sorghum_HgHa)
+dim(sorghum) - dim(sorghum.filter) # Num Outliers Removed
+summary(sorghum.filter)
+sorghum<-sorghum.filter
+
+#Inside vs Outside GCO 
+sorghum.inside<-filter(sorghum, sorghum_GCO == "Inside")
+sorghum.outside<-filter(sorghum, sorghum_GCO == "Outside")
+sorghum.m<-melt(sorghum)
+summary(sorghum.inside)
+summary(sorghum.outside)
+
+# Permutational T Test
+set.seed(12345)
+sorghum.perm<-perm.t.test(sorghum.inside$sorghum_HgHa,sorghum.outside$sorghum_HgHa, progress=FALSE)
+print(sorghum.perm)
+
+#Plot
+ggplot(sorghum.m, aes(x=sorghum.m$sorghum_GCO, y=sorghum.m$value)) +  geom_boxplot(fill=sighigh, fill="transparent", width=0.4)+
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+
+
+## Soybean 
+soybean<-na.omit(yield.mapping %>% dplyr::select(soybean_HgHa,soybean_GCO))
+
+#Outlier Removal
+hist(soybean$soybean_HgHa)
+qqnorm(soybean$soybean_HgHa)
+soybean.filter<-soybean %>% filter(between(soybean_HgHa, quantile(soybean_HgHa, .01), quantile(soybean_HgHa, .99))) #remove top and bottom 1% 
+hist(soybean.filter$soybean_HgHa)
+qqnorm(soybean.filter$soybean_HgHa)
+dim(soybean) - dim(soybean.filter) # Num Outliers Removed
+summary(soybean)
+summary(soybean.filter)
+soybean<-soybean.filter
+
+
+
+#Inside vs Outside GCO 
+soybean.inside<-filter(soybean, soybean_GCO == "Inside")
+soybean.outside<-filter(soybean, soybean_GCO == "Outside")
+soybean.m<-melt(soybean)
+summary(soybean.inside)
+summary(soybean.outside)
+
+# Permutational T Test
+set.seed(8675309)
+soybean.perm<-perm.t.test(soybean.inside$soybean_HgHa,soybean.outside$soybean_HgHa, progress=FALSE)
+print(soybean.perm)
+
+#Plot
+ggplot(soybean.m, aes(x=soybean.m$soybean_GCO, y=soybean.m$value)) +  geom_boxplot(fill=siglow, fill="transparent", width=0.4)+
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+
+## Sunflower 
+sunflower<-na.omit(yield.mapping %>% dplyr::select(sunflower_HgHa,sunflower_GCO))
+
+#Outlier Removal
+hist(sunflower$sunflower_HgHa)
+qqnorm(sunflower$sunflower_HgHa)
+sunflower.filter<-sunflower %>% filter(between(sunflower_HgHa, quantile(sunflower_HgHa, .01), quantile(sunflower_HgHa, .99))) #remove top and bottom 1% 
+hist(sunflower.filter$sunflower_HgHa)
+qqnorm(sunflower.filter$sunflower_HgHa)
+dim(sunflower) - dim(sunflower.filter) # Num Outliers Removed
+summary(sunflower)
+summary(sunflower.filter)
+sunflower<-sunflower.filter
+
+
+#Inside vs Outside GCO 
+sunflower.inside<-filter(sunflower, sunflower_GCO == "Inside")
+sunflower.outside<-filter(sunflower, sunflower_GCO == "Outside")
+sunflower.m<-melt(sunflower)
+summary(sunflower.inside)
+summary(sunflower.outside)
+
+# Permutational T Test
+sunflower.perm<-perm.t.test(sunflower.inside$sunflower_HgHa,sunflower.outside$sunflower_HgHa, progress=FALSE)
+print(sunflower.perm)
+
+#Plot
+ggplot(sunflower.m, aes(x=sunflower.m$sunflower_GCO, y=sunflower.m$value, color=sunflower.m$sunflower_GCO)) + 
+  geom_jitter(alpha=0.4, width=0.2) + 
+  geom_boxplot(color="black", fill="transparent", width=0.4)+
+  scale_color_manual(values = wes_palette("Darjeeling1",type = "discrete")) + 
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+
+## Wheat 
+wheat<-na.omit(yield.mapping %>% dplyr::select(wheat_HgHa,wheat_GCO))
+
+#Outlier Removal
+hist(wheat$wheat_HgHa)
+qqnorm(wheat$wheat_HgHa)
+wheat.filter<-wheat %>% filter(between(wheat_HgHa, quantile(wheat_HgHa, .01), quantile(wheat_HgHa, .99))) #remove top and bottom 1% 
+hist(wheat.filter$wheat_HgHa)
+qqnorm(wheat.filter$wheat_HgHa)
+dim(wheat) - dim(wheat.filter) # Num Outliers Removed
+summary(wheat)
+summary(wheat.filter)
+wheat<-wheat.filter
+
+
+#Inside vs Outside GCO 
+wheat.inside<-filter(wheat, wheat_GCO == "Inside")
+wheat.outside<-filter(wheat, wheat_GCO == "Outside")
+wheat.m<-melt(wheat)
+summary(wheat.inside)
+summary(wheat.outside)
+
+# Permutational T Test
+wheat.perm<-perm.t.test(wheat.inside$wheat_HgHa,wheat.outside$wheat_HgHa, progress=FALSE)
+print(wheat.perm)
+
+#Plot
+ggplot(wheat.m, aes(x=wheat.m$wheat_GCO, y=wheat.m$value, color=wheat.m$wheat_GCO)) + 
+  geom_jitter(alpha=0.4, width=0.2) + 
+  geom_boxplot(color="black", fill="transparent", width=0.4)+
+  scale_color_manual(values = wes_palette("Darjeeling1",type = "discrete")) + 
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank()) + 
+  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+
+```

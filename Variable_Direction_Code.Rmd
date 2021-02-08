@@ -1,0 +1,348 @@
+
+## Variable Direction Estimation
+
+<div class = "col-md-4">
+<br><br> **What Was Tested:** How do crop yields increase or decrease with each single explantory variable in the RFR models? 
+</div>
+
+<div class = "col-md-4">
+<br><br> **What This Allows Me To Do:** Identify how the emergent correlations from RFR are driven by individual variables. 
+</div>
+
+<div class = "col-md-4">
+<br><br> **What Are The Model Assumptions:** Permutational Spearman rank-order correlations are used as they will identify monotonic relationships.Permutational tests were chosen as they have few assumptions about the distribution and independence of the data (i.e. exchangability is th only assumption however there is no way to test for this as we do not know the true distribution). Likewise permutational tests destroy the spatial-autocorrelation structure that influences test results. Plots are solely visual.
+</div>
+---
+title: "Random Forests"
+author: "JD Stewart (@thecrobe)"
+output:
+  html_document: default
+  pdf_document: default
+editor_options:
+  chunk_output_type: inline
+---
+```{r Introduction, echo=FALSE}
+
+# The goal of this study is to answer:
+
+#"Are crop yields greater inside or outside the crop's geographic center of origin as a function of escaping pest and pathogen pressure?"
+
+# Reproducibility
+
+#This document can be regenerated using Rmarkdown and the associated R-script (Analyses_Figures.R). This R-script, in combination with the supplementary data files (available online at github.com/thecrobe) also allows for full reproducibility of all the the figures and analyses conducted in R. All other analyses are conducted in ArcMap by ESRI. 
+```
+
+```{r Packages, include=TRUE, echo=FALSE, message=FALSE, eval=TRUE, warning=FALSE}
+
+#models
+library(wPerm)
+library(caret)
+library(wPerm)
+#library(spatialEco)
+#library(rgdal)
+library(RVAideMemoire)
+library(nlme)
+
+#plots
+library(RColorBrewer)
+library(ggplot2)
+library(wesanderson)
+
+#data wrangling
+library(reshape2)
+library(dplyr)
+library(Hmisc)
+
+### Graphics
+
+theme_justin<-theme_bw() +theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank())
+```
+
+```{r Variable Direction Estimation,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
+
+## Barley
+rf.barley<-read.csv(file="Models/Barley_RF.csv", header = T, row.names = 1)
+rf.barley<-na.omit(rf.barley)
+rf.barley<-log10(rf.barley+1)
+
+#AET
+barley.aet<-perm.relation(rf.barley$barley_HgHa,rf.barley$AET_mean,method = "pearson") 
+#print(barley.aet)
+
+#GDP
+barley.gdp<-perm.relation(rf.barley$barley_HgHa,rf.barley$GDP_Mean,method = "pearson") 
+#print(barley.gdp)
+
+#Pest
+barley.pest<-perm.relation(rf.barley$barley_HgHa,rf.barley$Pesticide,method = "pearson") 
+#print(barley.pest)
+
+#Fertilizer
+barley.fert<-perm.relation(rf.barley$barley_HgHa,rf.barley$Barley_Fertilizer,method = "pearson") #print(barley.fert)
+
+##Cassava
+rf.cassava<-read.csv(file="Models/Cassava_RF.csv", header = T, row.names = 1)
+rf.cassava$Growing_Mean<-as.numeric(rf.cassava$Growing_Mean)
+rf.cassava<-na.omit(rf.cassava)
+rf.cassava<-log10(rf.cassava+1)
+
+#AET
+cassava.aet<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$AET_mean,method = "pearson") 
+#print(cassava.aet)
+
+#GDP
+cassava.gdp<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$GDP_Mean,method = "pearson") 
+#print(cassava.gdp)
+
+#Pest
+cassava.pest<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$Pesticide,method = "pearson") 
+#print(cassava.pest)
+
+#Fertilizer
+cassava.fert<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$cassava_Fertilizer,method = "pearson")
+#print(cassava.fert)
+
+##Groundnut
+rf.groundnut<-read.csv(file="Models/Groundnut_RF.csv", header = T, row.names = 1)
+rf.groundnut$Growing_Mean<-as.numeric(rf.groundnut$Growing_Mean)
+rf.groundnut<-na.omit(rf.groundnut)
+rf.groundnut<-log10(rf.groundnut+1)
+
+#AET
+groundnut.aet<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$AET_mean,method = "pearson") 
+#print(groundnut.aet)
+
+#GDP
+groundnut.gdp<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$GDP_Mean,method = "pearson") 
+#print(groundnut.gdp)
+
+#Pest
+groundnut.pest<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$Pesticide,method = "pearson") 
+#print(groundnut.pest)
+
+#Fertilizer
+groundnut.fert<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$groundnut_Fertilizer,method = "pearson")
+#print(groundnut.fert)
+
+##Maize
+rf.maize<-read.csv(file="Models/Maize_RF.csv", header = T, row.names = 1)
+rf.maize$Growing_Mean<-as.numeric(rf.maize$Growing_Mean)
+rf.maize<-na.omit(rf.maize)
+rf.maize<-log10(rf.maize+1)
+
+#AET
+maize.aet<-perm.relation(rf.maize$maize_HgHa,rf.maize$AET_mean,method = "pearson") 
+#print(maize.aet)
+
+#GDP
+maize.gdp<-perm.relation(rf.maize$maize_HgHa,rf.maize$GDP_Mean,method = "pearson") 
+#print(maize.gdp)
+
+#Pest
+maize.pest<-perm.relation(rf.maize$maize_HgHa,rf.maize$Pesticide,method = "pearson") 
+#print(maize.pest)
+
+#Fertilizer
+maize.fert<-perm.relation(rf.maize$maize_HgHa,rf.maize$maize_Fertilizer,method = "pearson")
+#print(maize.fert)
+
+##Millet
+
+rf.millet<-read.csv(file="Models/Millet_RF.csv", header = T, row.names = 1)
+rf.millet$Growing_Mean<-as.numeric(rf.millet$Growing_Mean)
+rf.millet<-na.omit(rf.millet)
+rf.millet<-log10(rf.millet+1)
+
+#AET
+millet.aet<-perm.relation(rf.millet$millet_HgHa,rf.millet$AET_mean,method = "pearson") 
+#print(millet.aet)
+
+#GDP
+millet.gdp<-perm.relation(rf.millet$millet_HgHa,rf.millet$GDP_Mean,method = "pearson") 
+#print(millet.gdp)
+
+#Pest
+millet.pest<-perm.relation(rf.millet$millet_HgHa,rf.millet$Pesticide,method = "pearson") 
+#print(millet.pest)
+
+#Fertilizer
+millet.fert<-perm.relation(rf.millet$millet_HgHa,rf.millet$millet_Fertilizer,method = "pearson")
+#print(millet.fert)
+
+##Rapeseed
+rf.rapeseed<-read.csv(file="Models/Rapeseed_RF.csv", header = T, row.names = 1)
+rf.rapeseed<-na.omit(rf.rapeseed)
+rf.rapeseed<-log10(rf.rapeseed+1)
+
+#AET
+rapeseed.aet<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$AET_mean,method = "pearson") 
+#print(rapeseed.aet)
+
+#GDP
+rapeseed.gdp<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$GDP_Mean,method = "pearson") 
+#print(rapeseed.gdp)
+
+#Pest
+rapeseed.pest<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$Pesticide,method = "pearson") 
+#print(rapeseed.pest)
+
+#Fertilizer
+rapeseed.fert<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$rapeseed_Fertilizer,method = "pearson")
+#print(rapeseed.fert)
+
+##Rice
+rf.rice<-read.csv(file="Models/Rice_RF.csv", header = T, row.names = 1)
+rf.rice<-na.omit(rf.rice)
+rf.rice<-log10(rf.rice+1)
+
+#AET
+rice.aet<-perm.relation(rf.rice$rice_HgHa,rf.rice$AET_mean,method = "pearson") 
+#print(rice.aet)
+
+#GDP
+rice.gdp<-perm.relation(rf.rice$rice_HgHa,rf.rice$GDP_Mean,method = "pearson") 
+#print(rice.gdp)
+
+#Pest
+rice.pest<-perm.relation(rf.rice$rice_HgHa,rf.rice$Pesticide,method = "pearson") 
+#print(rice.pest)
+
+#Fertilizer
+rice.fert<-perm.relation(rf.rice$rice_HgHa,rf.rice$rice_Fertilizer,method = "pearson")
+#print(rice.fert)
+
+##Rye
+rf.rye<-read.csv(file="Models/Rye_RF.csv", header = T, row.names = 1)
+rf.rye<-na.omit(rf.rye)
+rf.rye<-log10(rf.rye+1)
+
+#AET
+rye.aet<-perm.relation(rf.rye$rye_HgHa,rf.rye$AET_mean,method = "pearson") 
+#print(rye.aet)
+
+#GDP
+rye.gdp<-perm.relation(rf.rye$rye_HgHa,rf.rye$GDP_Mean,method = "pearson") 
+#print(rye.gdp)
+
+#Pest
+rye.pest<-perm.relation(rf.rye$rye_HgHa,rf.rye$Pesticide,method = "pearson") 
+#print(rye.pest)
+
+#Fertilizer
+rye.fert<-perm.relation(rf.rye$rye_HgHa,rf.rye$rye_Fertilizer,method = "pearson")
+#print(rye.fert)
+
+##Sorghum
+rf.sorghum<-read.csv(file="Models/Sorghum_RF.csv", header = T, row.names = 1)
+rf.sorghum<-na.omit(rf.sorghum)
+rf.sorghum<-log10(rf.sorghum+1)
+
+#AET
+sorghum.aet<-perm.relation(rf.sorghum$Yield,rf.sorghum$Evapotranspiraton,method = "pearson") 
+#print(sorghum.aet)
+
+#GDP
+sorghum.gdp<-perm.relation(rf.sorghum$Yield,rf.sorghum$GDP,method = "pearson") 
+#print(sorghum.gdp)
+
+#Pest
+sorghum.pest<-perm.relation(rf.sorghum$Yield,rf.sorghum$Pesticide,method = "pearson") 
+#print(sorghum.pest)
+
+#Fertilizer
+sorghum.fert<-perm.relation(rf.sorghum$Yield,rf.sorghum$sorghum_Fertilizer,method = "pearson")
+#print(sorghum.fert)
+
+##Soybean
+rf.soybean<-read.csv(file="Models/Soybean_RF.csv", header = T, row.names = 1)
+rf.soybean<-na.omit(rf.soybean)
+rf.soybean<-log10(rf.soybean+1)
+
+#AET
+soybean.aet<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$AET_mean,method = "pearson") 
+#print(soybean.aet)
+
+#GDP
+soybean.gdp<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$GDP_Mean,method = "pearson") 
+#print(soybean.gdp)
+
+#Pest
+soybean.pest<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$Pesticide,method = "pearson") 
+#print(soybean.pest)
+
+#Fertilizer
+soybean.fert<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$soybean_Fertilizer,method = "pearson")
+#print(soybean.fert)
+
+##Sunflower
+rf.sunflower<-read.csv(file="Models/Sunflower_RF.csv", header = T, row.names = 1)
+rf.sunflower<-na.omit(rf.sunflower)
+rf.sunflower<-log10(rf.sunflower+1)
+
+#AET
+sunflower.aet<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$AET_mean,method = "pearson") 
+#print(sunflower.aet)
+
+#GDP
+sunflower.gdp<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$GDP_Mean,method = "pearson")
+#print(sunflower.gdp)
+
+#Pest
+sunflower.pest<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$Pesticide,method = "pearson") 
+#print(sunflower.pest)
+
+#Fertilizer
+sunflower.fert<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$sunflower_Fertilizer,method = "pearson")
+#print(sunflower.fert)
+
+##Wheat
+rf.wheat<-read.csv(file="Models/Wheat_RF.csv", header = T, row.names = 1)
+rf.wheat<-na.omit(rf.wheat)
+rf.wheat<-log10(rf.wheat+1)
+
+#AET
+wheat.aet<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$AET_mean,method = "pearson") 
+#print(wheat.aet)
+
+#GDP
+wheat.gdp<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$GDP_Mean,method = "pearson") 
+#print(wheat.gdp)
+
+#Pest
+wheat.pest<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$Pesticide,method = "pearson")
+#print(wheat.pest)
+
+#Fertilizer
+wheat.fert<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$wheat_Fertilizer,method = "pearson")
+#print(wheat.fert)
+
+# Tabulate in Excel and then import
+vard<-read.csv(file="Models/VariableDirection/VariableDirection.csv", header=T, row.names = 1)
+
+distance<-dist(vard, method = "euclidean")
+vard.hc<-hclust(distance)
+plot(vard.hc) #reorder in excel 
+
+#reimport
+vard<-read.csv(file="Models/VariableDirection/VariableDirection.csv", header=T)
+
+vard$Crop<-factor(vard$Crop, levels=vard$Crop) #set factor
+vard.m<-melt(vard) #melt
+
+#heatmap
+library(reshape2)
+ggplot(vard.m, aes(x=vard.m$variable, y=vard.m$Crop, fill=vard.m$value)) + 
+  geom_tile() + 
+  scale_fill_gradientn(colours = pal) + 
+  scale_x_discrete(expand = c(0, 0)) +
+  scale_y_discrete(expand = c(0, 0))  + 
+  coord_equal() +xlab("Variable") +ylab("Crop")  +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+ scale_fill_viridis(option = "D") 
+
+
+
+```
