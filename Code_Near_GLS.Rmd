@@ -354,9 +354,9 @@ soybean.exp <- update(soybean.ols, . ~., weights = varExp(form = ~ rescale_ND)) 
 # varConstPower (constant plus a power function of X (useful if X includes 0))
 soybean.ConstPower <- update(soybean.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
 # compare all models by AIC
-AIC(soybean.ols, soybean.fixed, soybean.power, soybean.ConstPower, soybean.exp)
+AIC(soybean.ols, soybean.exp)
 #varPower
-summary(soybean.power)
+summary(soybean.exp)
 ```
 
 #Sunflower -
@@ -384,9 +384,9 @@ sunflower.exp <- update(sunflower.ols, . ~., weights = varExp(form = ~ rescale_N
 # varConstPower (constant plus a power function of X (useful if X includes 0))
 sunflower.ConstPower <- update(sunflower.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
 # compare all models by AIC
-AIC(sunflower.ols, sunflower.fixed, sunflower.power, sunflower.ConstPower, sunflower.exp)
+AIC(sunflower.ols,  sunflower.ConstPower, sunflower.exp)
 #varPower
-summary(sunflower.power)
+summary(sunflower.ConstPower)
 ```
 #Wheat -
 ```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Wheat Near near Model, "}
