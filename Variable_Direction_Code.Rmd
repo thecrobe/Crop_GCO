@@ -13,7 +13,7 @@
 <br><br> **What Are The Model Assumptions:** Permutational Spearman rank-order correlations are used as they will identify monotonic relationships.Permutational tests were chosen as they have few assumptions about the distribution and independence of the data (i.e. exchangability is th only assumption however there is no way to test for this as we do not know the true distribution). Likewise permutational tests destroy the spatial-autocorrelation structure that influences test results. Plots are solely visual.
 </div>
 ---
-title: "Random Forests"
+title: "Variable Direction"
 author: "JD Stewart (@thecrobe)"
 output:
   html_document: default
@@ -47,6 +47,8 @@ library(nlme)
 library(RColorBrewer)
 library(ggplot2)
 library(wesanderson)
+library(viridis)
+library(viridisLite)
 
 #data wrangling
 library(reshape2)

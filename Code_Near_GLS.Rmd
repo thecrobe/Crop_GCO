@@ -77,7 +77,6 @@ barley.near$logBarley<-log10(barley.near$mean_barle)
 #Plot
 ggplot(barley.near, aes(x=rescale_ND, y=logBarley)) +
   geom_point(alpha=0.1, color="#00A9B4") + geom_smooth(method = "lm",color="#DB3500") + labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
-
 ###  Model - Barley 
 # regular OLS no variance structure
 barley.ols <- gls(logBarley ~ rescale_ND, data = barley.near)
