@@ -14,7 +14,7 @@ output: html_document
 #This document can be regenerated using Rmarkdown and the associated R-script (Analyses_Figures.R). This R-script, in combination with the supplementary data files (available online at github.com/thecrobe) also allows for full reproducibility of all the the figures and analyses conducted in R. All other analyses are conducted in ArcMap by ESRI. 
 ```
 
-## Near Analysis Models 
+# Near Analysis Models 
 
 <div class = "col-md-4">
 <br><br> **What Was Tested:** Do crop yields increase from GCOs globally as a function of fertilizer? Note that since some crops have the same GCOs their distance bands are calculated once. 
@@ -28,11 +28,12 @@ output: html_document
 <br><br> **What Are The Model Assumptions:** GLS models are used as they have less assumptions about error structure and heteroscadicity. 
 </div>
 
+
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
 library(rgdal)
 library(maptools)
 library(rgeos)
-fishnet<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Near_Fert.")
+fishnet<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Near_Fertilizer")
 
 ### Get Lat-Long Baby Girl and apply metadata
 xy <- coordinates(fishnet)
@@ -40,10 +41,61 @@ metadata <- fishnet@data
 sapply(metadata, "class")
 plot(fishnet) #Fishnet only contains pixels with fertilizer input
 ```
-
+## Barley 
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
-barley.wheat<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/GCO_Shapefiles/", layer="Barley_Wheat")
-plot(barley.wheat) #check her!
-barley.wheat.centr <- gCentroid(barley.wheat, byid = FALSE) #calculate centroid
+barley<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Barley_Wheat_Centroid") #Import GCO Centroid
+barley.c<-coordinates(barley.wheat) #Extract Lat-Long
+distances <- spDistsN1(xy,barley.c, longlat = FALSE) #Calculate Near Distances
+data<-cbind(data.frame(metadata),data.frame(distances)) #Merge into a DF
+data$rescale_ND<-data$distances/(1000*1000) #Rescale distances 
+data<-data %>% filter(barley_Fer > 0, na.rm=TRUE) #select Fertilizer > 0 
 
+#Pivot Table To ID Top Fertilizer Applications by Country Sum 
+barley.pivot<-dcast(data, COUNTRY ~., value.var="barley_Fer", fun.aggregate=sum)
+barley.pivot<-arrange(barley.pivot,.)
+tail(barley.pivot, 3) #ID Top 3 Fertilizer Countries
+sum(barley.pivot$.) #Total Fertilizer
+
+#Filter Countries
+china<-filter(data, COUNTRY == "China") 
+china.Fert.Perc<-sum(china$barley_Fer)/sum(barley.pivot$.) 
+print(China.Fert.Perc) # % of Global Fertilizer For Crop 
+china.color<-"#1665AF"
+summary(china)
+
+usa<-filter(data, COUNTRY == "United States")
+usa.Fert.Perc<-sum(usa$barley_Fer)/sum(barley.pivot$.) 
+print(usa.Fert.Perc) # % of Global Fertilizer For Crop 
+usa.color<-"#9225D8"
+
+canada<-filter(data, COUNTRY == "India")
+canada.Fert.Perc<-sum(canada$barley_Fer)/sum(barley.pivot$.) 
+print(canada.Fert.Perc) # % of Global Fertilizer For Crop 
+india.color<-"#98C24B"
+
+#Plot 
+ggplot(data, aes(x=rescale_ND,y=log10(data$barley_Fer))) + 
+      geom_point(alpha=0.3) +theme_justin + 
+      geom_point(data=china, aes(x=rescale_ND, y=log10(china$barley_Fer)), color=china.color, alpha=0.1) + 
+      geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$barley_Fer)), color=usa.color, alpha=0.2) + 
+      geom_point(data=canada, aes(x=rescale_ND, y=log10(canada$barley_Fer)), color=canada.color, alpha=0.1) + 
+      geom_smooth(method="lm", color="red") +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Fertilizer Input")
+
+###  Model - Barley Fertilizer Near
+library(nlme)
+data$logBarley<-log10(data$barley_Fer)
+# regular OLS no variance structure
+barley.fert.ols <- gls(logBarley ~ rescale_ND, data = data)
+# varFixed (variance changes linearly with X)
+barley.fert.fixed <- update(barley.ols, .~., weights = varFixed(~rescale_ND))
+# varPower (variance changes as a power function with X)
+barley.fert.power <- update(barley.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+# varExp (variance changes as an exponential function of x)
+barley.fert.exp <- update(barley.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+# varConstPower (constant plus a power function of X (useful if X includes 0))
+barley.fert.ConstPower <- update(barley.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+# compare all models by AIC
+AIC(barley.fert.ols, barley.fert.fixed, barley.fert.power, barley.fert.ConstPower, barley.fert.exp)
+#Power
+summary(barley.fert.power)
 ```
