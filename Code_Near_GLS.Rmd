@@ -71,6 +71,7 @@ near<-read.csv(file = "Near_All/Barley_Near_Centroid.csv", header=T)
 near$rescale_ND <- near$NEAR_DIST/(1000*1000)
 barley.near<-near %>% select(mean_barle,rescale_ND)
 barley.near<-barley.near %>% filter(mean_barle > 0, na.rm=TRUE)
+barley.near<-barley.near %>% filter(rescale_ND > 0, na.rm=TRUE)
 barley.near$logBarley<-log10(barley.near$mean_barle)
 
 #Plot
@@ -91,7 +92,7 @@ barley.ConstPower <- update(barley.ols, . ~., weights = varConstPower(form = ~ r
 # compare all models by AIC
 AIC(barley.ols, barley.fixed, barley.power, barley.ConstPower, barley.exp)
 #varPower
-summary(barley.power)
+summary(barley.exp)
 ```
 
 #Cassava -
@@ -102,7 +103,10 @@ near<-read.csv(file = "Near_All/Cassava_Near_Centroid.csv", header=T)
 near$rescale_ND <- near$NEAR_DIST/(1000*1000)
 cassava.near<-near %>% select(mean_cassa,rescale_ND)
 cassava.near<-cassava.near %>% filter(mean_cassa > 0, na.rm=TRUE)
+cassava.near<-cassava.near %>% filter(rescale_ND > 0, na.rm=TRUE)
 cassava.near$logCassava<-log10(cassava.near$mean_cassa)
+
+summary(cassava.near)
 
 #Plot
 ggplot(cassava.near, aes(x=rescale_ND, y=logCassava)) +
@@ -132,6 +136,7 @@ near<-read.csv(file = "Near_All/Groundnut_Near_Centroid.csv", header=T)
 near$rescale_ND <- near$NEAR_DIST/(1000*1000)
 groundnut.near<-near %>% select(mean_groun,rescale_ND)
 groundnut.near<-groundnut.near %>% filter(mean_groun > 0, na.rm=TRUE)
+groundnut.near<-groundnut.near %>% filter(rescale_ND > 0, na.rm=TRUE)
 groundnut.near$logGroundnut<-log10(groundnut.near$mean_groun)
 
 #Plot
@@ -144,15 +149,15 @@ groundnut.ols <- gls(logGroundnut ~ rescale_ND, data = groundnut.near)
 # varFixed (variance changes linearly with X)
 groundnut.fixed <- update(groundnut.ols, .~., weights = varFixed(~rescale_ND))
 # varPower (variance changes as a power function with X)
-# Does Not Run groundnut.power <- update(groundnut.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+groundnut.power <- update(groundnut.ols, . ~ ., weights = varPower(form = ~rescale_ND))
 # varExp (variance changes as an exponential function of x)
 groundnut.exp <- update(groundnut.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
 # varConstPower (constant plus a power function of X (useful if X includes 0))
-# Does not convergegroundnut.ConstPower <- update(groundnut.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+groundnut.ConstPower <- update(groundnut.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
 # compare all models by AIC
 AIC(groundnut.ols, groundnut.ConstPower,groundnut.power, groundnut.fixed, groundnut.exp)
 #varPower
-summary(groundnut.power)
+summary(groundnut.exp)
 ```
 #Maize -
 ```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Maize Near near Model, "}
@@ -162,6 +167,7 @@ near<-read.csv(file = "Near_All/Maize_Near_Centroid.csv", header=T)
 near$rescale_ND <- near$NEAR_DIST/(1000*1000)
 maize.near<-near %>% select(mean_maize,rescale_ND)
 maize.near<-maize.near %>% filter(mean_maize > 0, na.rm=TRUE)
+maize.near<-maize.near %>% filter(rescale_ND > 0, na.rm=TRUE)
 maize.near$logMaize<-log10(maize.near$mean_maize)
 
 #Plot
@@ -180,7 +186,7 @@ maize.exp <- update(maize.ols, . ~., weights = varExp(form = ~ rescale_ND)) # er
 maize.ConstPower <- update(maize.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
 # compare all models by AIC
 AIC(maize.ols, maize.fixed, maize.power, maize.ConstPower,maize.exp)
-#OLS but chost varExp as AIC is close
+#varExp
 summary(maize.exp)
 ```
 #Millet -
@@ -191,6 +197,7 @@ near<-read.csv(file="Near_All/Millet_Near_Centroid.csv", header=T)
 near$rescale_ND <- near$NEAR_DIST/(1000*1000)
 millet.near<-near %>% select(mean_mille,rescale_ND)
 millet.near<-millet.near %>% filter(mean_mille > 0, na.rm=TRUE)
+millet.near<-millet.near %>% filter(rescale_ND > 0, na.rm=TRUE)
 millet.near$logMillet<-log10(millet.near$mean_mille)
 
 #Plot
@@ -220,6 +227,7 @@ near<-read.csv(file="./Near_All/Rapeseed_Near_Centroid.csv", header=T)
 near$rescale_ND <- near$NEAR_DIST/(1000*1000)
 rapeseed.near<-near %>% select(mean_rapes,rescale_ND)
 rapeseed.near<-rapeseed.near %>% filter(mean_rapes > 0, na.rm=TRUE)
+rapeseed.near<-rapeseed.near %>% filter(rescale_ND > 0, na.rm=TRUE)
 rapeseed.near$logRapeseed<-log10(rapeseed.near$mean_rapes)
 
 #Plot
@@ -239,7 +247,7 @@ rapeseed.ConstPower <- update(rapeseed.ols, . ~., weights = varConstPower(form =
 # compare all models by AIC
 AIC(rapeseed.ols, rapeseed.fixed, rapeseed.power, rapeseed.ConstPower, rapeseed.exp)
 #varPower
-summary(rapeseed.power)
+summary(rapeseed.exp)
 ```
 #Rice -
 ```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Rice Near near Model, "}
@@ -248,7 +256,8 @@ summary(rapeseed.power)
 near<-read.csv(file="./Near_All/Rice_Near_Centroid.csv", header=T)
 near$rescale_ND <- near$NEAR_DIST/(1000*1000)
 rice.near<-near %>% select(mean_rice,rescale_ND)
-rice.near<-rice.near %>% filter(mean_rice> 0, na.rm=TRUE)
+rice.near<-rice.near %>% filter(mean_rice > 0, na.rm=TRUE)
+rice.near<-rice.near %>% filter(rescale_ND > 0, na.rm=TRUE)
 rice.near$logRice<-log10(rice.near$mean_rice)
 
 #Plot
@@ -278,6 +287,7 @@ near<-read.csv(file="./Near_All/Rye_Near_Centroid.csv", header=T)
 near$rescale_ND <- near$NEAR_DIST/(1000*1000)
 rye.near<-near %>% select(mean_rye_Y,rescale_ND)
 rye.near<-rye.near %>% filter(mean_rye_Y > 0, na.rm=TRUE)
+rye.near<-rye.near %>% filter(rescale_ND > 0, na.rm=TRUE)
 rye.near$logRye<-log10(rye.near$mean_rye_Y)
 
 #Plot
@@ -306,6 +316,7 @@ summary(rye.ConstPower)
 near<-read.csv(file="./Near_All/Sorghum_Near_Centroid.csv", header=T)
 near$rescale_ND <- near$NEAR_DIST/(1000*1000)
 sorghum.near<-near %>% select(mean_sorgh,rescale_ND)
+sorghum.near<-sorghum.near %>% filter(rescale_ND > 0, na.rm=TRUE)
 sorghum.near<-sorghum.near %>% filter(mean_sorgh > 0, na.rm=TRUE)
 sorghum.near$logSorghum<-log10(sorghum.near$mean_sorgh)
 
@@ -336,6 +347,7 @@ near<-read.csv(file="./Near_All/Soybean_Near_Centroid.csv", header=T)
 near$rescale_ND <- near$NEAR_DIST/(1000*1000)
 soybean.near<-near %>% select(mean_soybe,rescale_ND)
 soybean.near<-soybean.near %>% filter(mean_soybe > 0, na.rm=TRUE)
+soybean.near<-soybean.near %>% filter(rescale_ND > 0, na.rm=TRUE)
 soybean.near$logSoybean<-log10(soybean.near$mean_soybe)
 
 #Plot
@@ -353,7 +365,7 @@ soybean.exp <- update(soybean.ols, . ~., weights = varExp(form = ~ rescale_ND)) 
 # varConstPower (constant plus a power function of X (useful if X includes 0))
 soybean.ConstPower <- update(soybean.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
 # compare all models by AIC
-AIC(soybean.ols, soybean.exp)
+AIC(soybean.ols, soybean.fixed, soybean.power, soybean.exp, soybean.ConstPower)
 #varPower
 summary(soybean.exp)
 ```
@@ -366,6 +378,7 @@ near<-read.csv(file="Near_All/Sunflower_Near_Centroid.csv", header=T)
 near$rescale_ND <- near$NEAR_DIST/(1000*1000)
 sunflower.near<-near %>% select(mean_sunfl,rescale_ND)
 sunflower.near<-sunflower.near %>% filter(mean_sunfl > 0, na.rm=TRUE)
+sunflower.near<-sunflower.near %>% filter(rescale_ND > 0, na.rm=TRUE)
 sunflower.near$logSunflower<-log10(sunflower.near$mean_sunfl)
 
 #Plot
@@ -383,7 +396,7 @@ sunflower.exp <- update(sunflower.ols, . ~., weights = varExp(form = ~ rescale_N
 # varConstPower (constant plus a power function of X (useful if X includes 0))
 sunflower.ConstPower <- update(sunflower.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
 # compare all models by AIC
-AIC(sunflower.ols,  sunflower.ConstPower, sunflower.exp)
+AIC(sunflower.ols, sunflower.fixed, sunflower.power,sunflower.ConstPower, sunflower.exp)
 #varPower
 summary(sunflower.ConstPower)
 ```
@@ -395,6 +408,7 @@ near<-read.csv(file="Near_All/Wheat_Near_Centroid.csv", header=T)
 near$rescale_ND <- near$NEAR_DIST/(1000*1000)
 wheat.near<-near %>% select(mean_wheat,rescale_ND)
 wheat.near<-wheat.near %>% filter(mean_wheat > 0, na.rm=TRUE)
+wheat.near<-wheat.near %>% filter(rescale_ND> 0, na.rm=TRUE)
 wheat.near$logWheat<-log10(wheat.near$mean_wheat)
 
 #Plot
