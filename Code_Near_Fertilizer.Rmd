@@ -33,6 +33,18 @@ output: html_document
 library(rgdal)
 library(maptools)
 library(rgeos)
+library(ggplot2)
+library(dplyr)
+library(reshape2)
+
+#ggplot graphic parameters
+theme_justin<-theme_bw() +theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank())
+
+#Import Fishnet
 fishnet<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Near_Fertilizer")
 
 ### Get Lat-Long Baby Girl and apply metadata
@@ -58,19 +70,19 @@ sum(barley.pivot$.) #Total Fertilizer
 
 #Filter Countries
 china<-filter(data, COUNTRY == "China") 
-china.Fert.Perc<-sum(china$barley_Fer)/sum(barley.pivot$.) 
-print(China.Fert.Perc) # % of Global Fertilizer For Crop 
+china.Perc<-sum(china$barley_Fer)/sum(barley.pivot$.) 
+print(china.Perc) # % of Global Fertilizer For Crop 
 china.color<-"#1665AF"
 summary(china)
 
 usa<-filter(data, COUNTRY == "United States")
-usa.Fert.Perc<-sum(usa$barley_Fer)/sum(barley.pivot$.) 
-print(usa.Fert.Perc) # % of Global Fertilizer For Crop 
+usa.Perc<-sum(usa$barley_Fer)/sum(barley.pivot$.) 
+print(usa.Perc) # % of Global Fertilizer For Crop 
 usa.color<-"#8F4A33"
 
 canada<-filter(data, COUNTRY == "Canada")
-canada.Fert.Perc<-sum(canada$barley_Fer)/sum(barley.pivot$.) 
-print(canada.Fert.Perc) # % of Global Fertilizer For Crop 
+canada.Perc<-sum(canada$barley_Fer)/sum(barley.pivot$.) 
+print(canada.Perc) # % of Global Fertilizer For Crop 
 canada.color<-"#98C24B"
 
 #Plot 
@@ -85,18 +97,19 @@ ggplot(data, aes(x=rescale_ND,y=log10(data$barley_Fer))) +
 library(nlme)
 data$logBarley<-log10(data$barley_Fer)
 # regular OLS no variance structure
-barley.fert.ols <- gls(logBarley ~ rescale_ND, data = data)
+barley.ols <- gls(logBarley ~ rescale_ND, data = data)
 # varFixed (variance changes linearly with X)
-barley.fert.fixed <- update(barley.ols, .~., weights = varFixed(~rescale_ND))
+barley.fixed <- update(barley.ols, .~., weights = varFixed(~rescale_ND))
 # varPower (variance changes as a power function with X)
-barley.fert.power <- update(barley.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+barley.power <- update(barley.ols, . ~ ., weights = varPower(form = ~rescale_ND))
 # varExp (variance changes as an exponential function of x)
-barley.fert.exp <- update(barley.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+barley.exp <- update(barley.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
 # varConstPower (constant plus a power function of X (useful if X includes 0))
-barley.fert.ConstPower <- update(barley.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+barley.ConstPower <- update(barley.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
 # compare all models by AIC
-AIC(barley.fert.ols, barley.fert.fixed, barley.fert.power, barley.fert.ConstPower, barley.fert.exp)
-summary(barley.fert.power)
+AIC(barley.ols, barley.fixed, barley.power, barley.ConstPower, barley.exp)
+summary(barley.power)
+
 ```
 
 ## Cassava 
@@ -116,19 +129,19 @@ sum(cassava.pivot$.) #Total Fertilizer
 
 #Filter Countries
 china<-filter(data, COUNTRY == "China") 
-china.Fert.Perc<-sum(china$cassava_Fer)/sum(cassava.pivot$.) 
-print(China.Fert.Perc) # % of Global Fertilizer For Crop 
+china.Perc<-sum(china$cassava_Fer)/sum(cassava.pivot$.) 
+print(china.Perc) # % of Global Fertilizer For Crop 
 china.color<-"#1665AF"
 summary(china)
 
 brazil<-filter(data, COUNTRY == "Brazil")
-brazil.Fert.Perc<-sum(brazil$cassava_Fer)/sum(cassava.pivot$.) 
-print(brazil.Fert.Perc) # % of Global Fertilizer For Crop 
+brazil.Perc<-sum(brazil$cassava_Fer)/sum(cassava.pivot$.) 
+print(brazil.Perc) # % of Global Fertilizer For Crop 
 brazil.color<-"#E28D15"
 
 usa<-filter(data, COUNTRY == "United States")
-usa.Fert.Perc<-sum(usa$cassava_Fer)/sum(cassava.pivot$.) 
-print(usa.Fert.Perc) # % of Global Fertilizer For Crop 
+usa.Perc<-sum(usa$cassava_Fer)/sum(cassava.pivot$.) 
+print(usa.Perc) # % of Global Fertilizer For Crop 
 usa.color<-"#8F4A33"
 
 
@@ -144,18 +157,18 @@ ggplot(data, aes(x=rescale_ND,y=log10(data$cassava_Fe))) +
 library(nlme)
 data$logCassava<-log10(data$cassava_Fe)
 # regular OLS no variance structure
-cassava.fert.ols <- gls(logCassava ~ rescale_ND, data = data)
+cassava.ols <- gls(logCassava ~ rescale_ND, data = data)
 # varFixed (variance changes linearly with X)
-cassava.fert.fixed <- update(cassava.ols, .~., weights = varFixed(~rescale_ND))
+cassava.fixed <- update(cassava.ols, .~., weights = varFixed(~rescale_ND))
 # varPower (variance changes as a power function with X)
-cassava.fert.power <- update(cassava.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+cassava.power <- update(cassava.ols, . ~ ., weights = varPower(form = ~rescale_ND))
 # varExp (variance changes as an exponential function of x)
-cassava.fert.exp <- update(cassava.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+cassava.exp <- update(cassava.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
 # varConstPower (constant plus a power function of X (useful if X includes 0))
-cassava.fert.ConstPower <- update(cassava.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+cassava.ConstPower <- update(cassava.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
 # compare all models by AIC
-AIC(cassava.fert.ols, cassava.fert.fixed, cassava.fert.power, cassava.fert.ConstPower, cassava.fert.exp)
-summary(cassava.fert.exp)
+AIC(cassava.ols, cassava.fixed, cassava.power, cassava.ConstPower, cassava.exp)
+summary(cassava.exp)
 ```
 ## Groundnut 
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
@@ -174,19 +187,19 @@ sum(groundnut.pivot$.) #Total Fertilizer
 
 #Filter Countries
 china<-filter(data, COUNTRY == "China") 
-china.Fert.Perc<-sum(china$groundnut_Fer)/sum(groundnut.pivot$.) 
-print(China.Fert.Perc) # % of Global Fertilizer For Crop 
+china.Perc<-sum(china$groundnut_Fer)/sum(groundnut.pivot$.) 
+print(china.Perc) # % of Global Fertilizer For Crop 
 china.color<-"#1665AF"
 summary(china)
 
 india<-filter(data, COUNTRY == "India")
-india.Fert.Perc<-sum(canada$groundnut_Fer)/sum(groundnut.pivot$.) 
-print(india.Fert.Perc) # % of Global Fertilizer For Crop 
+india.Perc<-sum(canada$groundnut_Fer)/sum(groundnut.pivot$.) 
+print(india.Perc) # % of Global Fertilizer For Crop 
 india.color<-"#078D40"
 
 usa<-filter(data, COUNTRY == "United States")
-usa.Fert.Perc<-sum(usa$groundnut_Fer)/sum(groundnut.pivot$.) 
-print(usa.Fert.Perc) # % of Global Fertilizer For Crop 
+usa.Perc<-sum(usa$groundnut_Fer)/sum(groundnut.pivot$.) 
+print(usa.Perc) # % of Global Fertilizer For Crop 
 usa.color<-"#8F4A33"
 
 #Plot 
@@ -201,17 +214,527 @@ ggplot(data, aes(x=rescale_ND,y=log10(data$groundnut_))) +
 library(nlme)
 data$logGroundnut<-log10(data$groundnut_)
 # regular OLS no variance structure
-groundnut.fert.ols <- gls(logGroundnut ~ rescale_ND, data = data)
+groundnut.ols <- gls(logGroundnut ~ rescale_ND, data = data)
 # varFixed (variance changes linearly with X)
-groundnut.fert.fixed <- update(groundnut.ols, .~., weights = varFixed(~rescale_ND))
+groundnut.fixed <- update(groundnut.ols, .~., weights = varFixed(~rescale_ND))
 # varPower (variance changes as a power function with X)
-groundnut.fert.power <- update(groundnut.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+groundnut.power <- update(groundnut.ols, . ~ ., weights = varPower(form = ~rescale_ND))
 # varExp (variance changes as an exponential function of x)
-groundnut.fert.exp <- update(groundnut.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+groundnut.exp <- update(groundnut.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
 # varConstPower (constant plus a power function of X (useful if X includes 0))
-groundnut.fert.ConstPower <- update(groundnut.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+groundnut.ConstPower <- update(groundnut.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
 # compare all models by AIC
-AIC(groundnut.fert.ols, groundnut.fert.fixed, groundnut.fert.power, groundnut.fert.ConstPower, groundnut.fert.exp)
-summary(groundnut.fert.exp)
+AIC(groundnut.ols, groundnut.fixed, groundnut.power, groundnut.ConstPower, groundnut.exp)
+summary(groundnut.exp)
+```
+## Sorghum 
+```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
+sorghum<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Sorghum_Centroid") #Import GCO Centroid
+sorghum.c<-coordinates(sorghum) #Extract Lat-Long
+distances <- spDistsN1(xy,sorghum.c, longlat = FALSE) #Calculate Near Distances
+data<-cbind(data.frame(metadata),data.frame(distances)) #Merge into a DF
+data$rescale_ND<-data$distances/(1000*1000) #Rescale distances 
+data<-data %>% filter(sorghum_Fe > 0, na.rm=TRUE) #select Fertilizer > 0 
+summary(data)
+#Pivot Table To ID Top Fertilizer Applications by Country Sum 
+sorghum.pivot<-dcast(data, COUNTRY ~., value.var="sorghum_Fe", fun.aggregate=sum)
+sorghum.pivot<-arrange(sorghum.pivot,.)
+tail(sorghum.pivot, 3) #ID Top 3 Fertilizer Countries
+sum(sorghum.pivot$.) #Total Fertilizer
+
+#Filter Countries
+china<-filter(data, COUNTRY == "China") 
+china.Perc<-sum(china$sorghum_Fe)/sum(sorghum.pivot$.) 
+print(china.Perc) # % of Global Fertilizer For Crop 
+china.color<-"#1665AF"
+summary(china)
+
+usa<-filter(data, COUNTRY == "United States")
+usa.Perc<-sum(usa$sorghum_Fe)/sum(sorghum.pivot$.) 
+print(usa.Perc) # % of Global Fertilizer For Crop 
+usa.color<-"#8F4A33"
+
+mexico<-filter(data, COUNTRY == "Mexico")
+mexico.Perc<-sum(mexico$sorghum_Fe)/sum(sorghum.pivot$.) 
+print(mexico.Perc) # % of Global Fertilizer For Crop 
+mexico.color<-"#96AEEA"
+
+#Plot 
+ggplot(data, aes(x=rescale_ND,y=log10(data$sorghum_Fe))) + 
+      geom_point(alpha=0.3) +theme_justin + 
+      geom_point(data=china, aes(x=rescale_ND, y=log10(china$sorghum_Fe)), color=china.color, alpha=0.1) + 
+      geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$sorghum_Fe)), color=usa.color, alpha=0.2) + 
+      geom_point(data=mexico, aes(x=rescale_ND, y=log10(mexico$sorghum_Fe)), color=mexico.color, alpha=0.1) + 
+      geom_smooth(method="lm", color="red") +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Fertilizer Input")
+
+###  Model - Sorghum Fertilizer Near
+library(nlme)
+data$logSorghum<-log10(data$sorghum_Fe)
+# regular OLS no variance structure
+sorghum.ols <- gls(logSorghum ~ rescale_ND, data = data)
+# varFixed (variance changes linearly with X)
+sorghum.fixed <- update(sorghum.ols, .~., weights = varFixed(~rescale_ND))
+# varPower (variance changes as a power function with X)
+sorghum.power <- update(sorghum.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+# varExp (variance changes as an exponential function of x)
+#sorghum.exp <- update(sorghum.ols,.~., weights = varExp(form = ~ rescale_ND)) # does not converge
+# varConstPower (constant plus a power function of X (useful if X includes 0))
+sorghum.ConstPower <- update(sorghum.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+# compare all models by AIC
+AIC(sorghum.ols, sorghum.fixed, sorghum.power, sorghum.ConstPower) #sorghum.exp)
+summary(sorghum.ConstPower)
+```
+
+## Soybean 
+```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
+soybean<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Soy_Millet_Centroid") #Import GCO Centroid
+soybean.c<-coordinates(soybean) #Extract Lat-Long
+distances <- spDistsN1(xy,soybean.c, longlat = FALSE) #Calculate Near Distances
+data<-cbind(data.frame(metadata),data.frame(distances)) #Merge into a DF
+data$rescale_ND<-data$distances/(1000*1000) #Rescale distances 
+data<-data %>% filter(soybean_Fe > 0, na.rm=TRUE) #select Fertilizer > 0 
+
+#Pivot Table To ID Top Fertilizer Applications by Country Sum 
+soybean.pivot<-dcast(data, COUNTRY ~., value.var="soybean_Fe", fun.aggregate=sum)
+soybean.pivot<-arrange(soybean.pivot,.)
+tail(soybean.pivot, 3) #ID Top 3 Fertilizer Countries
+sum(soybean.pivot$.) #Total Fertilizer
+
+#Filter Countries
+china<-filter(data, COUNTRY == "China") 
+china.Perc<-sum(china$soybean_Fe)/sum(soybean.pivot$.) 
+print(china.Perc) # % of Global Fertilizer For Crop 
+china.color<-"#1665AF"
+summary(china)
+
+usa<-filter(data, COUNTRY == "United States")
+usa.Perc<-sum(usa$soybean_Fe)/sum(soybean.pivot$.) 
+print(usa.Perc) # % of Global Fertilizer For Crop 
+usa.color<-"#8F4A33"
+
+brazil<-filter(data, COUNTRY == "Brazil")
+brazil.Perc<-sum(brazil$soybean_Fe)/sum(cassava.pivot$.) 
+print(brazil.Perc) # % of Global Fertilizer For Crop 
+brazil.color<-"#E28D15"
+
+#Plot 
+ggplot(data, aes(x=rescale_ND,y=log10(data$soybean_Fe))) + 
+      geom_point(alpha=0.3) +theme_justin + 
+      geom_point(data=china, aes(x=rescale_ND, y=log10(china$soybean_Fe)), color=china.color, alpha=0.1) + 
+      geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$soybean_Fe)), color=usa.color, alpha=0.2) + 
+      geom_point(data=brazil, aes(x=rescale_ND, y=log10(brazil$soybean_Fe)), color=brazil.color, alpha=0.3) + 
+      geom_smooth(method="lm", color="red") +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Fertilizer Input")
+
+###  Model - Soybean Fertilizer Near
+library(nlme)
+data$logSoybean<-log10(data$soybean_Fe)
+# regular OLS no variance structure
+soybean.ols <- gls(logSoybean ~ rescale_ND, data = data)
+# varFixed (variance changes linearly with X)
+soybean.fixed <- update(soybean.ols, .~., weights = varFixed(~rescale_ND))
+# varPower (variance changes as a power function with X)
+soybean.power <- update(soybean.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+# varExp (variance changes as an exponential function of x)
+soybean.exp <- update(soybean.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+# varConstPower (constant plus a power function of X (useful if X includes 0))
+soybean.ConstPower <- update(soybean.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+# compare all models by AIC
+AIC(soybean.ols, soybean.fixed, soybean.power, soybean.ConstPower, soybean.exp)
+summary(soybean.exp)
+```
+
+## Wheat 
+```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
+wheat<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Barley_Wheat_Centroid") #Import GCO Centroid
+wheat.c<-coordinates(wheat) #Extract Lat-Long
+distances <- spDistsN1(xy,wheat.c, longlat = FALSE) #Calculate Near Distances
+data<-cbind(data.frame(metadata),data.frame(distances)) #Merge into a DF
+data$rescale_ND<-data$distances/(1000*1000) #Rescale distances 
+data<-data %>% filter(wheat_Fert > 0, na.rm=TRUE) #select Fertilizer > 0 
+
+#Pivot Table To ID Top Fertilizer Applications by Country Sum 
+wheat.pivot<-dcast(data, COUNTRY ~., value.var="wheat_Fert", fun.aggregate=sum)
+wheat.pivot<-arrange(wheat.pivot,.)
+tail(wheat.pivot, 3) #ID Top 3 Fertilizer Countries
+sum(wheat.pivot$.) #Total Fertilizer
+
+#Filter Countries
+china<-filter(data, COUNTRY == "China") 
+china.Perc<-sum(china$wheat_Fert)/sum(wheat.pivot$.) 
+print(china.Perc) # % of Global Fertilizer For Crop 
+china.color<-"#1665AF"
+
+usa<-filter(data, COUNTRY == "United States")
+usa.Perc<-sum(usa$wheat_Fert)/sum(wheat.pivot$.) 
+print(usa.Perc) # % of Global Fertilizer For Crop 
+usa.color<-"#8F4A33"
+
+india<-filter(data, COUNTRY == "India")
+india.Perc<-sum(canada$wheat_Fert)/sum(wheat.pivot$.) 
+print(india.Perc) # % of Global Fertilizer For Crop 
+india.color<-"#078D40"
+
+#Plot 
+ggplot(data, aes(x=rescale_ND,y=log10(data$wheat_Fert))) + 
+      geom_point(alpha=0.3) +theme_justin + 
+      geom_point(data=china, aes(x=rescale_ND, y=log10(china$wheat_Fert)), color=china.color, alpha=0.1) + 
+      geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$wheat_Fert)), color=usa.color, alpha=0.2) + 
+      geom_point(data=india, aes(x=rescale_ND, y=log10(india$wheat_Fert)), color=india.color, alpha=0.3) + 
+      geom_smooth(method="lm", color="red") +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Fertilizer Input")
+
+###  Model - Wheat Fertilizer Near
+library(nlme)
+data$logWheat<-log10(data$wheat_Fe)
+# regular OLS no variance structure
+wheat.ols <- gls(logWheat ~ rescale_ND, data = data)
+# varFixed (variance changes linearly with X)
+wheat.fixed <- update(wheat.ols, .~., weights = varFixed(~rescale_ND))
+# varPower (variance changes as a power function with X)
+wheat.power <- update(wheat.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+# varExp (variance changes as an exponential function of x)
+wheat.exp <- update(wheat.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+# varConstPower (constant plus a power function of X (useful if X includes 0))
+wheat.ConstPower <- update(wheat.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+# compare all models by AIC
+AIC(wheat.ols, wheat.fixed, wheat.power, wheat.ConstPower, wheat.exp)
+summary(wheat.power)
+```
+
+## Maize 
+```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
+maize<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Maize") #Import GCO Centroid
+maize.c<-coordinates(maize) #Extract Lat-Long
+distances <- spDistsN1(xy,maize.c, longlat = FALSE) #Calculate Near Distances
+data<-cbind(data.frame(metadata),data.frame(distances)) #Merge into a DF
+data$rescale_ND<-data$distances/(1000*1000) #Rescale distances 
+data<-data %>% filter(maize_Fert > 0, na.rm=TRUE) #select Fertilizer > 0 
+
+#Pivot Table To ID Top Fertilizer Applications by Country Sum 
+maize.pivot<-dcast(data, COUNTRY ~., value.var="maize_Fert", fun.aggregate=sum)
+maize.pivot<-arrange(maize.pivot,.)
+tail(maize.pivot, 3) #ID Top 3 Fertilizer Countries
+sum(maize.pivot$.) #Total Fertilizer
+
+#Filter Countries
+china<-filter(data, COUNTRY == "China") 
+china.Perc<-sum(china$maize_Fert)/sum(maize.pivot$.) 
+print(china.Perc) # % of Global Fertilizer For Crop 
+china.color<-"#1665AF"
+
+usa<-filter(data, COUNTRY == "United States")
+usa.Perc<-sum(usa$maize_Fert)/sum(maize.pivot$.) 
+print(usa.Perc) # % of Global Fertilizer For Crop 
+usa.color<-"#8F4A33"
+
+brazil<-filter(data, COUNTRY == "Brazil")
+brazil.Perc<-sum(brazil$maize_Fert)/sum(maize.pivot$.) 
+print(brazil.Perc) # % of Global Fertilizer For Crop 
+brazil.color<-"#E28D15"
+
+#Plot 
+ggplot(data, aes(x=rescale_ND,y=log10(data$maize_Fert))) + 
+      geom_point(alpha=0.3) +theme_justin + 
+      geom_point(data=china, aes(x=rescale_ND, y=log10(china$maize_Fert)), color=china.color, alpha=0.1) + 
+      geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$maize_Fert)), color=usa.color, alpha=0.2) + 
+      geom_point(data=brazil, aes(x=rescale_ND, y=log10(brazil$maize_Fert)), color=brazil.color, alpha=0.3) + 
+      geom_smooth(method="lm", color="red") +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Fertilizer Input")
+
+###  Model - Maize Fertilizer Near
+library(nlme)
+data$logMaize<-log10(data$maize_Fert)
+# regular OLS no variance structure
+maize.ols <- gls(logMaize ~ rescale_ND, data = data)
+# varFixed (variance changes linearly with X)
+maize.fixed <- update(maize.ols, .~., weights = varFixed(~rescale_ND))
+# varPower (variance changes as a power function with X)
+maize.power <- update(maize.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+# varExp (variance changes as an exponential function of x)
+maize.exp <- update(maize.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+# varConstPower (constant plus a power function of X (useful if X includes 0))
+maize.ConstPower <- update(maize.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+# compare all models by AIC
+AIC(maize.ols, maize.fixed, maize.power, maize.ConstPower, maize.exp)
+summary(maize.ConstPower)
+```
+## Millet 
+```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
+millet<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Soy_Millet_Centroid") #Import GCO Centroid
+millet.c<-coordinates(millet) #Extract Lat-Long
+distances <- spDistsN1(xy,millet.c, longlat = FALSE) #Calculate Near Distances
+data<-cbind(data.frame(metadata),data.frame(distances)) #Merge into a DF
+data$rescale_ND<-data$distances/(1000*1000) #Rescale distances 
+data<-data %>% filter(millet_Fer > 0, na.rm=TRUE) #select Fertilizer > 0 
+
+#Pivot Table To ID Top Fertilizer Applications by Country Sum 
+millet.pivot<-dcast(data, COUNTRY ~., value.var="millet_Fer", fun.aggregate=sum)
+millet.pivot<-arrange(millet.pivot,.)
+tail(millet.pivot, 3) #ID Top 3 Fertilizer Countries
+sum(millet.pivot$.) #Total Fertilizer
+
+#Filter Countries
+china<-filter(data, COUNTRY == "China") 
+china.Perc<-sum(china$millet_Fer)/sum(millet.pivot$.) 
+print(china.Perc) # % of Global Fertilizer For Crop 
+china.color<-"#1665AF"
+
+usa<-filter(data, COUNTRY == "United States")
+usa.Perc<-sum(usa$millet_Fer)/sum(millet.pivot$.) 
+print(usa.Perc) # % of Global Fertilizer For Crop 
+usa.color<-"#8F4A33"
+
+india<-filter(data, COUNTRY == "India")
+india.Perc<-sum(india$millet_Fer)/sum(millet.pivot$.) 
+print(india.Perc) # % of Global Fertilizer For Crop 
+india.color<-"#078D40"
+
+#Plot 
+ggplot(data, aes(x=rescale_ND,y=log10(data$millet_Fer))) + 
+      geom_point(alpha=0.3) +theme_justin + 
+      geom_point(data=china, aes(x=rescale_ND, y=log10(china$millet_Fer)), color=china.color, alpha=0.1) + 
+      geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$millet_Fer)), color=usa.color, alpha=0.2) + 
+      geom_point(data=india, aes(x=rescale_ND, y=log10(india$millet_Fer)), color=india.color, alpha=0.3) + 
+      geom_smooth(method="lm", color="red") +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Fertilizer Input")
+
+###  Model - Millet Fertilizer Near
+library(nlme)
+data$logMillet<-log10(data$millet_Fer)
+# regular OLS no variance structure
+millet.ols <- gls(logMillet ~ rescale_ND, data = data)
+# varFixed (variance changes linearly with X)
+millet.fixed <- update(millet.ols, .~., weights = varFixed(~rescale_ND))
+# varPower (variance changes as a power function with X)
+millet.power <- update(millet.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+# varExp (variance changes as an exponential function of x)
+millet.exp <- update(millet.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+# varConstPower (constant plus a power function of X (useful if X includes 0))
+millet.ConstPower <- update(millet.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+# compare all models by AIC
+AIC(millet.ols, millet.fixed, millet.power, millet.ConstPower, millet.exp)
+summary(millet.ConstPower)
+```
+
+## Rapeseed 
+```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
+rapeseed<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Rapeseed_Centroid") #Import GCO Centroid
+rapeseed.c<-coordinates(rapeseed) #Extract Lat-Long
+distances <- spDistsN1(xy,rapeseed.c, longlat = FALSE) #Calculate Near Distances
+data<-cbind(data.frame(metadata),data.frame(distances)) #Merge into a DF
+data$rescale_ND<-data$distances/(1000*1000) #Rescale distances 
+data<-data %>% filter(rapeseed_F > 0, na.rm=TRUE) #select Fertilizer > 0 
+
+#Pivot Table To ID Top Fertilizer Applications by Country Sum 
+rapeseed.pivot<-dcast(data, COUNTRY ~., value.var="rapeseed_F", fun.aggregate=sum)
+rapeseed.pivot<-arrange(rapeseed.pivot,.)
+tail(rapeseed.pivot, 3) #ID Top 3 Fertilizer Countries
+sum(rapeseed.pivot$.) #Total Fertilizer
+
+#Filter Countries
+china<-filter(data, COUNTRY == "China") 
+china.Perc<-sum(china$rapeseed_F)/sum(rapeseed.pivot$.) 
+print(china.Perc) # % of Global Fertilizer For Crop 
+china.color<-"#1665AF"
+
+brazil<-filter(data, COUNTRY == "Brazil")
+brazil.Perc<-sum(brazil$rapeseed_F)/sum(rapeseed.pivot$.) 
+print(brazil.Perc) # % of Global Fertilizer For Crop 
+brazil.color<-"#E28D15"
+
+usa<-filter(data, COUNTRY == "United States")
+usa.Perc<-sum(usa$rapeseed_F)/sum(rapeseed.pivot$.) 
+print(usa.Perc) # % of Global Fertilizer For Crop 
+usa.color<-"#8F4A33"
+
+#Plot 
+ggplot(data, aes(x=rescale_ND,y=log10(data$rapeseed_F))) + 
+      geom_point(alpha=0.3) +theme_justin + 
+      geom_point(data=china, aes(x=rescale_ND, y=log10(china$rapeseed_F)), color=china.color, alpha=0.1) + 
+      geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$rapeseed_F)), color=usa.color, alpha=0.2) + 
+      geom_point(data=brazil, aes(x=rescale_ND, y=log10(brazil$rapeseed_F)), color=brazil.color, alpha=0.3) + 
+      geom_smooth(method="lm", color="red") +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Fertilizer Input")
+
+###  Model - Rapeseed Fertilizer Near
+library(nlme)
+data$logRapeseed<-log10(data$rapeseed_F)
+# regular OLS no variance structure
+rapeseed.ols <- gls(logRapeseed ~ rescale_ND, data = data)
+# varFixed (variance changes linearly with X)
+rapeseed.fixed <- update(rapeseed.ols, .~., weights = varFixed(~rescale_ND))
+# varPower (variance changes as a power function with X)
+rapeseed.power <- update(rapeseed.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+# varExp (variance changes as an exponential function of x)
+rapeseed.exp <- update(rapeseed.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+# varConstPower (constant plus a power function of X (useful if X includes 0))
+rapeseed.ConstPower <- update(rapeseed.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+# compare all models by AIC
+AIC(rapeseed.ols, rapeseed.fixed, rapeseed.power, rapeseed.ConstPower, rapeseed.exp)
+summary(rapeseed.ConstPower)
+```
+## Rice 
+```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
+rice<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Rice_Centroid") #Import GCO Centroid
+rice.c<-coordinates(rice) #Extract Lat-Long
+distances <- spDistsN1(xy,rice.c, longlat = FALSE) #Calculate Near Distances
+data<-cbind(data.frame(metadata),data.frame(distances)) #Merge into a DF
+data$rescale_ND<-data$distances/(1000*1000) #Rescale distances 
+data<-data %>% filter(rice_FertM > 0, na.rm=TRUE) #select Fertilizer > 0 
+
+#Pivot Table To ID Top Fertilizer Applications by Country Sum 
+rice.pivot<-dcast(data, COUNTRY ~., value.var="rice_FertM", fun.aggregate=sum)
+rice.pivot<-arrange(rice.pivot,.)
+tail(rice.pivot, 3) #ID Top 3 Fertilizer Countries
+sum(rice.pivot$.) #Total Fertilizer
+
+#Filter Countries
+china<-filter(data, COUNTRY == "China") 
+china.Perc<-sum(china$rice_FertM)/sum(rice.pivot$.) 
+print(china.Perc) # % of Global Fertilizer For Crop 
+china.color<-"#1665AF"
+
+india<-filter(data, COUNTRY == "India")
+india.Perc<-sum(india$rice_FertM)/sum(rice.pivot$.) 
+print(india.Perc) # % of Global Fertilizer For Crop 
+india.color<-"#078D40"
+
+brazil<-filter(data, COUNTRY == "Brazil")
+brazil.Perc<-sum(brazil$rice_FertM)/sum(rice.pivot$.) 
+print(brazil.Perc) # % of Global Fertilizer For Crop 
+brazil.color<-"#E28D15"
+
+#Plot 
+ggplot(data, aes(x=rescale_ND,y=log10(data$rice_Fert))) + 
+      geom_point(alpha=0.3) +theme_justin + 
+      geom_point(data=china, aes(x=rescale_ND, y=log10(china$rice_Fert)), color=china.color, alpha=0.1) + 
+      geom_point(data=india, aes(x=rescale_ND, y=log10(india$rice_Fert)), color=india.color, alpha=0.2) + 
+      geom_point(data=brazil, aes(x=rescale_ND, y=log10(brazil$rice_Fert)), color=brazil.color, alpha=0.3) + 
+      geom_smooth(method="lm", color="red") +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Fertilizer Input")
+
+###  Model - Rice Fertilizer Near
+library(nlme)
+data$logRice<-log10(data$rice_Fert)
+# regular OLS no variance structure
+rice.ols <- gls(logRice ~ rescale_ND, data = data)
+# varFixed (variance changes linearly with X)
+rice.fixed <- update(rice.ols, .~., weights = varFixed(~rescale_ND))
+# varPower (variance changes as a power function with X)
+rice.power <- update(rice.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+# varExp (variance changes as an exponential function of x)
+rice.exp <- update(rice.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+# varConstPower (constant plus a power function of X (useful if X includes 0))
+rice.ConstPower <- update(rice.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+# compare all models by AIC
+AIC(rice.ols, rice.fixed, rice.power, rice.ConstPower, rice.exp)
+summary(rice.ConstPower)
+```
+## Rye 
+```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
+rye<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Rye_Centroid") #Import GCO Centroid
+rye.c<-coordinates(rye) #Extract Lat-Long
+distances <- spDistsN1(xy,rye.c, longlat = FALSE) #Calculate Near Distances
+data<-cbind(data.frame(metadata),data.frame(distances)) #Merge into a DF
+data$rescale_ND<-data$distances/(1000*1000) #Rescale distances 
+data<-data %>% filter(rye_FertMe > 0, na.rm=TRUE) #select Fertilizer > 0 
+
+#Pivot Table To ID Top Fertilizer Applications by Country Sum 
+rye.pivot<-dcast(data, COUNTRY ~., value.var="rye_FertMe", fun.aggregate=sum)
+rye.pivot<-arrange(rye.pivot,.)
+tail(rye.pivot, 3) #ID Top 3 Fertilizer Countries
+sum(rye.pivot$.) #Total Fertilizer
+
+#Filter Countries
+china<-filter(data, COUNTRY == "China") 
+china.Perc<-sum(china$rye_Fert)/sum(rye.pivot$.) 
+print(china.Perc) # % of Global Fertilizer For Crop 
+china.color<-"#1665AF"
+
+usa<-filter(data, COUNTRY == "United States")
+usa.Perc<-sum(usa$rye_Fert)/sum(rye.pivot$.) 
+print(usa.Perc) # % of Global Fertilizer For Crop 
+usa.color<-"#8F4A33"
+
+russia<-filter(data, COUNTRY == "Russian Federation")
+russia.Perc<-sum(russia$rye_FertMe)/sum(rye.pivot$.) 
+print(russia.Perc) # % of Global Fertilizer For Crop 
+russia.color<-"#D3867A"
+
+#Plot 
+ggplot(data, aes(x=rescale_ND,y=log10(data$rye_FertMe))) + 
+      geom_point(alpha=0.3) +theme_justin + 
+      geom_point(data=china, aes(x=rescale_ND, y=log10(china$rye_FertMe)), color=china.color, alpha=0.1) + 
+      geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$rye_FertMe)), color=usa.color, alpha=0.2) + 
+      geom_point(data=russia, aes(x=rescale_ND, y=log10(russia$rye_FertMe)), color=russia.color, alpha=0.3) + 
+      geom_smooth(method="lm", color="red") +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Fertilizer Input")
+
+###  Model - Rye Fertilizer Near
+library(nlme)
+data$logRye<-log10(data$rye_FertMe)
+# regular OLS no variance structure
+rye.ols <- gls(logRye ~ rescale_ND, data = data)
+# varFixed (variance changes linearly with X)
+rye.fixed <- update(rye.ols, .~., weights = varFixed(~rescale_ND))
+# varPower (variance changes as a power function with X)
+rye.power <- update(rye.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+# varExp (variance changes as an exponential function of x)
+rye.exp <- update(rye.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+# varConstPower (constant plus a power function of X (useful if X includes 0))
+rye.ConstPower <- update(rye.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+# compare all models by AIC
+AIC(rye.ols, rye.fixed, rye.power, rye.ConstPower, rye.exp)
+summary(rye.exp)
+```
+## Sunflower 
+```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
+sunflower<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Sunflower_Centroid") #Import GCO Centroid
+sunflower.c<-coordinates(sunflower) #Extract Lat-Long
+distances <- spDistsN1(xy,sunflower.c, longlat = FALSE) #Calculate Near Distances
+data<-cbind(data.frame(metadata),data.frame(distances)) #Merge into a DF
+data$rescale_ND<-data$distances/(1000*1000) #Rescale distances 
+data<-data %>% filter(sunflower_ > 0, na.rm=TRUE) #select Fertilizer > 0 
+
+#Pivot Table To ID Top Fertilizer Applications by Country Sum 
+sunflower.pivot<-dcast(data, COUNTRY ~., value.var="sunflower_", fun.aggregate=sum)
+sunflower.pivot<-arrange(sunflower.pivot,.)
+tail(sunflower.pivot, 3) #ID Top 3 Fertilizer Countries
+sum(sunflower.pivot$.) #Total Fertilizer
+
+#Filter Countries
+china<-filter(data, COUNTRY == "China") 
+china.Perc<-sum(china$sunflower_)/sum(sunflower.pivot$.) 
+print(china.Perc) # % of Global Fertilizer For Crop 
+china.color<-"#1665AF"
+
+france<-filter(data, COUNTRY == "France")
+france.Perc<-sum(usa$sunflower_)/sum(sunflower.pivot$.) 
+print(france.Perc) # % of Global Fertilizer For Crop 
+france.color<-"#CE465B"
+
+india<-filter(data, COUNTRY == "India")
+india.Perc<-sum(india$sunflower_)/sum(rice.pivot$.) 
+print(india.Perc) # % of Global Fertilizer For Crop 
+india.color<-"#078D40"
+
+#Plot 
+ggplot(data, aes(x=rescale_ND,y=log10(data$sunflower_))) + 
+      geom_point(alpha=0.3) +theme_justin + 
+      geom_point(data=china, aes(x=rescale_ND, y=log10(china$sunflower_)), color=china.color, alpha=0.1) + 
+      geom_point(data=france, aes(x=rescale_ND, y=log10(france$sunflower_)), color=france.color, alpha=0.2) + 
+      geom_point(data=india, aes(x=rescale_ND, y=log10(india$sunflower_)), color=india.color, alpha=0.3) + 
+      geom_smooth(method="lm", color="red") +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Fertilizer Input")
+
+###  Model - Sunflower Fertilizer Near
+library(nlme)
+data$logSunflower<-log10(data$sunflower_)
+# regular OLS no variance structure
+sunflower.ols <- gls(logSunflower ~ rescale_ND, data = data)
+# varFixed (variance changes linearly with X)
+sunflower.fixed <- update(sunflower.ols, .~., weights = varFixed(~rescale_ND))
+# varPower (variance changes as a power function with X)
+sunflower.power <- update(sunflower.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+# varExp (variance changes as an exponential function of x)
+sunflower.exp <- update(sunflower.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+# varConstPower (constant plus a power function of X (useful if X includes 0))
+sunflower.ConstPower <- update(sunflower.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+# compare all models by AIC
+AIC(sunflower.ols, sunflower.fixed, sunflower.power, sunflower.ConstPower, sunflower.exp)
+summary(sunflower.exp)
 ```
 

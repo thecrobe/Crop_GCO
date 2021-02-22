@@ -13,6 +13,8 @@ random.point <- sample(1:nrow(xy), 1)
 ###Calculate Distances
 distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
 
+
+
 ###Plot###
 xy.df<-data.frame(xy) #Set XY into a DF
 #Basemap
