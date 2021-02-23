@@ -36,6 +36,7 @@ library(rgeos)
 library(ggplot2)
 library(dplyr)
 library(reshape2)
+library(sf)
 
 #ggplot graphic parameters
 theme_justin<-theme_bw() +theme(axis.line = element_line(colour = "black"),
@@ -46,7 +47,6 @@ theme_justin<-theme_bw() +theme(axis.line = element_line(colour = "black"),
 
 #Import Fishnet
 fishnet<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Near_Fertilizer")
-
 ### Get Lat-Long Baby Girl and apply metadata
 xy <- coordinates(fishnet)
 metadata <- fishnet@data
@@ -56,6 +56,7 @@ plot(fishnet) #Fishnet only contains pixels with fertilizer input
 ## Barley 
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
 barley<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Barley_Wheat_Centroid") #Import GCO Centroid
+plot(barley)
 barley.c<-coordinates(barley) #Extract Lat-Long
 distances <- spDistsN1(xy,barley.c, longlat = FALSE) #Calculate Near Distances
 data<-cbind(data.frame(metadata),data.frame(distances)) #Merge into a DF

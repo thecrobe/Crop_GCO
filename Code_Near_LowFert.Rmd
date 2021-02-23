@@ -1,0 +1,55 @@
+---
+title: "Near Analysis Low Fertilizer Removed"
+author: "JD Stewart"
+date: "2/22/2021"
+output: html_document
+---
+
+```{r Introduction, echo=FALSE}
+
+# This document contains code for identifying the relationship between spatial distance and crop yields  to determine the extent GCO escape effects are driven by spatial processes. 
+
+# Reproducibility
+
+#This document can be regenerated using Rmarkdown and the associated R-script (Analyses_Figures.R). This R-script, in combination with the supplementary data files (available online at github.com/thecrobe) also allows for full reproducibility of all the the figures and analyses conducted in R. All other analyses are conducted in ArcMap by ESRI. 
+```
+
+# Near Analysis Models 
+
+<div class = "col-md-4">
+<br><br> **What Was Tested:** Do crop yields increase from GCOs globally as a function of fertilizer? Note that since some crops have the same GCOs their distance bands are calculated once. 
+</div>
+
+<div class = "col-md-4">
+<br><br> **What This Allows Me To Do:** Identify if yield-distance relationships (near analysis) are a function of evolutionary escape or other fertilizer.
+</div>
+
+<div class = "col-md-4">
+<br><br> **What Are The Model Assumptions:** GLS models are used as they have less assumptions about error structure and heteroscadicity. 
+</div>
+
+
+```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
+library(rgdal)
+library(maptools)
+library(rgeos)
+library(ggplot2)
+library(dplyr)
+library(reshape2)
+library(sf)
+
+#ggplot graphic parameters
+theme_justin<-theme_bw() +theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank())
+
+#Import Fishnet
+fishnet<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Near_Fertilizer")
+### Get Lat-Long Baby Girl and apply metadata
+xy <- coordinates(fishnet)
+metadata <- fishnet@data
+sapply(metadata, "class")
+plot(fishnet) #Fishnet only contains pixels with fertilizer input
+```
