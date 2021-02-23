@@ -92,7 +92,7 @@ ggplot(data, aes(x=rescale_ND,y=log10(data$barley_Fer))) +
       geom_point(data=china, aes(x=rescale_ND, y=log10(china$barley_Fer)), color=china.color, alpha=0.1) + 
       geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$barley_Fer)), color=usa.color, alpha=0.2) + 
       geom_point(data=canada, aes(x=rescale_ND, y=log10(canada$barley_Fer)), color=canada.color, alpha=0.1) + 
-      geom_smooth(method="lm", color="red") +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Fertilizer Input")
+      geom_smooth(method="lm", color="red") +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Fertilizer Input") + geom_abline(aes(intercept=coef(barley.power)[1], slope=coef(barley.power)[2]), color="blue")
 
 ###  Model - Barley Fertilizer Near
 library(nlme)
@@ -110,7 +110,7 @@ barley.ConstPower <- update(barley.ols, . ~., weights = varConstPower(form = ~ r
 # compare all models by AIC
 AIC(barley.ols, barley.fixed, barley.power, barley.ConstPower, barley.exp)
 summary(barley.power)
-
+coef(barley.power)
 ```
 
 ## Cassava 
@@ -152,7 +152,7 @@ ggplot(data, aes(x=rescale_ND,y=log10(data$cassava_Fe))) +
       geom_point(data=china, aes(x=rescale_ND, y=log10(china$cassava_Fe)), color=china.color, alpha=0.1) + 
       geom_point(data=brazil, aes(x=rescale_ND, y=log10(brazil$cassava_Fe)), color=brazil.color, alpha=0.2) + 
       geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$cassava_Fe)), color=usa.color, alpha=0.1) + 
-      geom_smooth(method="lm", color="red") +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Fertilizer Input")
+      geom_smooth(method="lm", color="red") +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Fertilizer Input") + geom_abline(aes(intercept=coef(cassava.exp)[1], slope=coef(cassava.exp)[2]), color="blue")
 
 ###  Model - Cassava Fertilizer Near
 library(nlme)
@@ -169,7 +169,7 @@ cassava.exp <- update(cassava.ols, . ~., weights = varExp(form = ~ rescale_ND)) 
 cassava.ConstPower <- update(cassava.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
 # compare all models by AIC
 AIC(cassava.ols, cassava.fixed, cassava.power, cassava.ConstPower, cassava.exp)
-summary(cassava.exp)
+summary(cassava.exp) #CHECK IT LINDa 
 ```
 ## Groundnut 
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
