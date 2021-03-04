@@ -45,4 +45,44 @@ theme_justin<-theme_bw() +theme(axis.line = element_line(colour = "black"),
 
 ```
 
+```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE,echo=FALSE}
+#### readins and preprocess ######################
+fishnet<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Fishnet/", layer="Fishnet_yield_NoAntarctica")
+fertilizer<-read.csv(file="Fertilizer_Near/Near_Fertilizer_Fishnet.csv", header=T) #import fert
+fishnet.m <- na.omit(merge(fishnet, fertilizer, by='Fishnet_ID'))#merge 
+fishnet.low<-subset(fishnet.m, fishnet.m$barley_FertMean > 0 ) #fert > 0 
+fishnet.low<-subset(fishnet.m, fishnet.m$mean_barle > 0 ) # yield > 0 
+dim(fishnet) - dim(fishnet.low) # pixels left
+quantile(fishnet.low$barley_FertMean,na.rm = TRUE) #identify quantiles
+fishnet.low.barley<-subset(fishnet.m, fishnet.m$barley_FertMean < 18.9819612) #subset below 50% of data
+
+### Get Lat-Long Baby Girl 
+xy <- coordinates(fishnet.low.barley)
+metadata <- fishnet.low.barley@data
+
+# the loop
+
+N <-10000
+output <- data.frame(slope=numeric(N), x = numeric(N), y = numeric(N), P=numeric(N))
+for(i in 1:N){
+  # pick a point
+  random.point <- sample(1:nrow(xy), 1)
+  # calculate distances from that point
+  distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
+  yield$rescale_ND<-distances/(1000*1000)
+  barley.near<-metadata %>% select(mean_sorgh,rescale_ND)
+  barley.near<-sorghum.near %>% filter(mean_sorgh > 0, na.rm=TRUE)
+  barley.near<-sorghum.near %>% filter(rescale_ND > 0, na.rm=TRUE)
+  barley.near$logSorghum<-log10(sorghum.near$mean_sorgh)
+  
+  # fit yield ~ distance model
+  sorghum.ols <- gls(logSorghum ~ rescale_ND, data = sorghum.near)
+  
+  # associate it to the point
+  output[i,] <- c(coef(sorghum.ols)[2], xy[random.point,], summary(sorghum.ols)$tTable[2,4] )
+}
+
+#Plot it!
+ggplot(output, aes(x=x, y=y, color=slope)) +geom_point() +theme_justin 
+```
 

@@ -72,7 +72,7 @@ for(i in 1:N){
 }
 
 #Plot it!
-ggplot(output, aes(x=x, y=y, color=slope)) +geom_point() +theme_justin 
+ggplot(output, aes(x=x, y=y, color=log10(slope+1))) +geom_point() +theme_justin 
 
 #write.csv(output, file="Near_Null/Barley_Null_10000.csv")
 ```
@@ -344,5 +344,65 @@ for(i in 1:N){
 ggplot(output, aes(x=x, y=y, color=slope)) +geom_point() +theme_justin 
 
 #write.csv(output, file="Near_Null/Soybean_Null_10000.csv")
+```
+#Sunflower
+```{r}
+# the loop
+
+N <-10000
+output <- data.frame(slope=numeric(N), x = numeric(N), y = numeric(N), P=numeric(N))
+for(i in 1:N){
+  # pick a point
+  random.point <- sample(1:nrow(xy), 1)
+  # calculate distances from that point
+  distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
+  yield$rescale_ND<-distances/(1000*1000)
+  Sunflower.near<-yield %>% select(mean_sunfl,rescale_ND)
+  Sunflower.near<-Sunflower.near %>% filter(mean_sunfl> 0, na.rm=TRUE)
+  Sunflower.near<-Sunflower.near %>% filter(rescale_ND > 0, na.rm=TRUE)
+  Sunflower.near$logSunflower<-log10(Sunflower.near$mean_sunfl)
+  
+  # fit yield ~ distance model
+  Sunflower.ols <- gls(logSunflower ~ rescale_ND, data = Sunflower.near)
+  
+  # associate it to the point
+  output[i,] <- c(coef(Sunflower.ols)[2], xy[random.point,], summary(Sunflower.ols)$tTable[2,4] )
+}
+
+#Plot it!
+ggplot(output, aes(x=x, y=y, color=slope)) +geom_point() +theme_justin 
+
+#write.csv(output, file="Near_Null/Sunflower_Null_10000.csv")
+```
+
+#Wheat
+```{r}
+# the loop
+
+N <-10000
+output <- data.frame(slope=numeric(N), x = numeric(N), y = numeric(N), P=numeric(N))
+for(i in 1:N){
+  # pick a point
+  random.point <- sample(1:nrow(xy), 1)
+  # calculate distances from that point
+  distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
+  yield$rescale_ND<-distances/(1000*1000)
+  Wheat.near<-yield %>% select(mean_wheat,rescale_ND)
+  Wheat.near<-Wheat.near %>% filter(mean_wheat> 0, na.rm=TRUE)
+  Wheat.near<-Wheat.near %>% filter(rescale_ND > 0, na.rm=TRUE)
+  Wheat.near$logWheat<-log10(Wheat.near$mean_wheat)
+  
+  # fit yield ~ distance model
+  Wheat.ols <- gls(logWheat ~ rescale_ND, data = Wheat.near)
+  
+  # associate it to the point
+  output[i,] <- c(coef(Wheat.ols)[2], xy[random.point,], summary(Wheat.ols)$tTable[2,4] )
+}
+
+
+#Plot it!
+ggplot(output, aes(x=x, y=y, color=slope)) +geom_point() +theme_justin 
+
+#write.csv(output, file="Near_Null/Wheat_Null_10000.csv")
 ```
 
