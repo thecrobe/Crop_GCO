@@ -54,7 +54,7 @@ fishnet.low<-subset(fishnet.m, fishnet.m$barley_FertMean > 0 ) #fert > 0
 fishnet.low<-subset(fishnet.m, fishnet.m$mean_barle > 0 ) # yield > 0 
 dim(fishnet) - dim(fishnet.low) # pixels left
 quantile(fishnet.low$barley_FertMean,na.rm = TRUE) #identify quantiles
-fishnet.low.barley<-subset(fishnet.m, fishnet.m$barley_FertMean < 18.9819612) #subset below 50% of data
+fishnet.low.barley<-subset(fishnet.m, fishnet.m$barley_FertMean < 8.717) #subset below 50% of data
 
 ### Get Lat-Long Baby Girl 
 xy <- coordinates(fishnet.low.barley)
@@ -63,26 +63,32 @@ metadata <- fishnet.low.barley@data
 # the loop
 
 N <-10000
-output <- data.frame(slope=numeric(N), x = numeric(N), y = numeric(N), P=numeric(N))
+output.low <- data.frame(slope=numeric(N), x = numeric(N), y = numeric(N), P=numeric(N))
 for(i in 1:N){
   # pick a point
   random.point <- sample(1:nrow(xy), 1)
   # calculate distances from that point
   distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
-  yield$rescale_ND<-distances/(1000*1000)
-  barley.near<-metadata %>% select(mean_sorgh,rescale_ND)
-  barley.near<-sorghum.near %>% filter(mean_sorgh > 0, na.rm=TRUE)
-  barley.near<-sorghum.near %>% filter(rescale_ND > 0, na.rm=TRUE)
-  barley.near$logSorghum<-log10(sorghum.near$mean_sorgh)
+  metadata$rescale_ND_barley<-distances/(1000*1000)
+  barley.near.low<-metadata %>% select(mean_barle,rescale_ND_barley)
+  barley.near.low<-barley.near.low %>% filter(mean_barle > 0, na.rm=TRUE)
+  barley.near.low<-barley.near.low %>% filter(rescale_ND_barley > 0, na.rm=TRUE)
+  barley.near.low$logBarley<-log10(barley.near.low$mean_barle)
   
   # fit yield ~ distance model
-  sorghum.ols <- gls(logSorghum ~ rescale_ND, data = sorghum.near)
+  barley.low.ols <- gls(logBarley ~ rescale_ND_barley, data = barley.near.low)
   
   # associate it to the point
-  output[i,] <- c(coef(sorghum.ols)[2], xy[random.point,], summary(sorghum.ols)$tTable[2,4] )
+  output.low[i,] <- c(coef(barley.low.ols)[2], xy[random.point,], summary(barley.low.ols)$tTable[2,4] )
 }
 
+
+
+plot(barley.near.low$rescale_ND_barley, barley.near.low$logBarley)
 #Plot it!
-ggplot(output, aes(x=x, y=y, color=slope)) +geom_point() +theme_justin 
+x<-subset(output.low, output.low$slope > 0)
+ggplot(x, aes(x=x, y=y, color=slope)) +geom_point() +theme_justin 
+
+hist(output.low$P)
 ```
 
