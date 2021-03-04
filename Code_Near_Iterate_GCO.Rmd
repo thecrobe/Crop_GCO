@@ -1,0 +1,348 @@
+---
+title: "Iterate Null GCO"
+author: "JD Stewart (@thecrobe)"
+output:
+  html_document: default
+  pdf_document: default
+editor_options:
+  chunk_output_type: inline
+---
+```{r Introduction, echo=FALSE}
+
+# The goal of this study is to answer:
+
+#"Are crop yields greater inside or outside the crop's geographic center of origin as a function of escaping pest and pathogen pressure?"
+
+# Reproducibility
+
+#This document can be regenerated using Rmarkdown and the associated R-script (Analyses_Figures.R). This R-script, in combination with the supplementary data files (available online at github.com/thecrobe) also allows for full reproducibility of all the the figures and analyses conducted in R. All other analyses are conducted in ArcMap by ESRI. 
+```
+
+## Random Forest Regression (RFR)
+
+<div class = "col-md-4">
+<br><br> **What Was Tested:** Does the location of a GCO influence the strenght and direction of the GCO escape effect? 
+</div>
+
+<div class = "col-md-4">
+<br><br> **What This Allows Me To Do:** Identify if the location of a GCO with respect to other factors such as high yielding areas influence the near analysis. This will be able to serve as a null model. 
+</div>
+
+<div class = "col-md-4">
+<br><br> **What Are The Model Assumptions:** GLS models are used as they have less assumptions about error structure and heteroscadicity. 
+</div>
+
+```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE,echo=FALSE}
+library(nlme)
+library(rgdal)
+library(dplyr)
+library(ggplot2)
+
+#ggplot graphic parameters
+theme_justin<-theme_bw() +theme(axis.line = element_line(colour = "black"),
+                                panel.grid.major = element_blank(),
+                                panel.grid.minor = element_blank(),
+                                panel.border = element_blank(),
+                                panel.background = element_blank())
+```
+
+
+#Barley
+```{r}
+# the loop
+
+N <-10000
+output <- data.frame(slope=numeric(N), x = numeric(N), y = numeric(N), P=numeric(N))
+for(i in 1:N){
+  # pick a point
+  random.point <- sample(1:nrow(xy), 1)
+  # calculate distances from that point
+  distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
+  yield$rescale_ND<-distances/(1000*1000)
+  barley.near<-yield %>% select(mean_barle,rescale_ND)
+  barley.near<-barley.near %>% filter(mean_barle > 0, na.rm=TRUE)
+  barley.near<-barley.near %>% filter(rescale_ND > 0, na.rm=TRUE)
+  barley.near$logBarley<-log10(barley.near$mean_barle)
+  
+  # fit yield ~ distance model
+  barley.ols <- gls(logBarley ~ rescale_ND, data = barley.near)
+  
+  # associate it to the point
+  output[i,] <- c(coef(barley.ols)[2], xy[random.point,], summary(barley.ols)$tTable[2,4] )
+}
+
+#Plot it!
+ggplot(output, aes(x=x, y=y, color=slope)) +geom_point() +theme_justin 
+
+#write.csv(output, file="Near_Null/Barley_Null_10000.csv")
+```
+
+#Cassava
+```{r}
+# the loop
+
+N <-10000
+output <- data.frame(slope=numeric(N), x = numeric(N), y = numeric(N), P=numeric(N))
+for(i in 1:N){
+  # pick a point
+  random.point <- sample(1:nrow(xy), 1)
+  # calculate distances from that point
+  distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
+  yield$rescale_ND<-distances/(1000*1000)
+  cassava.near<-yield %>% select(mean_cassa,rescale_ND)
+  cassava.near<-cassava.near %>% filter(mean_cassa > 0, na.rm=TRUE)
+  cassava.near<-cassava.near %>% filter(rescale_ND > 0, na.rm=TRUE)
+  cassava.near$logCassava<-log10(cassava.near$mean_cassa)
+  
+  # fit yield ~ distance model
+  cassava.ols <- gls(logCassava ~ rescale_ND, data = cassava.near)
+  
+  # associate it to the point
+  output[i,] <- c(coef(cassava.ols)[2], xy[random.point,], summary(cassava.ols)$tTable[2,4] )
+}
+
+#Plot it!
+ggplot(output, aes(x=x, y=y, color=slope)) +geom_point() +theme_justin 
+
+write.csv(output, file="Near_Null/Cassava_Null_10000.csv")
+```
+
+#Groundnuts
+```{r}
+# the loop
+
+N <-10000
+output <- data.frame(slope=numeric(N), x = numeric(N), y = numeric(N), P=numeric(N))
+for(i in 1:N){
+  # pick a point
+  random.point <- sample(1:nrow(xy), 1)
+  # calculate distances from that point
+  distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
+  yield$rescale_ND<-distances/(1000*1000)
+  groundnuts.near<-yield %>% select(mean_groun,rescale_ND)
+  groundnuts.near<-groundnuts.near %>% filter(mean_groun > 0, na.rm=TRUE)
+  groundnuts.near<-groundnuts.near %>% filter(rescale_ND > 0, na.rm=TRUE)
+  groundnuts.near$logGroundnuts<-log10(groundnuts.near$mean_groun)
+  
+  # fit yield ~ distance model
+  groundnuts.ols <- gls(logGroundnuts ~ rescale_ND, data = groundnuts.near)
+  
+  # associate it to the point
+  output[i,] <- c(coef(groundnuts.ols)[2], xy[random.point,], summary(groundnuts.ols)$tTable[2,4] )
+}
+
+#Plot it!
+ggplot(output, aes(x=x, y=y, color=slope)) +geom_point() +theme_justin 
+
+write.csv(output, file="Near_Null/Groundnuts_Null_10000.csv")
+```
+
+#Maize
+```{r}
+# the loop
+
+N <-10000
+output <- data.frame(slope=numeric(N), x = numeric(N), y = numeric(N), P=numeric(N))
+for(i in 1:N){
+  # pick a point
+  random.point <- sample(1:nrow(xy), 1)
+  # calculate distances from that point
+  distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
+  yield$rescale_ND<-distances/(1000*1000)
+  maize.near<-yield %>% select(mean_maize,rescale_ND)
+  maize.near<-maize.near %>% filter(mean_maize > 0, na.rm=TRUE)
+  maize.near<-maize.near %>% filter(rescale_ND > 0, na.rm=TRUE)
+  maize.near$logMaize<-log10(maize.near$mean_maize)
+  
+  # fit yield ~ distance model
+  maize.ols <- gls(logMaize ~ rescale_ND, data = maize.near)
+  
+  # associate it to the point
+  output[i,] <- c(coef(maize.ols)[2], xy[random.point,], summary(maize.ols)$tTable[2,4] )
+}
+
+#Plot it!
+ggplot(output, aes(x=x, y=y, color=slope)) +geom_point() +theme_justin 
+
+write.csv(output, file="Near_Null/Maize_Null_10000.csv")
+```
+
+#Millet
+```{r}
+# the loop
+
+N <-10000
+output <- data.frame(slope=numeric(N), x = numeric(N), y = numeric(N), P=numeric(N))
+for(i in 1:N){
+  # pick a point
+  random.point <- sample(1:nrow(xy), 1)
+  # calculate distances from that point
+  distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
+  yield$rescale_ND<-distances/(1000*1000)
+  Millet.near<-yield %>% select(mean_mille,rescale_ND)
+  Millet.near<-Millet.near %>% filter(mean_mille > 0, na.rm=TRUE)
+  Millet.near<-Millet.near %>% filter(rescale_ND > 0, na.rm=TRUE)
+  Millet.near$logMillet<-log10(Millet.near$mean_mille)
+  
+  # fit yield ~ distance model
+  Millet.ols <- gls(logMillet ~ rescale_ND, data = Millet.near)
+  
+  # associate it to the point
+  output[i,] <- c(coef(Millet.ols)[2], xy[random.point,], summary(Millet.ols)$tTable[2,4] )
+}
+
+#Plot it!
+ggplot(output, aes(x=x, y=y, color=slope)) +geom_point() +theme_justin 
+
+#write.csv(output, file="Near_Null/Millet_Null_10000.csv")
+```
+
+#Rapeseed
+```{r}
+# the loop
+
+N <-10000
+output <- data.frame(slope=numeric(N), x = numeric(N), y = numeric(N), P=numeric(N))
+for(i in 1:N){
+  # pick a point
+  random.point <- sample(1:nrow(xy), 1)
+  # calculate distances from that point
+  distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
+  yield$rescale_ND<-distances/(1000*1000)
+  Rapeseed.near<-yield %>% select(mean_rapes,rescale_ND)
+  Rapeseed.near<-Rapeseed.near %>% filter(mean_rapes > 0, na.rm=TRUE)
+  Rapeseed.near<-Rapeseed.near %>% filter(rescale_ND > 0, na.rm=TRUE)
+  Rapeseed.near$logRapeseed<-log10(Rapeseed.near$mean_rapes)
+  
+  # fit yield ~ distance model
+  Rapeseed.ols <- gls(logRapeseed ~ rescale_ND, data = Rapeseed.near)
+  
+  # associate it to the point
+  output[i,] <- c(coef(Rapeseed.ols)[2], xy[random.point,], summary(Rapeseed.ols)$tTable[2,4] )
+}
+
+#Plot it!
+ggplot(output, aes(x=x, y=y, color=slope)) +geom_point() +theme_justin 
+
+#write.csv(output, file="Near_Null/Rapeseed_Null_10000.csv")
+```
+#Rice
+```{r}
+# the loop
+
+N <-10000
+output <- data.frame(slope=numeric(N), x = numeric(N), y = numeric(N), P=numeric(N))
+for(i in 1:N){
+  # pick a point
+  random.point <- sample(1:nrow(xy), 1)
+  # calculate distances from that point
+  distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
+  yield$rescale_ND<-distances/(1000*1000)
+  Rice.near<-yield %>% select(mean_rice_,rescale_ND)
+  Rice.near<-Rice.near %>% filter(mean_rice_ > 0, na.rm=TRUE)
+  Rice.near<-Rice.near %>% filter(rescale_ND > 0, na.rm=TRUE)
+  Rice.near$logRice<-log10(Rice.near$mean_rice_)
+  
+  # fit yield ~ distance model
+  Rice.ols <- gls(logRice ~ rescale_ND, data = Rice.near)
+  
+  # associate it to the point
+  output[i,] <- c(coef(Rice.ols)[2], xy[random.point,], summary(Rice.ols)$tTable[2,4] )
+}
+
+#Plot it!
+ggplot(output, aes(x=x, y=y, color=slope)) +geom_point() +theme_justin 
+
+#write.csv(output, file="Near_Null/Rice_Null_10000.csv")
+```
+
+#Rye
+```{r}
+# the loop
+
+N <-10000
+output <- data.frame(slope=numeric(N), x = numeric(N), y = numeric(N), P=numeric(N))
+for(i in 1:N){
+  # pick a point
+  random.point <- sample(1:nrow(xy), 1)
+  # calculate distances from that point
+  distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
+  yield$rescale_ND<-distances/(1000*1000)
+  Rye.near<-yield %>% select(mean_rye_Y,rescale_ND)
+  Rye.near<-Rye.near %>% filter(mean_rye_Y > 0, na.rm=TRUE)
+  Rye.near<-Rye.near %>% filter(rescale_ND > 0, na.rm=TRUE)
+  Rye.near$logRye<-log10(Rye.near$mean_rye_Y)
+  
+  # fit yield ~ distance model
+  Rye.ols <- gls(logRye ~ rescale_ND, data = Rye.near)
+  
+  # associate it to the point
+  output[i,] <- c(coef(Rye.ols)[2], xy[random.point,], summary(Rye.ols)$tTable[2,4] )
+}
+
+#Plot it!
+ggplot(output, aes(x=x, y=y, color=slope)) +geom_point() +theme_justin 
+
+#write.csv(output, file="Near_Null/Rye_Null_10000.csv")
+```
+
+#Sorghum
+```{r}
+# the loop
+
+N <-10000
+output <- data.frame(slope=numeric(N), x = numeric(N), y = numeric(N), P=numeric(N))
+for(i in 1:N){
+  # pick a point
+  random.point <- sample(1:nrow(xy), 1)
+  # calculate distances from that point
+  distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
+  yield$rescale_ND<-distances/(1000*1000)
+  sorghum.near<-yield %>% select(mean_sorgh,rescale_ND)
+  sorghum.near<-sorghum.near %>% filter(mean_sorgh > 0, na.rm=TRUE)
+  sorghum.near<-sorghum.near %>% filter(rescale_ND > 0, na.rm=TRUE)
+  sorghum.near$logSorghum<-log10(sorghum.near$mean_sorgh)
+  
+  # fit yield ~ distance model
+  sorghum.ols <- gls(logSorghum ~ rescale_ND, data = sorghum.near)
+  
+  # associate it to the point
+  output[i,] <- c(coef(sorghum.ols)[2], xy[random.point,], summary(sorghum.ols)$tTable[2,4] )
+}
+
+#Plot it!
+ggplot(output, aes(x=x, y=y, color=slope)) +geom_point() +theme_justin 
+
+#write.csv(output, file="Near_Null/Sorghum_Null_10000.csv")
+```
+
+#Soybean
+```{r}
+# the loop
+
+N <-10000
+output <- data.frame(slope=numeric(N), x = numeric(N), y = numeric(N), P=numeric(N))
+for(i in 1:N){
+  # pick a point
+  random.point <- sample(1:nrow(xy), 1)
+  # calculate distances from that point
+  distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
+  yield$rescale_ND<-distances/(1000*1000)
+  Soybean.near<-yield %>% select(mean_soybe,rescale_ND)
+  Soybean.near<-Soybean.near %>% filter(mean_soybe > 0, na.rm=TRUE)
+  Soybean.near<-Soybean.near %>% filter(rescale_ND > 0, na.rm=TRUE)
+  Soybean.near$logSoybean<-log10(Soybean.near$mean_soybe)
+  
+  # fit yield ~ distance model
+  Soybean.ols <- gls(logSoybean ~ rescale_ND, data = Soybean.near)
+  
+  # associate it to the point
+  output[i,] <- c(coef(Soybean.ols)[2], xy[random.point,], summary(Soybean.ols)$tTable[2,4] )
+}
+
+#Plot it!
+ggplot(output, aes(x=x, y=y, color=slope)) +geom_point() +theme_justin 
+
+#write.csv(output, file="Near_Null/Soybean_Null_10000.csv")
+```
+
