@@ -90,22 +90,24 @@ output.low<-output.low %>% filter (output.low$P < 0.05) #remove insig p values
 ggplot(output.low, aes(x=output.low$x, y=y, color=slope)) +geom_point
 ```
 
-#Cassava
+#Sorghum
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE,echo=FALSE}
 #### readins and preprocess ######################
 fishnet<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Fishnet/", layer="Fishnet_yield_NoAntarctica")
 fertilizer<-read.csv(file="Fertilizer_Near/Near_Fertilizer_Fishnet.csv", header=T) #import fert
 fishnet.m <- na.omit(merge(fishnet, fertilizer, by='Fishnet_ID'))#merge 
-fishnet.low<-subset(fishnet.m, fishnet.m$Cassava_FertMean > 0 ) #fert > 0 
-fishnet.low<-subset(fishnet.m, fishnet.m$mean_cassa > 0 ) # yield > 0 
+fishnet.low<-subset(fishnet.m, fishnet.m$sorghum_FertMean> 0 ) #fert > 0 
+fishnet.low<-subset(fishnet.m, fishnet.m$mean_sorgh > 0 ) # yield > 0 
 dim(fishnet) - dim(fishnet.low) # pixels left
-quantile(fishnet.low$Cassava_FertMean,na.rm = TRUE) #identify quantiles
-fishnet.low.Cassava<-subset(fishnet.m, fishnet.m$Cassava_FertMean < 16.82) #subset below 50% of data
+quantile(fishnet.low$sorghum_FertMean,na.rm = TRUE) #identify quantiles
+fishnet.low.sorghum<-subset(fishnet.m, fishnet.m$sorghum_FertMean < 5.035) #subset below 25% of data
 
+summary(fishnet.low$mean_sorgh)
 
 ### Get Lat-Long Baby Girl 
-xy <- coordinates(fishnet.low.Cassava)
-metadata <- fishnet.low.Cassava@data
+xy <- coordinates(fishnet.low.sorghum)
+metadata <- fishnet.low.sorghum@data
+
 # the loop
 
 N <-10000
@@ -115,22 +117,25 @@ for(i in 1:N){
   random.point <- sample(1:nrow(xy), 1)
   # calculate distances from that point
   distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
-  metadata$rescale_ND_Cassava<-distances/(1000*1000)
-  Cassava.near.low<-metadata %>% select(mean_cassa,rescale_ND_Cassava)
-  Cassava.near.low<-Cassava.near.low %>% filter(mean_cassa > 0, na.rm=TRUE)
-  Cassava.near.low<-Cassava.near.low %>% filter(rescale_ND_Cassava > 0, na.rm=TRUE)
-  Cassava.near.low$logCassava<-log10(Cassava.near.low$)
+  metadata$rescale_ND_sorghum<-distances/(1000*1000)
+  sorghum.near.low<-metadata %>% select(mean_sorgh,rescale_ND_sorghum)
+  sorghum.near.low<-sorghum.near.low %>% filter(mean_sorgh > 0, na.rm=TRUE)
+  sorghum.near.low<-sorghum.near.low %>% filter(rescale_ND_sorghum > 0,   
+                                                na.rm=TRUE)
+  sorghum.near.low$logSorghum<-log10(sorghum.near.low$mean_sorgh)
   
   # fit yield ~ distance model
-  Cassava.low.gls <- gls(logCassava ~ rescale_ND_Cassava, data = Cassava.near.low)
+  sorghum.low.gls <- gls(logSorghum ~ rescale_ND_sorghum, data = sorghum.near.low)
   
   # associate it to the point
-  output.low[i,] <- c(coef(Cassava.low.gls)[2], xy[random.point,], summary(Cassava.low.ols)$tTable[2,4] )
+  output.low[i,] <- c(coef(sorghum.low.gls)[2], xy[random.point,], summary(sorghum.low.gls)$tTable[2,4] )
+  
 }
 
 #Map 
 output.low<-output.low %>% filter (output.low$P < 0.05) #remove insig p values
-ggplot(output.low, aes(x=output.low$x, y=y, color=slope)) +geom_point
-```
+ggplot(output.low, aes(x=$x, y=y, color=slope)) +geom_point()
 
+write.csv(output.low,file="Low_Fert_Analyses/RandomGCOs/sorghum_low25percNull.csv")
+```
 
