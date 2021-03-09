@@ -258,7 +258,7 @@ for(i in 1:N){
 output.low<-output.low %>% filter (output.low$P < 0.05) #remove insig p values
 ggplot(output.low, aes(x=x, y=y, color=slope)) +geom_point()
 
-write.csv(output.low,file="Low_Fert_Analyses/RandomGCOs/millet_low50percNull.csv")
+#write.csv(output.low,file="Low_Fert_Analyses/RandomGCOs/millet_low50percNull.csv")
 ```
 
 #Rapeseed
@@ -310,7 +310,7 @@ fishnet.low<-subset(fishnet.m, fishnet.m$rice_FertMean > 0 ) #fert > 0
 fishnet.low<-subset(fishnet.m, fishnet.m$mean_rice_ > 0 ) # yield > 0 
 dim(fishnet) - dim(fishnet.low) # pixels left
 quantile(fishnet.low$rice_FertMean,na.rm = TRUE) #identify quantiles
-fishnet.low.rice<-subset(fishnet.m, fishnet.m$rice_FertMean < 19.76) #subset below 50% of data
+fishnet.low.rice<-subset(fishnet.m, fishnet.m$rice_FertMean < 4.57) #subset below 50% of data
 
 ### Get Lat-Long Baby Girl 
 xy <- coordinates(fishnet.low.rice)
@@ -352,7 +352,7 @@ fishnet.low<-subset(fishnet.m, fishnet.m$rye_FertMean > 0 ) #fert > 0
 fishnet.low<-subset(fishnet.m, fishnet.m$mean_rye_Y > 0 ) # yield > 0 
 dim(fishnet) - dim(fishnet.low) # pixels left
 quantile(fishnet.low$rye_FertMean,na.rm = TRUE) #identify quantiles
-fishnet.low.rye<-subset(fishnet.m, fishnet.m$rye_FertMean < 8.32) #subset below 50% of data
+fishnet.low.rye<-subset(fishnet.m, fishnet.m$rye_FertMean < 16.04) #subset below 50% of data
 
 ### Get Lat-Long Baby Girl 
 xy <- coordinates(fishnet.low.rye)
@@ -384,7 +384,7 @@ for(i in 1:N){
 output.low<-output.low %>% filter (output.low$P < 0.05) #remove insig p values
 ggplot(output.low, aes(x=x, y=y, color=slope)) +geom_point()
 
-write.csv(output.low,file="Low_Fert_Analyses/RandomGCOs/rye_low50percNull.csv")
+#write.csv(output.low,file="Low_Fert_Analyses/RandomGCOs/rye_low50percNull.csv")
 ```
 
 #Sorghum
@@ -394,9 +394,7 @@ fishnet.low<-subset(fishnet.m, fishnet.m$sorghum_FertMean> 0 ) #fert > 0
 fishnet.low<-subset(fishnet.m, fishnet.m$mean_sorgh > 0 ) # yield > 0 
 dim(fishnet) - dim(fishnet.low) # pixels left
 quantile(fishnet.low$sorghum_FertMean,na.rm = TRUE) #identify quantiles
-fishnet.low.sorghum<-subset(fishnet.m, fishnet.m$sorghum_FertMean < 5.035) #subset below 50% of data
-
-summary(fishnet.low$mean_sorgh)
+fishnet.low.sorghum<-subset(fishnet.m, fishnet.m$sorghum_FertMean < 9.59) #subset below 50% of data
 
 ### Get Lat-Long Baby Girl 
 xy <- coordinates(fishnet.low.sorghum)
@@ -430,6 +428,95 @@ for(i in 1:N){
 output.low<-output.low %>% filter (output.low$P < 0.05) #remove insig p values
 ggplot(output.low, aes(x=x, y=y, color=slope)) +geom_point()
 
-write.csv(output.low,file="Low_Fert_Analyses/RandomGCOs/sorghum_low50percNull.csv")
+#write.csv(output.low,file="Low_Fert_Analyses/RandomGCOs/sorghum_low50percNull.csv")
 ```
+
+#Soybean
+```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE,echo=FALSE}
+#### readins and preprocess ######################
+fishnet.low<-subset(fishnet.m, fishnet.m$soybean_FertMean> 0 ) #fert > 0 
+fishnet.low<-subset(fishnet.m, fishnet.m$mean_soybe > 0 ) # yield > 0 
+dim(fishnet) - dim(fishnet.low) # pixels left
+quantile(fishnet.low$soybean_FertMean,na.rm = TRUE) #identify quantiles
+fishnet.low.soybean<-subset(fishnet.m, fishnet.m$soybean_FertMean < 8.91) #subset below 50% of data
+
+### Get Lat-Long Baby Girl 
+xy <- coordinates(fishnet.low.soybean)
+metadata <- fishnet.low.soybean@data
+
+# the loop
+
+N <-10000
+output.low <- data.frame(slope=numeric(N), x = numeric(N), y = numeric(N), P=numeric(N))
+for(i in 1:N){
+  # pick a point
+  random.point <- sample(1:nrow(xy), 1)
+  # calculate distances from that point
+  distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
+  metadata$rescale_ND_soybean<-distances/(1000*1000)
+  soybean.near.low<-metadata %>% select(mean_soybe,rescale_ND_soybean)
+  soybean.near.low<-soybean.near.low %>% filter(mean_soybe > 0, na.rm=TRUE)
+  soybean.near.low<-soybean.near.low %>% filter(rescale_ND_soybean > 0,   
+                                                na.rm=TRUE)
+  soybean.near.low$logSoybean<-log10(soybean.near.low$mean_soybe)
+  
+  # fit yield ~ distance model
+  soybean.low.gls <- gls(logSoybean ~ rescale_ND_soybean, data = soybean.near.low)
+  
+  # associate it to the point
+  output.low[i,] <- c(coef(soybean.low.gls)[2], xy[random.point,], summary(soybean.low.gls)$tTable[2,4] )
+  
+}
+
+#Map 
+output.low<-output.low %>% filter (output.low$P < 0.05) #remove insig p values
+ggplot(output.low, aes(x=x, y=y, color=slope)) +geom_point()
+
+#write.csv(output.low,file="Low_Fert_Analyses/RandomGCOs/soybean_low50percNull.csv")
+```
+
+#Sunflower
+```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE,echo=FALSE}
+#### readins and preprocess ######################
+fishnet.low<-subset(fishnet.m, fishnet.m$sunflower_FertMean> 0 ) #fert > 0 
+fishnet.low<-subset(fishnet.m, fishnet.m$mean_soybe > 0 ) # yield > 0 
+dim(fishnet) - dim(fishnet.low) # pixels left
+quantile(fishnet.low$sunflower_FertMean,na.rm = TRUE) #identify quantiles
+fishnet.low.sunflower<-subset(fishnet.m, fishnet.m$sunflower_FertMean < 6.28) #subset below 50% of data
+
+### Get Lat-Long Baby Girl 
+xy <- coordinates(fishnet.low.sunflower)
+metadata <- fishnet.low.sunflower@data
+
+# the loop
+
+N <-10000
+output.low <- data.frame(slope=numeric(N), x = numeric(N), y = numeric(N), P=numeric(N))
+for(i in 1:N){
+  # pick a point
+  random.point <- sample(1:nrow(xy), 1)
+  # calculate distances from that point
+  distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
+  metadata$rescale_ND_sunflower<-distances/(1000*1000)
+  sunflower.near.low<-metadata %>% select(mean_sunfl,rescale_ND_sunflower)
+  sunflower.near.low<-sunflower.near.low %>% filter(mean_sunfl > 0, na.rm=TRUE)
+  sunflower.near.low<-sunflower.near.low %>% filter(rescale_ND_sunflower > 0,   
+                                                na.rm=TRUE)
+  sunflower.near.low$logSunflower<-log10(sunflower.near.low$mean_sunfl)
+  
+  # fit yield ~ distance model
+  sunflower.low.gls <- gls(logSunflower ~ rescale_ND_sunflower, data = sunflower.near.low)
+  
+  # associate it to the point
+  output.low[i,] <- c(coef(sunflower.low.gls)[2], xy[random.point,], summary(sunflower.low.gls)$tTable[2,4] )
+  
+}
+
+#Map 
+output.low<-output.low %>% filter (output.low$P < 0.05) #remove insig p values
+ggplot(output.low, aes(x=x, y=y, color=slope)) +geom_point()
+
+#write.csv(output.low,file="Low_Fert_Analyses/RandomGCOs/sunflower_low50percNull.csv")
+```
+
 
