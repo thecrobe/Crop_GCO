@@ -86,13 +86,17 @@ canada.Perc<-sum(canada$barley_Fer)/sum(barley.pivot$.)
 print(canada.Perc) # % of Global Fertilizer For Crop 
 canada.color<-"#98C24B"
 
+
+
 #Plot 
 ggplot(data, aes(x=rescale_ND,y=log10(data$barley_Fer))) + 
       geom_point(alpha=0.3) +theme_justin + 
       geom_point(data=china, aes(x=rescale_ND, y=log10(china$barley_Fer)), color=china.color, alpha=0.1) + 
       geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$barley_Fer)), color=usa.color, alpha=0.2) + 
       geom_point(data=canada, aes(x=rescale_ND, y=log10(canada$barley_Fer)), color=canada.color, alpha=0.1) + 
-      geom_smooth(method="lm", color="red") +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Fertilizer Input") + geom_abline(aes(intercept=coef(barley.power)[1], slope=coef(barley.power)[2]), color="blue")
+      ylab("Log10 Fertilizer") + 
+      xlab("Distance From GCO (1000's km)") +
+      geom_abline(aes(intercept=coef(barley.power)[1], slope=coef(barley.power)[2]), color="red", size=2)
 
 ###  Model - Barley Fertilizer Near
 library(nlme)
@@ -130,20 +134,20 @@ sum(cassava.pivot$.) #Total Fertilizer
 
 #Filter Countries
 china<-filter(data, COUNTRY == "China") 
-china.Perc<-sum(china$cassava_Fer)/sum(cassava.pivot$.) 
+china.Perc<-sum(china$cassava_Fe)/sum(cassava.pivot$.) 
 print(china.Perc) # % of Global Fertilizer For Crop 
 china.color<-"#1665AF"
-summary(china)
 
 brazil<-filter(data, COUNTRY == "Brazil")
-brazil.Perc<-sum(brazil$cassava_Fer)/sum(cassava.pivot$.) 
+brazil.Perc<-sum(brazil$cassava_Fe)/sum(cassava.pivot$.) 
 print(brazil.Perc) # % of Global Fertilizer For Crop 
 brazil.color<-"#E28D15"
 
 usa<-filter(data, COUNTRY == "United States")
-usa.Perc<-sum(usa$cassava_Fer)/sum(cassava.pivot$.) 
+usa.Perc<-sum(usa$cassava_Fe)/sum(cassava.pivot$.) 
 print(usa.Perc) # % of Global Fertilizer For Crop 
 usa.color<-"#8F4A33"
+
 
 
 #Plot 
@@ -152,7 +156,9 @@ ggplot(data, aes(x=rescale_ND,y=log10(data$cassava_Fe))) +
       geom_point(data=china, aes(x=rescale_ND, y=log10(china$cassava_Fe)), color=china.color, alpha=0.1) + 
       geom_point(data=brazil, aes(x=rescale_ND, y=log10(brazil$cassava_Fe)), color=brazil.color, alpha=0.2) + 
       geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$cassava_Fe)), color=usa.color, alpha=0.1) + 
-      geom_smooth(method="lm", color="red") +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Fertilizer Input") + geom_abline(aes(intercept=coef(cassava.exp)[1], slope=coef(cassava.exp)[2]), color="blue")
+      ylab("Log10 Fertilizer") + 
+      xlab("Distance From GCO (1000's km)") +
+      geom_abline(aes(intercept=coef(cassava.exp)[1], slope=coef(cassava.exp)[2]), color="red", size=2)
 
 ###  Model - Cassava Fertilizer Near
 library(nlme)
@@ -173,7 +179,7 @@ summary(cassava.exp) #CHECK IT LINDa
 ```
 ## Groundnut 
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
-groundnut<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Cassava_Groundnut_Centroid") #Import GCO Centroid
+groundnut<-readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Cassava_Groundnut_Centroid") #Import GCO Centroid
 groundnut.c<-coordinates(groundnut) #Extract Lat-Long
 distances <- spDistsN1(xy,groundnut.c, longlat = FALSE) #Calculate Near Distances
 data<-cbind(data.frame(metadata),data.frame(distances)) #Merge into a DF
@@ -188,20 +194,21 @@ sum(groundnut.pivot$.) #Total Fertilizer
 
 #Filter Countries
 china<-filter(data, COUNTRY == "China") 
-china.Perc<-sum(china$groundnut_Fer)/sum(groundnut.pivot$.) 
+china.Perc<-sum(china$groundnut_)/sum(groundnut.pivot$.) 
 print(china.Perc) # % of Global Fertilizer For Crop 
 china.color<-"#1665AF"
 summary(china)
 
 india<-filter(data, COUNTRY == "India")
-india.Perc<-sum(canada$groundnut_Fer)/sum(groundnut.pivot$.) 
+india.Perc<-sum(canada$groundnut_)/sum(groundnut.pivot$.) 
 print(india.Perc) # % of Global Fertilizer For Crop 
 india.color<-"#078D40"
 
 usa<-filter(data, COUNTRY == "United States")
-usa.Perc<-sum(usa$groundnut_Fer)/sum(groundnut.pivot$.) 
+usa.Perc<-sum(usa$groundnut_)/sum(groundnut.pivot$.) 
 print(usa.Perc) # % of Global Fertilizer For Crop 
 usa.color<-"#8F4A33"
+
 
 #Plot 
 ggplot(data, aes(x=rescale_ND,y=log10(data$groundnut_))) + 
@@ -209,7 +216,10 @@ ggplot(data, aes(x=rescale_ND,y=log10(data$groundnut_))) +
       geom_point(data=china, aes(x=rescale_ND, y=log10(china$groundnut_)), color=china.color, alpha=0.1) + 
       geom_point(data=india, aes(x=rescale_ND, y=log10(india$groundnut_)), color=usa.color, alpha=0.2) + 
       geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$groundnut_)), color=canada.color, alpha=0.1) + 
-      geom_smooth(method="lm", color="red") +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Fertilizer Input")
+      geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$cassava_Fe)), color=usa.color, alpha=0.1) + 
+      ylab("Log10 Fertilizer") + 
+      xlab("Distance From GCO (1000's km)") +
+      geom_abline(aes(intercept=coef(groundnut.exp)[1], slope=coef(groundnut.exp)[2]), color="red", size=2)
 
 ###  Model - Groundnut Fertilizer Near
 library(nlme)
@@ -260,13 +270,17 @@ mexico.Perc<-sum(mexico$sorghum_Fe)/sum(sorghum.pivot$.)
 print(mexico.Perc) # % of Global Fertilizer For Crop 
 mexico.color<-"#96AEEA"
 
+
+
 #Plot 
 ggplot(data, aes(x=rescale_ND,y=log10(data$sorghum_Fe))) + 
       geom_point(alpha=0.3) +theme_justin + 
       geom_point(data=china, aes(x=rescale_ND, y=log10(china$sorghum_Fe)), color=china.color, alpha=0.1) + 
       geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$sorghum_Fe)), color=usa.color, alpha=0.2) + 
       geom_point(data=mexico, aes(x=rescale_ND, y=log10(mexico$sorghum_Fe)), color=mexico.color, alpha=0.1) + 
-      geom_smooth(method="lm", color="red") +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Fertilizer Input")
+      ylab("Log10 Fertilizer") + 
+      xlab("Distance From GCO (1000's km)") +
+      geom_abline(aes(intercept=coef(sorghum.ConstPower)[1], slope=coef(sorghum.ConstPower)[2]), color="red", size=2)
 
 ###  Model - Sorghum Fertilizer Near
 library(nlme)
@@ -318,13 +332,17 @@ brazil.Perc<-sum(brazil$soybean_Fe)/sum(cassava.pivot$.)
 print(brazil.Perc) # % of Global Fertilizer For Crop 
 brazil.color<-"#E28D15"
 
+sum(china.Perc,usa.Perc,brazil.Perc)
+
 #Plot 
 ggplot(data, aes(x=rescale_ND,y=log10(data$soybean_Fe))) + 
       geom_point(alpha=0.3) +theme_justin + 
       geom_point(data=china, aes(x=rescale_ND, y=log10(china$soybean_Fe)), color=china.color, alpha=0.1) + 
       geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$soybean_Fe)), color=usa.color, alpha=0.2) + 
       geom_point(data=brazil, aes(x=rescale_ND, y=log10(brazil$soybean_Fe)), color=brazil.color, alpha=0.3) + 
-      geom_smooth(method="lm", color="red") +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Fertilizer Input")
+      ylab("Log10 Fertilizer") + 
+      xlab("Distance From GCO (1000's km)") +
+      geom_abline(aes(intercept=coef(soybean.exp)[1], slope=coef(soybean.exp)[2]), color="red", size=2)
 
 ###  Model - Soybean Fertilizer Near
 library(nlme)
@@ -375,13 +393,16 @@ india.Perc<-sum(canada$wheat_Fert)/sum(wheat.pivot$.)
 print(india.Perc) # % of Global Fertilizer For Crop 
 india.color<-"#078D40"
 
+
 #Plot 
 ggplot(data, aes(x=rescale_ND,y=log10(data$wheat_Fert))) + 
       geom_point(alpha=0.3) +theme_justin + 
       geom_point(data=china, aes(x=rescale_ND, y=log10(china$wheat_Fert)), color=china.color, alpha=0.1) + 
       geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$wheat_Fert)), color=usa.color, alpha=0.2) + 
       geom_point(data=india, aes(x=rescale_ND, y=log10(india$wheat_Fert)), color=india.color, alpha=0.3) + 
-      geom_smooth(method="lm", color="red") +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Fertilizer Input")
+      ylab("Log10 Fertilizer") + 
+      xlab("Distance From GCO (1000's km)") +
+      geom_abline(aes(intercept=coef(wheat.power)[1], slope=coef(wheat.power)[2]), color="red", size=2)
 
 ###  Model - Wheat Fertilizer Near
 library(nlme)
@@ -432,13 +453,16 @@ brazil.Perc<-sum(brazil$maize_Fert)/sum(maize.pivot$.)
 print(brazil.Perc) # % of Global Fertilizer For Crop 
 brazil.color<-"#E28D15"
 
+
 #Plot 
 ggplot(data, aes(x=rescale_ND,y=log10(data$maize_Fert))) + 
       geom_point(alpha=0.3) +theme_justin + 
       geom_point(data=china, aes(x=rescale_ND, y=log10(china$maize_Fert)), color=china.color, alpha=0.1) + 
       geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$maize_Fert)), color=usa.color, alpha=0.2) + 
       geom_point(data=brazil, aes(x=rescale_ND, y=log10(brazil$maize_Fert)), color=brazil.color, alpha=0.3) + 
-      geom_smooth(method="lm", color="red") +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Fertilizer Input")
+      ylab("Log10 Fertilizer") + 
+      xlab("Distance From GCO (1000's km)") +
+      geom_abline(aes(intercept=coef(maize.ConstPower)[1], slope=coef(maize.ConstPower)[2]), color="red", size=2)
 
 ###  Model - Maize Fertilizer Near
 library(nlme)
@@ -494,7 +518,9 @@ ggplot(data, aes(x=rescale_ND,y=log10(data$millet_Fer))) +
       geom_point(data=china, aes(x=rescale_ND, y=log10(china$millet_Fer)), color=china.color, alpha=0.1) + 
       geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$millet_Fer)), color=usa.color, alpha=0.2) + 
       geom_point(data=india, aes(x=rescale_ND, y=log10(india$millet_Fer)), color=india.color, alpha=0.3) + 
-      geom_smooth(method="lm", color="red") +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Fertilizer Input")
+      ylab("Log10 Fertilizer") + 
+      xlab("Distance From GCO (1000's km)") +
+      geom_abline(aes(intercept=coef(millet.ConstPower)[1], slope=coef(millet.ConstPower)[2]), color="red", size=2)
 
 ###  Model - Millet Fertilizer Near
 library(nlme)
@@ -545,13 +571,17 @@ usa.Perc<-sum(usa$rapeseed_F)/sum(rapeseed.pivot$.)
 print(usa.Perc) # % of Global Fertilizer For Crop 
 usa.color<-"#8F4A33"
 
+sum(china.Perc,brazil.Perc,usa.Perc)
+
 #Plot 
 ggplot(data, aes(x=rescale_ND,y=log10(data$rapeseed_F))) + 
       geom_point(alpha=0.3) +theme_justin + 
       geom_point(data=china, aes(x=rescale_ND, y=log10(china$rapeseed_F)), color=china.color, alpha=0.1) + 
       geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$rapeseed_F)), color=usa.color, alpha=0.2) + 
       geom_point(data=brazil, aes(x=rescale_ND, y=log10(brazil$rapeseed_F)), color=brazil.color, alpha=0.3) + 
-      geom_smooth(method="lm", color="red") +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Fertilizer Input")
+      ylab("Log10 Fertilizer") + 
+      xlab("Distance From GCO (1000's km)") +
+      geom_abline(aes(intercept=coef(rapeseed.ConstPower)[1], slope=coef(rapeseed.ConstPower)[2]), color="red", size=2)
 
 ###  Model - Rapeseed Fertilizer Near
 library(nlme)
@@ -601,13 +631,16 @@ brazil.Perc<-sum(brazil$rice_FertM)/sum(rice.pivot$.)
 print(brazil.Perc) # % of Global Fertilizer For Crop 
 brazil.color<-"#E28D15"
 
+
 #Plot 
 ggplot(data, aes(x=rescale_ND,y=log10(data$rice_Fert))) + 
       geom_point(alpha=0.3) +theme_justin + 
       geom_point(data=china, aes(x=rescale_ND, y=log10(china$rice_Fert)), color=china.color, alpha=0.1) + 
       geom_point(data=india, aes(x=rescale_ND, y=log10(india$rice_Fert)), color=india.color, alpha=0.2) + 
       geom_point(data=brazil, aes(x=rescale_ND, y=log10(brazil$rice_Fert)), color=brazil.color, alpha=0.3) + 
-      geom_smooth(method="lm", color="red") +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Fertilizer Input")
+      ylab("Log10 Fertilizer") + 
+      xlab("Distance From GCO (1000's km)") +
+      geom_abline(aes(intercept=coef(rice.ConstPower)[1], slope=coef(rice.ConstPower)[2]), color="red", size=2)
 
 ###  Model - Rice Fertilizer Near
 library(nlme)
@@ -663,7 +696,9 @@ ggplot(data, aes(x=rescale_ND,y=log10(data$rye_FertMe))) +
       geom_point(data=china, aes(x=rescale_ND, y=log10(china$rye_FertMe)), color=china.color, alpha=0.1) + 
       geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$rye_FertMe)), color=usa.color, alpha=0.2) + 
       geom_point(data=russia, aes(x=rescale_ND, y=log10(russia$rye_FertMe)), color=russia.color, alpha=0.3) + 
-      geom_smooth(method="lm", color="red") +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Fertilizer Input")
+      ylab("Log10 Fertilizer") + 
+      xlab("Distance From GCO (1000's km)") +
+      geom_abline(aes(intercept=coef(rye.exp)[1], slope=coef(rye.exp)[2]), color="red", size=2)
 
 ###  Model - Rye Fertilizer Near
 library(nlme)
@@ -713,13 +748,17 @@ india.Perc<-sum(india$sunflower_)/sum(rice.pivot$.)
 print(india.Perc) # % of Global Fertilizer For Crop 
 india.color<-"#078D40"
 
+sum(china.Perc,france.Perc,india.Perc)
+
 #Plot 
 ggplot(data, aes(x=rescale_ND,y=log10(data$sunflower_))) + 
       geom_point(alpha=0.3) +theme_justin + 
       geom_point(data=china, aes(x=rescale_ND, y=log10(china$sunflower_)), color=china.color, alpha=0.1) + 
       geom_point(data=france, aes(x=rescale_ND, y=log10(france$sunflower_)), color=france.color, alpha=0.2) + 
       geom_point(data=india, aes(x=rescale_ND, y=log10(india$sunflower_)), color=india.color, alpha=0.3) + 
-      geom_smooth(method="lm", color="red") +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Fertilizer Input")
+      ylab("Log10 Fertilizer") + 
+      xlab("Distance From GCO (1000's km)") +
+      geom_abline(aes(intercept=coef(sunflower.exp)[1], slope=coef(sunflower.exp)[2]), color="red", size=2)
 
 ###  Model - Sunflower Fertilizer Near
 library(nlme)
