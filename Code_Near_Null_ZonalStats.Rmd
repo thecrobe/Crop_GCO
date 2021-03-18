@@ -56,7 +56,7 @@ data<-na.omit(x)
 #plot
 ggplot(data, aes(x=MEAN, fill=barley_GCO)) +
   geom_density(alpha=0.7) + 
-  scale_fill_manual(values = c("#F75C02","#1132BF")) +
+  scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope")
   theme_justin
 ```
 
@@ -74,7 +74,7 @@ data<-na.omit(x)
 #plot
 ggplot(data, aes(x=MEAN, fill=cassava_GCO)) +
   geom_density(alpha=0.7) + 
-  scale_fill_manual(values = c("#F75C02","#1132BF")) +
+  scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
   theme_justin
 ```
 
@@ -92,7 +92,7 @@ data<-na.omit(x)
 #plot
 ggplot(data, aes(x=MEAN, fill=groundnut_GCO)) +
   geom_density(alpha=0.7) + 
-  scale_fill_manual(values = c("#F75C02","#1132BF")) +
+  scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
   theme_justin
 ```
 
@@ -110,7 +110,7 @@ data<-na.omit(x)
 #plot
 ggplot(data, aes(x=MEAN, fill=maize_GCO)) +
   geom_density(alpha=0.7) + 
-  scale_fill_manual(values = c("#F75C02","#1132BF")) +
+  scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
   theme_justin
 ```
 #Millet
@@ -127,7 +127,7 @@ data<-na.omit(x)
 #plot
 ggplot(data, aes(x=MEAN, fill=millet_GCO)) +
   geom_density(alpha=0.7) + 
-  scale_fill_manual(values = c("#F75C02","#1132BF")) +
+  scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
   theme_justin
 ```
 
@@ -145,7 +145,7 @@ data<-na.omit(x)
 #plot
 ggplot(data, aes(x=MEAN, fill=rapeseed_GCO)) +
   geom_density(alpha=0.7) + 
-  scale_fill_manual(values = c("#F75C02","#1132BF")) +
+  scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
   theme_justin
 ```
 
@@ -162,7 +162,7 @@ data<-na.omit(x)
 #plot
 ggplot(data, aes(x=MEAN, fill=rice_GCO)) +
   geom_density(alpha=0.7) + 
-  scale_fill_manual(values = c("#F75C02","#1132BF")) +
+  scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
   theme_justin
 ```
 
@@ -179,7 +179,7 @@ data<-na.omit(x)
 #plot
 ggplot(data, aes(x=MEAN, fill=rye_GCO)) +
   geom_density(alpha=0.7) + 
-  scale_fill_manual(values = c("#F75C02","#1132BF")) +
+  scale_fill_manual(values = c("#F75C02","#1132BF"))  + xlab("Mean Pixel Slope") +
   theme_justin
 ```
 
@@ -196,7 +196,7 @@ data<-na.omit(x)
 #plot
 ggplot(data, aes(x=MEAN, fill=sorghum_GCO)) +
   geom_density(alpha=0.7) + 
-  scale_fill_manual(values = c("#F75C02","#1132BF")) +
+  scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
   theme_justin
 ```
 
@@ -213,7 +213,7 @@ data<-na.omit(x)
 #plot
 ggplot(data, aes(x=MEAN, fill=soybean_GCO)) +
   geom_density(alpha=0.7) + 
-  scale_fill_manual(values = c("#F75C02","#1132BF")) +
+  scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
   theme_justin
 ```
 

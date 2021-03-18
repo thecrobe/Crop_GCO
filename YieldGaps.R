@@ -1,0 +1,68 @@
+#data read-ins
+data1<-read.csv(file="YieldGap/Soy_Gap_ZS_Fishnet.csv", header=T)
+fishnet<-read.csv(file="Fishnets/mapping_GCOfishnet.csv", header=T)
+x<-inner_join(data1, fishnet)
+x[x==0] <- NA
+summary(x)
+data<-na.omit(x)
+data<-x
+fishnet.yield<-read.csv(file = "Fishnets/yield_fishnet.csv", header=T)
+x<-inner_join(data, fishnet.yield)
+data<-x
+data<-na.omit(data)
+
+#Inside vs Outside GCO 
+soybean.inside<-filter(data, soybean_GCO == "Inside")
+soybean.outside<-filter(data, soybean_GCO == "Outside")
+
+summary(soybean.inside$SUM)
+summary(soybean.outside$SUM)
+
+#T Test
+hist(soybean.inside$MEAN) #normal
+hist(soybean.outside$MEAN) #normal
+qqnorm(soybean.inside$MEAN) #normal
+qqnorm(soybean.outside$MEAN) #normal
+soy.test<-t.test(soybean.inside$SUM, soybean.outside$SUM, progress=FALSE)
+print(soy.test)
+
+
+
+library(rgdal)
+
+#Import Fishnet
+fishnet<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/Crop_GCO/YieldGap/", layer="SoyGap")
+### Get Lat-Long Baby Girl and apply metadata
+xy <- coordinates(fishnet)
+metadata <- fishnet@data
+sapply(metadata, "class")
+
+soy<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Soy_Millet_Centroid") #Import GCO Centroid
+plot(soy)
+soy.c<-coordinates(soy) #Extract Lat-Long
+distances <- spDistsN1(xy,soy.c, longlat = FALSE) #Calculate Near Distances
+data<-cbind(data.frame(metadata),data.frame(distances)) #Merge into a DF
+data$rescale_ND<-data$distances/(1000*1000) #Rescale distances 
+data<-data %>% filter(data$MEAN> 0, na.rm=TRUE) #select  > 0 
+
+ggplot(data, aes(x=data$rescale_ND, y=data$MEAN)) + 
+  geom_point(alpha=0.3) +theme_justin +geom_smooth(method="lm")
+
+##  Model - Barley Fertilizer Near
+library(nlme)
+# regular OLS no variance structure
+soy.gap.ols <- gls(MEAN ~ rescale_ND, data = data)
+# varFixed (variance changes linearly with X)
+soy.gap.fixed <- update(soy.gap.ols, .~., weights = varFixed(~rescale_ND))
+# varPower (variance changes as a power function with X)
+soy.gap.power <- update(soy.gap.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+# varExp (variance changes as an exponential function of x)
+soy.gap.exp <- update(soy.gap.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+# varConstPower (constant plus a power function of X (useful if X includes 0))
+soy.gap.ConstPower <- update(soy.gap.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+# compare all models by AIC
+AIC(soy.gap.ols, soy.gap.fixed, soy.gap.power, soy.gap.ConstPower, soy.gap.exp)
+summary(soy.gap.exp)
+coef(soy.gap.power) #for every 1000km escaped, yield gaps decrease 0.03 tons/hc
+
+
