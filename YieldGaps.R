@@ -45,8 +45,10 @@ data<-cbind(data.frame(metadata),data.frame(distances)) #Merge into a DF
 data$rescale_ND<-data$distances/(1000*1000) #Rescale distances 
 data<-data %>% filter(data$MEAN> 0, na.rm=TRUE) #select  > 0 
 
-ggplot(data, aes(x=data$rescale_ND, y=data$MEAN)) + 
-  geom_point(alpha=0.3) +theme_justin +geom_smooth(method="lm")
+ggplot(data, aes(x=data$rescale_ND, y=data$MEAN, color=data$NNeighbors)) + 
+  geom_point(alpha=0.3) +theme_justin +
+  geom_abline(aes(intercept=coef(soy.gap.power)[1], slope=coef(soy.gap.power)[2]), color="red", size=2) +xlab("Distance From GCO (1000's km)") +ylab("Mean Yield Gap (tons/ha)")
+
 
 ##  Model - Barley Fertilizer Near
 library(nlme)

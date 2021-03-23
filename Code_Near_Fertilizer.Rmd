@@ -298,6 +298,7 @@ sorghum.ConstPower <- update(sorghum.ols, . ~., weights = varConstPower(form = ~
 # compare all models by AIC
 AIC(sorghum.ols, sorghum.fixed, sorghum.power, sorghum.ConstPower) #sorghum.exp)
 summary(sorghum.ConstPower)
+
 ```
 
 ## Soybean 
