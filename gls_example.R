@@ -120,4 +120,12 @@ country_hull("Eritrea")
 # OK. this is maybe not so useful, but it helped me think about/investigate
 # whether the unexplained variation is related  to some kind of country-level factors
 
+## is there a "China effect"?
 
+nochina <- cassava.near[cassava.near$COUNTRY!="China",]
+
+nochina.ols <-  gls(logYield ~ rescale_ND, data = nochina)
+summary(nochina.ols)
+summary(cassava.ols)
+
+nochina.exp <- update(nochina.ols, .~.,weights = varExp(form = ~rescale_ND))
