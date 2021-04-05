@@ -31,6 +31,7 @@ output: html_document
 
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
 library(ggplot2)
+library(dplyr)
 
 
 #ggplot graphic parameters
@@ -47,7 +48,7 @@ theme_justin<-theme_bw() +theme(axis.line = element_line(colour = "black"),
 
 #data read-ins
 data1<-read.csv(file="Near_Null_ZonalStats/Barley_Null_ZS.csv", header=T)
-fishnet<-read.csv(file="Fishnets/mapping_GCOfishnet.csv", header=T)
+fishnet<-read.csv(file="Fishnets/mapping_GCOfishnet.csv", header=T, fileEncoding="UTF-8-BOM")
 x<-inner_join(data1, fishnet)
 x[x==0] <- NA
 summary(x)
@@ -65,7 +66,7 @@ ggplot(data, aes(x=MEAN, fill=barley_GCO)) +
 
 #data read-ins
 data1<-read.csv(file="Near_Null_ZonalStats/Cassava_Null_ZS.csv", header=T)
-fishnet<-read.csv(file="Fishnets/mapping_GCOfishnet.csv", header=T)
+
 x<-inner_join(data1, fishnet)
 x[x==0] <- NA
 summary(x)
@@ -83,7 +84,7 @@ ggplot(data, aes(x=MEAN, fill=cassava_GCO)) +
 
 #data read-ins
 data1<-read.csv(file="Near_Null_ZonalStats/Groundnut_Null_ZS.csv", header=T)
-fishnet<-read.csv(file="Fishnets/mapping_GCOfishnet.csv", header=T)
+
 x<-inner_join(data1, fishnet)
 x[x==0] <- NA
 summary(x)
@@ -101,7 +102,7 @@ ggplot(data, aes(x=MEAN, fill=groundnut_GCO)) +
 
 #data read-ins
 data1<-read.csv(file="Near_Null_ZonalStats/Maize_Null_ZS.csv", header=T)
-fishnet<-read.csv(file="Fishnets/mapping_GCOfishnet.csv", header=T)
+
 x<-inner_join(data1, fishnet)
 x[x==0] <- NA
 summary(x)
@@ -118,7 +119,7 @@ ggplot(data, aes(x=MEAN, fill=maize_GCO)) +
 
 #data read-ins
 data1<-read.csv(file="Near_Null_ZonalStats/Millet_Null_ZS.csv", header=T)
-fishnet<-read.csv(file="Fishnets/mapping_GCOfishnet.csv", header=T)
+
 x<-inner_join(data1, fishnet)
 x[x==0] <- NA
 summary(x)
@@ -136,7 +137,7 @@ ggplot(data, aes(x=MEAN, fill=millet_GCO)) +
 
 #data read-ins
 data1<-read.csv(file="Near_Null_ZonalStats/Rapeseed_Null_ZS.csv", header=T)
-fishnet<-read.csv(file="Fishnets/mapping_GCOfishnet.csv", header=T)
+
 x<-inner_join(data1, fishnet)
 x[x==0] <- NA
 summary(x)
@@ -154,7 +155,7 @@ ggplot(data, aes(x=MEAN, fill=rapeseed_GCO)) +
 
 #data read-ins
 data1<-read.csv(file="Near_Null_ZonalStats/Rice_Null_ZS.csv", header=T)
-fishnet<-read.csv(file="Fishnets/mapping_GCOfishnet.csv", header=T)
+
 x<-inner_join(data1, fishnet)
 x[x==0] <- NA
 summary(x)
@@ -171,7 +172,7 @@ ggplot(data, aes(x=MEAN, fill=rice_GCO)) +
 
 #data read-ins
 data1<-read.csv(file="Near_Null_ZonalStats/Rye_Null_ZS.csv", header=T)
-fishnet<-read.csv(file="Fishnets/mapping_GCOfishnet.csv", header=T)
+
 x<-inner_join(data1, fishnet)
 x[x==0] <- NA
 summary(x)
@@ -188,7 +189,7 @@ ggplot(data, aes(x=MEAN, fill=rye_GCO)) +
 
 #data read-ins
 data1<-read.csv(file="Near_Null_ZonalStats/Sorghum_Null_ZS.csv", header=T)
-fishnet<-read.csv(file="Fishnets/mapping_GCOfishnet.csv", header=T)
+
 x<-inner_join(data1, fishnet)
 x[x==0] <- NA
 summary(x)
@@ -205,7 +206,7 @@ ggplot(data, aes(x=MEAN, fill=sorghum_GCO)) +
 
 #data read-ins
 data1<-read.csv(file="Near_Null_ZonalStats/Soy_Null_ZS.csv", header=T)
-fishnet<-read.csv(file="Fishnets/mapping_GCOfishnet.csv", header=T)
+
 x<-inner_join(data1, fishnet)
 x[x==0] <- NA
 summary(x)
@@ -222,7 +223,7 @@ ggplot(data, aes(x=MEAN, fill=soybean_GCO)) +
 
 #data read-ins
 data1<-read.csv(file="Near_Null_ZonalStats/Sunflower_Null_ZS.csv", header=T)
-fishnet<-read.csv(file="Fishnets/mapping_GCOfishnet.csv", header=T)
+
 x<-inner_join(data1, fishnet)
 x[x==0] <- NA
 summary(x)
@@ -239,7 +240,7 @@ ggplot(data, aes(x=MEAN, fill=sunflower_GCO)) +
 
 #data read-ins
 data1<-read.csv(file="Near_Null_ZonalStats/Wheat_Null_ZS.csv", header=T)
-fishnet<-read.csv(file="Fishnets/mapping_GCOfishnet.csv", header=T)
+
 x<-inner_join(data1, fishnet)
 x[x==0] <- NA
 summary(x)
