@@ -1,0 +1,252 @@
+---
+title: "NearFertilizer"
+author: "JD Stewart"
+date: "2/17/2021"
+output: html_document
+---
+
+```{r Introduction, echo=FALSE}
+
+# This document contains code for viewing density plots of near-null model results by pixels inside/outside GCO. 
+
+# Reproducibility
+
+#This document can be regenerated using Rmarkdown and the associated R-script (Analyses_Figures.R). This R-script, in combination with the supplementary data files (available online at github.com/thecrobe) also allows for full reproducibility of all the the figures and analyses conducted in R. All other analyses are conducted in ArcMap by ESRI. 
+```
+
+# Near Analysis Models 
+
+<div class = "col-md-4">
+<br><br> **What Was Tested:** Do crop yields increase from GCOs globally no matter where you are located, e.g. with randomized GCOs? For this interpolated prediction surfaces generated using Bayesian Empirical Krigging were then covered with the global fishnet and zonal statistics (means) were calculated per pixel. Colors for these graphs are derived from Simphiwe Ndzube, Invitation to my Voyage #2 (2019). 
+</div>
+
+<div class = "col-md-4">
+<br><br> **What This Allows Me To Do:** Identify if yield-distance relationships (near analysis) are a function of location of GCOs relative to specific growing areas like China, USA, or India.
+</div>
+
+<div class = "col-md-4">
+<br><br> **What Are The Model Assumptions:** None, these are descriptive density plots of model results. 
+</div>
+
+
+```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
+library(ggplot2)
+
+
+#ggplot graphic parameters
+theme_justin<-theme_bw() +theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank())
+
+```
+
+#Barley
+```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
+
+#data read-ins
+data1<-read.csv(file="Near_Null_ZonalStats/Barley_Null_ZS.csv", header=T)
+fishnet<-read.csv(file="Fishnets/mapping_GCOfishnet.csv", header=T)
+x<-inner_join(data1, fishnet)
+x[x==0] <- NA
+summary(x)
+data<-na.omit(x)
+
+#plot
+ggplot(data, aes(x=MEAN, fill=barley_GCO)) +
+  geom_density(alpha=0.7) + 
+  scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope")
+  theme_justin
+```
+
+#Cassava
+```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
+
+#data read-ins
+data1<-read.csv(file="Near_Null_ZonalStats/Cassava_Null_ZS.csv", header=T)
+fishnet<-read.csv(file="Fishnets/mapping_GCOfishnet.csv", header=T)
+x<-inner_join(data1, fishnet)
+x[x==0] <- NA
+summary(x)
+data<-na.omit(x)
+
+#plot
+ggplot(data, aes(x=MEAN, fill=cassava_GCO)) +
+  geom_density(alpha=0.7) + 
+  scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
+  theme_justin
+```
+
+#Groundnut
+```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
+
+#data read-ins
+data1<-read.csv(file="Near_Null_ZonalStats/Groundnut_Null_ZS.csv", header=T)
+fishnet<-read.csv(file="Fishnets/mapping_GCOfishnet.csv", header=T)
+x<-inner_join(data1, fishnet)
+x[x==0] <- NA
+summary(x)
+data<-na.omit(x)
+
+#plot
+ggplot(data, aes(x=MEAN, fill=groundnut_GCO)) +
+  geom_density(alpha=0.7) + 
+  scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
+  theme_justin
+```
+
+#Maize
+```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
+
+#data read-ins
+data1<-read.csv(file="Near_Null_ZonalStats/Maize_Null_ZS.csv", header=T)
+fishnet<-read.csv(file="Fishnets/mapping_GCOfishnet.csv", header=T)
+x<-inner_join(data1, fishnet)
+x[x==0] <- NA
+summary(x)
+data<-na.omit(x)
+
+#plot
+ggplot(data, aes(x=MEAN, fill=maize_GCO)) +
+  geom_density(alpha=0.7) + 
+  scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
+  theme_justin
+```
+#Millet
+```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
+
+#data read-ins
+data1<-read.csv(file="Near_Null_ZonalStats/Millet_Null_ZS.csv", header=T)
+fishnet<-read.csv(file="Fishnets/mapping_GCOfishnet.csv", header=T)
+x<-inner_join(data1, fishnet)
+x[x==0] <- NA
+summary(x)
+data<-na.omit(x)
+
+#plot
+ggplot(data, aes(x=MEAN, fill=millet_GCO)) +
+  geom_density(alpha=0.7) + 
+  scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
+  theme_justin
+```
+
+#Rapeseed
+```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
+
+#data read-ins
+data1<-read.csv(file="Near_Null_ZonalStats/Rapeseed_Null_ZS.csv", header=T)
+fishnet<-read.csv(file="Fishnets/mapping_GCOfishnet.csv", header=T)
+x<-inner_join(data1, fishnet)
+x[x==0] <- NA
+summary(x)
+data<-na.omit(x)
+
+#plot
+ggplot(data, aes(x=MEAN, fill=rapeseed_GCO)) +
+  geom_density(alpha=0.7) + 
+  scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
+  theme_justin
+```
+
+#Rice
+```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
+
+#data read-ins
+data1<-read.csv(file="Near_Null_ZonalStats/Rice_Null_ZS.csv", header=T)
+fishnet<-read.csv(file="Fishnets/mapping_GCOfishnet.csv", header=T)
+x<-inner_join(data1, fishnet)
+x[x==0] <- NA
+summary(x)
+data<-na.omit(x)
+#plot
+ggplot(data, aes(x=MEAN, fill=rice_GCO)) +
+  geom_density(alpha=0.7) + 
+  scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
+  theme_justin
+```
+
+#Rye
+```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
+
+#data read-ins
+data1<-read.csv(file="Near_Null_ZonalStats/Rye_Null_ZS.csv", header=T)
+fishnet<-read.csv(file="Fishnets/mapping_GCOfishnet.csv", header=T)
+x<-inner_join(data1, fishnet)
+x[x==0] <- NA
+summary(x)
+data<-na.omit(x)
+#plot
+ggplot(data, aes(x=MEAN, fill=rye_GCO)) +
+  geom_density(alpha=0.7) + 
+  scale_fill_manual(values = c("#F75C02","#1132BF"))  + xlab("Mean Pixel Slope") +
+  theme_justin
+```
+
+#Sorghum
+```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
+
+#data read-ins
+data1<-read.csv(file="Near_Null_ZonalStats/Sorghum_Null_ZS.csv", header=T)
+fishnet<-read.csv(file="Fishnets/mapping_GCOfishnet.csv", header=T)
+x<-inner_join(data1, fishnet)
+x[x==0] <- NA
+summary(x)
+data<-na.omit(x)
+#plot
+ggplot(data, aes(x=MEAN, fill=sorghum_GCO)) +
+  geom_density(alpha=0.7) + 
+  scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
+  theme_justin
+```
+
+#Soybean
+```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
+
+#data read-ins
+data1<-read.csv(file="Near_Null_ZonalStats/Soy_Null_ZS.csv", header=T)
+fishnet<-read.csv(file="Fishnets/mapping_GCOfishnet.csv", header=T)
+x<-inner_join(data1, fishnet)
+x[x==0] <- NA
+summary(x)
+data<-na.omit(x)
+#plot
+ggplot(data, aes(x=MEAN, fill=soybean_GCO)) +
+  geom_density(alpha=0.7) + 
+  scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
+  theme_justin
+```
+
+#Sunflower
+```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
+
+#data read-ins
+data1<-read.csv(file="Near_Null_ZonalStats/Sunflower_Null_ZS.csv", header=T)
+fishnet<-read.csv(file="Fishnets/mapping_GCOfishnet.csv", header=T)
+x<-inner_join(data1, fishnet)
+x[x==0] <- NA
+summary(x)
+data<-na.omit(x)
+#plot
+ggplot(data, aes(x=MEAN, fill=sunflower_GCO)) +
+  geom_density(alpha=0.7) + 
+  scale_fill_manual(values = c("#F75C02","#1132BF")) +
+  theme_justin
+```
+
+#Wheat
+```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
+
+#data read-ins
+data1<-read.csv(file="Near_Null_ZonalStats/Wheat_Null_ZS.csv", header=T)
+fishnet<-read.csv(file="Fishnets/mapping_GCOfishnet.csv", header=T)
+x<-inner_join(data1, fishnet)
+x[x==0] <- NA
+summary(x)
+data<-na.omit(x)
+#plot
+ggplot(data, aes(x=MEAN, fill=wheat_GCO)) +
+  geom_density(alpha=0.7) + 
+  scale_fill_manual(values = c("#F75C02","#1132BF")) +
+  theme_justin
+```

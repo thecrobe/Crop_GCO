@@ -52,7 +52,7 @@ theme_justin<-theme_bw() +theme(axis.line = element_line(colour = "black"),
 ## Near Analysis Models 
 
 <div class = "col-md-4">
-<br><br> **What Was Tested:** Do crop yields increase from GCOs globally?
+<br><br> **What Was Tested:** Do crop yields increase from GCOs globally no matter where you are located, e.g. with randomized GCOs?
 </div>
 
 <div class = "col-md-4">
