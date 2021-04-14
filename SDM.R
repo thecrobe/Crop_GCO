@@ -90,19 +90,16 @@ plot(wrld_simpl,
 plot(predict.presence > bc.threshold, 
      add = TRUE, 
      legend = TRUE)
-
 x<-predict.presence>bc.threshold
-
-
 # And add those observations
 points(x = obs.data$Longitude, 
        y = obs.data$Latitude, 
        col = "black",
        pch = "+", 
        cex = 0.6)
-
 # Redraw those country borders
 plot(wrld_simpl, add = TRUE, border = "grey5")
 box()
-
 #Export for mapping in ArcGis (PRETTIER) 
+writeRaster(x, file="SDM/SDMs_Final/SorghumSDMraster.tif")
+

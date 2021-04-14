@@ -101,8 +101,7 @@ plot(predict.presence) #check it out
 bc.eval <- evaluate(p = presence.test,   # The presence testing data
                     a = background.test, # The absence testing data
                     model = bc.model,    # The model we are evaluating
-                    x = bioclim.data)    # Climatic variables for use by model
-
+print(bc.eval) #check AUC 
 # Determine minimum threshold for "presence"
 bc.threshold <- threshold(x = bc.eval, stat = "spec_sens")
 
