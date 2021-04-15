@@ -29,6 +29,7 @@ library("raster")
 library("maptools")
 library("rgdal")
 library("dismo")
+
 ```
 
 #Sorghum
@@ -101,7 +102,9 @@ plot(predict.presence) #check it out
 bc.eval <- evaluate(p = presence.test,   # The presence testing data
                     a = background.test, # The absence testing data
                     model = bc.model,    # The model we are evaluating
-print(bc.eval) #check AUC 
+                    x = bioclim.data)    # Climatic variables for use by model
+summary(bc.eval)
+plot(bc.eval, "ROC")
 # Determine minimum threshold for "presence"
 bc.threshold <- threshold(x = bc.eval, stat = "spec_sens")
 
@@ -131,4 +134,11 @@ plot(wrld_simpl, add = TRUE, border = "grey5")
 box()
 #Export for mapping in ArcGis (PRETTIER) 
 writeRaster(x, file="SDM/SDMs_Final/SorghumSDMraster.tif")
+
+
+mean<-read.csv(file = "../GIS/Fishnet/Fishnet_yield_world_excel.csv", header=T)
+mean
+
+
+
 ```
