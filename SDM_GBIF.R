@@ -183,3 +183,9 @@ e1 <- evaluate(Xanthium.spinosum.me, p=occ.Xanthium.spinosum.test, a=bg, x=model
 plot(e1, 'ROC')
 #writeRaster(Xanthium.spinosum.pred, file = "SDMs/Sorghum_Xanthium.spinosum.tif")
 
+
+#Zonal Statistics
+sorghum.pest.rasters<-list(Xanthium.spinosum.pred,Verbesina.encelioides.pred,Spodoptera.frugiperda.pred,Paspalum.urvillei.pred,occ.Achatina.fulica.pred)
+s <- stack(sorghum.pest.rasters)
+fishnet <- shapefile("Shapefiles/Fishnet_Yield_Fertilizer_NoAnt.shp")
+ex <- extract(s, fishnet, fun='mean', na.rm=TRUE, df=TRUE, weights = TRUE)
