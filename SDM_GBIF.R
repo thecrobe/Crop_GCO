@@ -14,7 +14,7 @@ Achatina.fulica<-data.frame(Achatina.fulica.gbf$data)
 # Number of occurrences
 dim(Achatina.fulica) #483 
 # Coordinates
-Achatina.fulica.xy<-Achatina.fulica  %>% select(scientificName,decimalLongitude, decimalLatitude)
+Achatina.fulica.xy<-Achatina.fulica %>% dplyr::select(scientificName,decimalLongitude, decimalLatitude)
 
 #Claviceps.africana - TOO FEW
 #Claviceps.africana.gbf<-occ_search(scientificName = "Claviceps africana",hasCoordinate = TRUE, limit=100000)
@@ -22,7 +22,7 @@ Achatina.fulica.xy<-Achatina.fulica  %>% select(scientificName,decimalLongitude,
 # Number of occurrences
 #dim(Claviceps.africana) #13
 # Coordinates
-#Claviceps.africana.xy<-Claviceps.africana  %>% select(scientificName,decimalLongitude, decimalLatitude)
+#Claviceps.africana.xy<-Claviceps.africana  %>% dplyr::select(scientificName,decimalLongitude, decimalLatitude)
 
 #Curvularia clavata - NOT PRESENT IN GBIF
 #Curvularia.clavata.gbf<-occ_search(scientificName = "Claviceps clavata",hasCoordinate = TRUE)
@@ -33,7 +33,7 @@ Achatina.fulica.xy<-Achatina.fulica  %>% select(scientificName,decimalLongitude,
 # Number of occurrences
 #dim(Eurystylus.oldi) #4
 # Coordinates
-#Eurystylus.oldi.xy<-Eurystylus.oldi %>% select(scientificName,decimalLongitude, decimalLatitude)
+#Eurystylus.oldi.xy<-Eurystylus.oldi %>% dplyr::select(scientificName,decimalLongitude, decimalLatitude)
 
 #Maliarpha.separatella - TOO FEW
 #Maliarpha.separatella.gbf<-occ_search(scientificName = " Maliarpha separatella ",hasCoordinate = TRUE, limit=100000)
@@ -41,7 +41,7 @@ Achatina.fulica.xy<-Achatina.fulica  %>% select(scientificName,decimalLongitude,
 # Number of occurrences
 #dim(Maliarpha.separatella) #5
 # Coordinates
-#Maliarpha.separatella.xy<-Maliarpha.separatella %>% select(scientificName,decimalLongitude, decimalLatitude)
+#Maliarpha.separatella.xy<-Maliarpha.separatella %>% dplyr::select(scientificName,decimalLongitude, decimalLatitude)
 
 #Paspalum urvillei
 Paspalum.urvillei.gbf<-occ_search(scientificName = "Paspalum urvillei",hasCoordinate = TRUE, limit=100000)
@@ -49,7 +49,7 @@ Paspalum.urvillei<-data.frame(Paspalum.urvillei.gbf$data)
 # Number of occurrences
 dim(Paspalum.urvillei) #5303
 # Coordinates
-Paspalum.urvillei.xy<-Paspalum.urvillei %>% select(scientificName,decimalLongitude, decimalLatitude)
+Paspalum.urvillei.xy<-Paspalum.urvillei %>% dplyr::select(scientificName,decimalLongitude, decimalLatitude)
 
 
 #Peronosclerospora australiensis - NOT PRESENT 
@@ -64,7 +64,7 @@ Spodoptera.frugiperda<-data.frame(Spodoptera.frugiperda.gbf$data)
 # Number of occurrences
 dim(Spodoptera.frugiperda) #2719
 # Coordinates
-Spodoptera.frugiperda.xy<-Spodoptera.frugiperda %>% select(scientificName,decimalLongitude, decimalLatitude)
+Spodoptera.frugiperda.xy<-Spodoptera.frugiperda %>% dplyr::select(scientificName,decimalLongitude, decimalLatitude)
 
 
 #Verbesina encelioides
@@ -73,7 +73,7 @@ Verbesina.encelioides<-data.frame(Verbesina.encelioides.gbf$data)
 # Number of occurrences
 dim(Verbesina.encelioides) #7795
 # Coordinates
-Verbesina.encelioides.xy<-Verbesina.encelioides %>% select(scientificName,decimalLongitude, decimalLatitude)
+Verbesina.encelioides.xy<-Verbesina.encelioides %>% dplyr::select(scientificName,decimalLongitude, decimalLatitude)
 
 #Xanthium spinosum
 Xanthium.spinosum.gbf<-occ_search(scientificName = "Xanthium spinosum",limit = 100000)
@@ -82,7 +82,7 @@ Xanthium.spinosum
 # Number of occurrences
 dim(Xanthium.spinosum) #16833
 # Coordinates
-Xanthium.spinosum.xy<-Xanthium.spinosum %>% select(scientificName,decimalLongitude, decimalLatitude)
+Xanthium.spinosum.xy<-Xanthium.spinosum %>% dplyr::select(scientificName,decimalLongitude, decimalLatitude)
 
 ##### SDM MODELS #####
 #Import Raster 
@@ -184,8 +184,8 @@ plot(e1, 'ROC')
 #writeRaster(Xanthium.spinosum.pred, file = "SDMs/Sorghum_Xanthium.spinosum.tif")
 
 
-#Zonal Statistics
-sorghum.pest.rasters<-list(Xanthium.spinosum.pred,Verbesina.encelioides.pred,Spodoptera.frugiperda.pred,Paspalum.urvillei.pred,occ.Achatina.fulica.pred)
-s <- stack(sorghum.pest.rasters)
-fishnet <- shapefile("Shapefiles/Fishnet_Yield_Fertilizer_NoAnt.shp")
-ex <- extract(s, fishnet, fun='mean', na.rm=TRUE, df=TRUE, weights = TRUE)
+Xanthium.spinosum.pred<-raster("SDMs/Sorghum_Xanthium.spinosum.tif")
+Achatina.fulica.pred<-raster("SDMs/Sorghum_Achatina.fulica.tif")
+Verbesina.encelioides.pred<-raster("SDMs/Sorghum_Verbesina.encelioides.tif")
+Spodoptera.frugiperda.pred<-raster("SDMs/Sorghum_Spodoptera.frugiperda.tif")
+Paspalum.urvillei.pred<-raster("SDMs/Sorghum_Paspalum.urvillei.tif")
