@@ -6,6 +6,8 @@ library(dismo)
 library(rJava) 
 library(maptools)
 library(jsonlite)
+library(ggplot2)
+library(RVAideMemoire)
 # Collect occurrences for pests
 
 #Achatina.fulica
@@ -183,9 +185,27 @@ e1 <- evaluate(Xanthium.spinosum.me, p=occ.Xanthium.spinosum.test, a=bg, x=model
 plot(e1, 'ROC')
 #writeRaster(Xanthium.spinosum.pred, file = "SDMs/Sorghum_Xanthium.spinosum.tif")
 
+#Zonal Means calculated in ArcMap - Reimport Data
+pests<-read.csv(file = "SDMs/SorghumPests_ZonalMeans.csv", header=T)
+mapping<-read.csv("Fishnets/mapping_GCOfishnet.csv", header=T, fileEncoding = "UTF-8-BOM")
+pest.mapping<-inner_join(mapping,pests)
+dim(pest.mapping)
+pest.mapping<-na.omit(pest.mapping)
 
-#Zonal Statistics
-sorghum.pest.rasters<-list(Xanthium.spinosum.pred,Verbesina.encelioides.pred,Spodoptera.frugiperda.pred,Paspalum.urvillei.pred,occ.Achatina.fulica.pred)
-s <- stack(sorghum.pest.rasters)
-fishnet <- shapefile("Shapefiles/Fishnet_Yield_Fertilizer_NoAnt.shp")
-ex <- extract(s, fishnet, fun='mean', na.rm=TRUE, df=TRUE, weights = TRUE)
+#Inside vs Outside GCO 
+inside<-filter(pest.mapping, sorghum_GCO == "Inside")
+outside<-filter(pest.mapping, sorghum_GCO == "Outside")
+
+summary(inside)
+summary(outside)
+
+# Permutational T Test
+set.seed(8675309)
+perm<-perm.t.test(inside$MeanProbability,outside$MeanProbability,progress=FALSE)
+print(perm)
+
+
+
+Achatina.filter<-pest.mapping %>% filter(Achatina.fulica_MEAN > 0.7)
+ggplot(Achatina.filter, aes(x=sorghum_GCO, y=Achatina.fulica_MEAN)) +geom_boxplot()
+
