@@ -185,27 +185,4 @@ e1 <- evaluate(Xanthium.spinosum.me, p=occ.Xanthium.spinosum.test, a=bg, x=model
 plot(e1, 'ROC')
 #writeRaster(Xanthium.spinosum.pred, file = "SDMs/Sorghum_Xanthium.spinosum.tif")
 
-#Zonal Means calculated in ArcMap - Reimport Data
-pests<-read.csv(file = "SDMs/SorghumPests_ZonalMeans.csv", header=T)
-mapping<-read.csv("Fishnets/mapping_GCOfishnet.csv", header=T, fileEncoding = "UTF-8-BOM")
-pest.mapping<-inner_join(mapping,pests)
-dim(pest.mapping)
-pest.mapping<-na.omit(pest.mapping)
-
-#Inside vs Outside GCO 
-inside<-filter(pest.mapping, sorghum_GCO == "Inside")
-outside<-filter(pest.mapping, sorghum_GCO == "Outside")
-
-summary(inside)
-summary(outside)
-
-# Permutational T Test
-set.seed(8675309)
-perm<-perm.t.test(inside$MeanProbability,outside$MeanProbability,progress=FALSE)
-print(perm)
-
-
-
-Achatina.filter<-pest.mapping %>% filter(Achatina.fulica_MEAN > 0.7)
-ggplot(Achatina.filter, aes(x=sorghum_GCO, y=Achatina.fulica_MEAN)) +geom_boxplot()
 
