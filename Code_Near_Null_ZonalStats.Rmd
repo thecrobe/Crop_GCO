@@ -47,9 +47,9 @@ theme_justin<-theme_bw() +theme(axis.line = element_line(colour = "black"),
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
 
 #data read-ins
-data1<-read.csv(file="Near_Null_ZonalStats/Barley_Null_ZS.csv", header=T)
+barley<-read.csv(file="Near_Null_ZonalStats/Barley_Null_ZS.csv", header=T)
 fishnet<-read.csv(file="Fishnets/mapping_GCOfishnet.csv", header=T, fileEncoding="UTF-8-BOM")
-x<-inner_join(data1, fishnet)
+x<-inner_join(barley, fishnet)
 x[x==0] <- NA
 summary(x)
 data<-na.omit(x)
@@ -57,17 +57,22 @@ data<-na.omit(x)
 #plot
 ggplot(data, aes(x=MEAN, fill=barley_GCO)) +
   geom_density(alpha=0.7) + 
-  scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope")
+  scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope")+
   theme_justin
+  
+#Inside vs Outside GCO 
+barley.inside<-filter(x, barley_GCO == "Inside")
+barley.outside<-filter(x, barley_GCO == "Outside")
+barley.test<-perm.t.test(barley.inside$MEAN,barley.outside$MEAN)
+print(barley.test)
 ```
 
 #Cassava
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
 
 #data read-ins
-data1<-read.csv(file="Near_Null_ZonalStats/Cassava_Null_ZS.csv", header=T)
-
-x<-inner_join(data1, fishnet)
+cassava<-read.csv(file="Near_Null_ZonalStats/Cassava_Null_ZS.csv", header=T)
+x<-inner_join(cassava, fishnet)
 x[x==0] <- NA
 summary(x)
 data<-na.omit(x)
@@ -77,15 +82,22 @@ ggplot(data, aes(x=MEAN, fill=cassava_GCO)) +
   geom_density(alpha=0.7) + 
   scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
   theme_justin
+
+#Inside vs Outside GCO 
+cassava.inside<-filter(x, cassava_GCO == "Inside")
+cassava.outside<-filter(x, cassava_GCO == "Outside")
+cassava.test<-perm.t.test(cassava.inside$MEAN,cassava.outside$MEAN)
+print(cassava.test)
+
 ```
 
 #Groundnut
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
 
 #data read-ins
-data1<-read.csv(file="Near_Null_ZonalStats/Groundnut_Null_ZS.csv", header=T)
+groundnut<-read.csv(file="Near_Null_ZonalStats/Groundnut_Null_ZS.csv", header=T)
 
-x<-inner_join(data1, fishnet)
+x<-inner_join(groundnut, fishnet)
 x[x==0] <- NA
 summary(x)
 data<-na.omit(x)
@@ -95,15 +107,21 @@ ggplot(data, aes(x=MEAN, fill=groundnut_GCO)) +
   geom_density(alpha=0.7) + 
   scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
   theme_justin
+
+#Inside vs Outside GCO 
+groundnut.inside<-filter(x, groundnut_GCO == "Inside")
+groundnut.outside<-filter(x, groundnut_GCO == "Outside")
+groundnut.test<-perm.t.test(groundnut.inside$MEAN,groundnut.outside$MEAN)
+print(groundnut.test)
 ```
 
 #Maize
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
 
 #data read-ins
-data1<-read.csv(file="Near_Null_ZonalStats/Maize_Null_ZS.csv", header=T)
+maize<-read.csv(file="Near_Null_ZonalStats/Maize_Null_ZS.csv", header=T)
 
-x<-inner_join(data1, fishnet)
+x<-inner_join(maize, fishnet)
 x[x==0] <- NA
 summary(x)
 data<-na.omit(x)
@@ -113,14 +131,20 @@ ggplot(data, aes(x=MEAN, fill=maize_GCO)) +
   geom_density(alpha=0.7) + 
   scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
   theme_justin
+
+#Inside vs Outside GCO 
+maize.outside<-filter(x, maize_GCO == "Outside")
+maize.inside<-filter(x, maize_GCO == "Inside")
+maize.test<-perm.t.test(maize.inside$MEAN,maize.outside$MEAN)
+print(maize.test)
 ```
 #Millet
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
 
 #data read-ins
-data1<-read.csv(file="Near_Null_ZonalStats/Millet_Null_ZS.csv", header=T)
+millet<-read.csv(file="Near_Null_ZonalStats/Millet_Null_ZS.csv", header=T)
 
-x<-inner_join(data1, fishnet)
+x<-inner_join(millet, fishnet)
 x[x==0] <- NA
 summary(x)
 data<-na.omit(x)
@@ -130,15 +154,22 @@ ggplot(data, aes(x=MEAN, fill=millet_GCO)) +
   geom_density(alpha=0.7) + 
   scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
   theme_justin
+
+#Inside vs Outside GCO 
+millet.outside<-filter(x, millet_GCO == "Outside")
+millet.inside<-filter(x, millet_GCO == "Inside")
+millet.test<-perm.t.test(millet.inside$MEAN,millet.outside$MEAN)
+print(millet.test)
+
 ```
 
 #Rapeseed
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
 
 #data read-ins
-data1<-read.csv(file="Near_Null_ZonalStats/Rapeseed_Null_ZS.csv", header=T)
+rapeseed<-read.csv(file="Near_Null_ZonalStats/Rapeseed_Null_ZS.csv", header=T)
 
-x<-inner_join(data1, fishnet)
+x<-inner_join(rapeseed, fishnet)
 x[x==0] <- NA
 summary(x)
 data<-na.omit(x)
@@ -148,6 +179,13 @@ ggplot(data, aes(x=MEAN, fill=rapeseed_GCO)) +
   geom_density(alpha=0.7) + 
   scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
   theme_justin
+
+#Inside vs Outside GCO 
+rapeseed.outside<-filter(x, rapeseed_GCO == "Outside")
+rapeseed.inside<-filter(x, rapeseed_GCO == "Inside")
+rapeseed.test<-perm.t.test(rapeseed.inside$MEAN,rapeseed.outside$MEAN)
+print(rapeseed.test)
+
 ```
 
 #Rice

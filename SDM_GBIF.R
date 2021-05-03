@@ -6,6 +6,8 @@ library(dismo)
 library(rJava) 
 library(maptools)
 library(jsonlite)
+library(ggplot2)
+library(RVAideMemoire)
 # Collect occurrences for pests
 
 #Achatina.fulica
@@ -184,8 +186,11 @@ plot(e1, 'ROC')
 #writeRaster(Xanthium.spinosum.pred, file = "SDMs/Sorghum_Xanthium.spinosum.tif")
 
 
+<<<<<<< HEAD
 Xanthium.spinosum.pred<-raster("SDMs/Sorghum_Xanthium.spinosum.tif")
 Achatina.fulica.pred<-raster("SDMs/Sorghum_Achatina.fulica.tif")
 Verbesina.encelioides.pred<-raster("SDMs/Sorghum_Verbesina.encelioides.tif")
 Spodoptera.frugiperda.pred<-raster("SDMs/Sorghum_Spodoptera.frugiperda.tif")
 Paspalum.urvillei.pred<-raster("SDMs/Sorghum_Paspalum.urvillei.tif")
+=======
+>>>>>>> 2192ab6456e2382d850e201a3445c6ce0a8642df
