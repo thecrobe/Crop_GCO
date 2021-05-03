@@ -132,7 +132,7 @@ occ.Spodoptera.frugiperda<-Spodoptera.frugiperda.xy[,-1]
 model.extent<-extent(-180,180,-90,90)
 modelEnv=crop(currentEnv,model.extent)
 
-fold <- kfold(occ.Spodoptera.frugiperda, k=5) # add an index that makes five random groups of observations
+fold <- kfold(occ.Spodoptera.frugiperda, k=5) # add an index that makes five random groups of observations 
 occ.Spodoptera.frugiperda.test <- occ.Spodoptera.frugiperda[fold == 1, ] # hold out one fifth as test data
 occ.Spodoptera.frugiperda.train <- occ.Spodoptera.frugiperda.test[fold != 1, ] # the other four fifths are training data
 maxent()
