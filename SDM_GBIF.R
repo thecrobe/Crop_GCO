@@ -184,13 +184,3 @@ bg <- randomPoints(modelEnv, 1000) #make psuedorandom background points
 e1 <- evaluate(Xanthium.spinosum.me, p=occ.Xanthium.spinosum.test, a=bg, x=modelEnv)
 plot(e1, 'ROC')
 #writeRaster(Xanthium.spinosum.pred, file = "SDMs/Sorghum_Xanthium.spinosum.tif")
-
-
-<<<<<<< HEAD
-Xanthium.spinosum.pred<-raster("SDMs/Sorghum_Xanthium.spinosum.tif")
-Achatina.fulica.pred<-raster("SDMs/Sorghum_Achatina.fulica.tif")
-Verbesina.encelioides.pred<-raster("SDMs/Sorghum_Verbesina.encelioides.tif")
-Spodoptera.frugiperda.pred<-raster("SDMs/Sorghum_Spodoptera.frugiperda.tif")
-Paspalum.urvillei.pred<-raster("SDMs/Sorghum_Paspalum.urvillei.tif")
-=======
->>>>>>> 2192ab6456e2382d850e201a3445c6ce0a8642df
