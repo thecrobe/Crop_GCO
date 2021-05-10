@@ -15,17 +15,7 @@ library(RVAideMemoire)
 Pseudomonas.syringae.gbf<-occ_search(scientificName = "Pseudomonas syringae",hasCoordinate = TRUE, limit=100000)
 Pseudomonas.syringae<-data.frame(Pseudomonas.syringae.gbf$data)
 # Number of occurrences
-dim(Pseudomonas.syringae) #483 
-# Coordinates
-Pseudomonas.syringae.xy<-Pseudomonas.syringae %>% dplyr::select(scientificName,decimalLongitude, decimalLatitude)
-
-
-
-#Xanthomonas campestris
-Pseudomonas.syringae.gbf<-occ_search(scientificName = "Pseudomonas syringae",hasCoordinate = TRUE, limit=100000)
-Pseudomonas.syringae<-data.frame(Pseudomonas.syringae.gbf$data)
-# Number of occurrences
-dim(Pseudomonas.syringae) #1223 
+dim(Pseudomonas.syringae) #1223
 # Coordinates
 Pseudomonas.syringae.xy<-Pseudomonas.syringae %>% dplyr::select(scientificName,decimalLongitude, decimalLatitude)
 
@@ -157,6 +147,7 @@ Diabrotica.undecimpunctata.xy<-Diabrotica.undecimpunctata %>% dplyr::select(scie
 grids <- list.files("wc2-5/" , pattern = "*.tif$")
 #create a raster stack from the input raster files 
 currentEnv <- raster::stack(paste0("wc2-5/", grids))
+.jinit() #star java(script?)
 
 #Pseudomonas.syringae SDM 
 occ.Pseudomonas.syringae<-Pseudomonas.syringae.xy[,-1]
@@ -171,4 +162,5 @@ print(Pseudomonas.syringae.me)
 plot(Pseudomonas.syringae.me) #Variable Importance 
 occ.Pseudomonas.syringae.pred <- predict(Pseudomonas.syringae.me, modelEnv)
 plot(occ.Pseudomonas.syringae.pred)
+
 
