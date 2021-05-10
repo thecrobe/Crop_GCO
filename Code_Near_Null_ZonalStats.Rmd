@@ -185,16 +185,15 @@ rapeseed.outside<-filter(x, rapeseed_GCO == "Outside")
 rapeseed.inside<-filter(x, rapeseed_GCO == "Inside")
 rapeseed.test<-perm.t.test(rapeseed.inside$MEAN,rapeseed.outside$MEAN)
 print(rapeseed.test)
-
 ```
 
 #Rice
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
 
 #data read-ins
-data1<-read.csv(file="Near_Null_ZonalStats/Rice_Null_ZS.csv", header=T)
+rice<-read.csv(file="Near_Null_ZonalStats/Rice_Null_ZS.csv", header=T)
 
-x<-inner_join(data1, fishnet)
+x<-inner_join(rice, fishnet)
 x[x==0] <- NA
 summary(x)
 data<-na.omit(x)
@@ -203,15 +202,22 @@ ggplot(data, aes(x=MEAN, fill=rice_GCO)) +
   geom_density(alpha=0.7) + 
   scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
   theme_justin
+
+#Inside vs Outside GCO 
+rice.outside<-filter(x, rice_GCO == "Outside")
+rice.inside<-filter(x, rice_GCO == "Inside")
+rice.test<-perm.t.test(rice.inside$MEAN,rice.outside$MEAN)
+print(rice.test)
+
 ```
 
 #Rye
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
 
 #data read-ins
-data1<-read.csv(file="Near_Null_ZonalStats/Rye_Null_ZS.csv", header=T)
+rye<-read.csv(file="Near_Null_ZonalStats/Rye_Null_ZS.csv", header=T)
 
-x<-inner_join(data1, fishnet)
+x<-inner_join(rye, fishnet)
 x[x==0] <- NA
 summary(x)
 data<-na.omit(x)
@@ -220,13 +226,20 @@ ggplot(data, aes(x=MEAN, fill=rye_GCO)) +
   geom_density(alpha=0.7) + 
   scale_fill_manual(values = c("#F75C02","#1132BF"))  + xlab("Mean Pixel Slope") +
   theme_justin
+
+#Inside vs Outside GCO 
+rye.outside<-filter(x, rye_GCO == "Outside")
+rye.inside<-filter(x, rye_GCO == "Inside")
+rye.test<-perm.t.test(rye.inside$MEAN,rye.outside$MEAN)
+print(rye.test)
+
 ```
 
 #Sorghum
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
 
 #data read-ins
-data1<-read.csv(file="Near_Null_ZonalStats/Sorghum_Null_ZS.csv", header=T)
+sorghum<-read.csv(file="Near_Null_ZonalStats/Sorghum_Null_ZS.csv", header=T)
 
 x<-inner_join(data1, fishnet)
 x[x==0] <- NA
@@ -237,15 +250,21 @@ ggplot(data, aes(x=MEAN, fill=sorghum_GCO)) +
   geom_density(alpha=0.7) + 
   scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
   theme_justin
+
+#Inside vs Outside GCO 
+sorghum.outside<-filter(x, sorghum_GCO == "Outside")
+sorghum.inside<-filter(x, sorghum_GCO == "Inside")
+sorghum.test<-perm.t.test(sorghum.inside$MEAN,sorghum.outside$MEAN)
+print(sorghum.test)
 ```
 
 #Soybean
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
 
 #data read-ins
-data1<-read.csv(file="Near_Null_ZonalStats/Soy_Null_ZS.csv", header=T)
+soybean<-read.csv(file="Near_Null_ZonalStats/Soy_Null_ZS.csv", header=T)
 
-x<-inner_join(data1, fishnet)
+x<-inner_join(soybean, fishnet)
 x[x==0] <- NA
 summary(x)
 data<-na.omit(x)
@@ -254,15 +273,22 @@ ggplot(data, aes(x=MEAN, fill=soybean_GCO)) +
   geom_density(alpha=0.7) + 
   scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
   theme_justin
+
+#Inside vs Outside GCO 
+soybean.outside<-filter(x, soybean_GCO == "Outside")
+soybean.inside<-filter(x, soybean_GCO == "Inside")
+soybean.test<-perm.t.test(soybean.inside$MEAN,soybean.outside$MEAN)
+print(soybean.test)
+
 ```
 
 #Sunflower
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
 
 #data read-ins
-data1<-read.csv(file="Near_Null_ZonalStats/Sunflower_Null_ZS.csv", header=T)
+sunflower<-read.csv(file="Near_Null_ZonalStats/Sunflower_Null_ZS.csv", header=T)
 
-x<-inner_join(data1, fishnet)
+x<-inner_join(sunflower, fishnet)
 x[x==0] <- NA
 summary(x)
 data<-na.omit(x)
@@ -271,15 +297,22 @@ ggplot(data, aes(x=MEAN, fill=sunflower_GCO)) +
   geom_density(alpha=0.7) + 
   scale_fill_manual(values = c("#F75C02","#1132BF")) +
   theme_justin
+
+#Inside vs Outside GCO 
+sunflower.outside<-filter(x, sunflower_GCO == "Outside")
+sunflower.inside<-filter(x, sunflower_GCO == "Inside")
+sunflower.test<-perm.t.test(sunflower.inside$MEAN,sunflower.outside$MEAN)
+print(sunflower.test)
+
 ```
 
 #Wheat
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
 
 #data read-ins
-data1<-read.csv(file="Near_Null_ZonalStats/Wheat_Null_ZS.csv", header=T)
+wheat<-read.csv(file="Near_Null_ZonalStats/Wheat_Null_ZS.csv", header=T)
 
-x<-inner_join(data1, fishnet)
+x<-inner_join(wheat, fishnet)
 x[x==0] <- NA
 summary(x)
 data<-na.omit(x)
@@ -288,4 +321,11 @@ ggplot(data, aes(x=MEAN, fill=wheat_GCO)) +
   geom_density(alpha=0.7) + 
   scale_fill_manual(values = c("#F75C02","#1132BF")) +
   theme_justin
+
+#Inside vs Outside GCO 
+wheat.outside<-filter(x, wheat_GCO == "Outside")
+wheat.inside<-filter(x, wheat_GCO == "Inside")
+wheat.test<-perm.t.test(wheat.inside$MEAN,wheat.outside$MEAN)
+print(wheat.test)
+
 ```
