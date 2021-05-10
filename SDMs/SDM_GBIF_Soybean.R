@@ -19,6 +19,8 @@ dim(Pseudomonas.syringae) #483
 # Coordinates
 Pseudomonas.syringae.xy<-Pseudomonas.syringae %>% dplyr::select(scientificName,decimalLongitude, decimalLatitude)
 
+
+
 #Xanthomonas campestris
 Pseudomonas.syringae.gbf<-occ_search(scientificName = "Pseudomonas syringae",hasCoordinate = TRUE, limit=100000)
 Pseudomonas.syringae<-data.frame(Pseudomonas.syringae.gbf$data)
@@ -148,4 +150,25 @@ Diabrotica.undecimpunctata.xy<-Diabrotica.undecimpunctata %>% dplyr::select(scie
 #Phytophthora.megasperma.xy<-Phytophthora.megasperma %>% dplyr::select(scientificName,decimalLongitude, decimalLatitude)
 
 
+##### SDM MODELS #####
+#Import Raster 
+#generate a list of input rasters ("grids")
+#pattern = "*.tif$" - filters for main raster files only and skips any associated files (e.g. world files)
+grids <- list.files("wc2-5/" , pattern = "*.tif$")
+#create a raster stack from the input raster files 
+currentEnv <- raster::stack(paste0("wc2-5/", grids))
+
+#Pseudomonas.syringae SDM 
+occ.Pseudomonas.syringae<-Pseudomonas.syringae.xy[,-1]
+model.extent<-extent(-180,180,-90,90)
+modelEnv=crop(currentEnv,model.extent)
+fold <- kfold(occ.Pseudomonas.syringae, k=5) # add an index that makes five random groups of observations
+occ.Pseudomonas.syringae.test <- occ.Pseudomonas.syringae[fold == 1, ] # hold out one fifth as test data
+occ.Pseudomonas.syringae.train <- occ.Pseudomonas.syringae.test[fold != 1, ] # the other four fifths are training data
+maxent()
+Pseudomonas.syringae.me <- maxent(modelEnv, occ.Pseudomonas.syringae.train ) # just using the training data
+print(Pseudomonas.syringae.me)
+plot(Pseudomonas.syringae.me) #Variable Importance 
+occ.Pseudomonas.syringae.pred <- predict(Pseudomonas.syringae.me, modelEnv)
+plot(occ.Pseudomonas.syringae.pred)
 
