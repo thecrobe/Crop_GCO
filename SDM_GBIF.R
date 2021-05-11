@@ -107,6 +107,10 @@ print(Achatina.fulica.me)
 plot(Achatina.fulica.me) #Variable Importance 
 occ.Achatina.fulica.pred <- predict(Achatina.fulica.me, modelEnv)
 plot(occ.Achatina.fulica.pred)
+bg <- randomPoints(modelEnv, 1000) #make psuedorandom background points
+e1 <- evaluate(Achatina.fulica.me, p=occ.Achatina.fulica.test, a=bg, x=modelEnv)
+plot(e1, 'ROC')
+#writeRaster(Achatina.fulica.pred, file = "SDMs/Achatina.fulica.urvillei.tif")
 
 #Paspalum.urvillei SDM 
 occ.Paspalum.urvillei<-Paspalum.urvillei.xy[,-1]
