@@ -147,7 +147,6 @@ Diabrotica.undecimpunctata.xy<-Diabrotica.undecimpunctata %>% dplyr::select(scie
 grids <- list.files("wc2-5/" , pattern = "*.tif$")
 #create a raster stack from the input raster files 
 currentEnv <- raster::stack(paste0("wc2-5/", grids))
-.jinit() #star java(script?)
 
 #Pseudomonas.syringae SDM 
 occ.Pseudomonas.syringae<-Pseudomonas.syringae.xy[,-1]
@@ -162,5 +161,86 @@ print(Pseudomonas.syringae.me)
 plot(Pseudomonas.syringae.me) #Variable Importance 
 occ.Pseudomonas.syringae.pred <- predict(Pseudomonas.syringae.me, modelEnv)
 plot(occ.Pseudomonas.syringae.pred)
+bg <- randomPoints(modelEnv, 1000) #make psuedorandom background points
+e1 <- evaluate(Pseudomonas.syringae.me, p=occ.Pseudomonas.syringae.test, a=bg, x=modelEnv)
+plot(e1, 'ROC')
+Pseudomonas.syringae.pred <- predict(Pseudomonas.syringae.me, modelEnv)
+#writeRaster(Pseudomonas.syringae.pred, file = "SDMs/Soybean_Pseudomonas.syringae.tif")
+
+#Xanthomonas.campestris SDM 
+occ.Xanthomonas.campestris<-Xanthomonas.campestris.xy[,-1]
+model.extent<-extent(-180,180,-90,90)
+modelEnv=crop(currentEnv,model.extent)
+fold <- kfold(occ.Xanthomonas.campestris, k=5) # add an index that makes five random groups of observations
+occ.Xanthomonas.campestris.test <- occ.Xanthomonas.campestris[fold == 1, ] # hold out one fifth as test data
+occ.Xanthomonas.campestris.train <- occ.Xanthomonas.campestris.test[fold != 1, ] # the other four fifths are training data
+maxent()
+Xanthomonas.campestris.me <- maxent(modelEnv, occ.Xanthomonas.campestris.train ) # just using the training data
+print(Xanthomonas.campestris.me)
+plot(Xanthomonas.campestris.me) #Variable Importance 
+occ.Xanthomonas.campestris.pred <- predict(Xanthomonas.campestris.me, modelEnv)
+plot(occ.Xanthomonas.campestris.pred)
+bg <- randomPoints(modelEnv, 1000) #make psuedorandom background points
+e1 <- evaluate(Xanthomonas.campestris.me, p=occ.Xanthomonas.campestris.test, a=bg, x=modelEnv)
+plot(e1, 'ROC')
+Xanthomonas.campestris.pred <- predict(Xanthomonas.campestris.me, modelEnv)
+plot(Xanthomonas.campestris.pred)
+#writeRaster(Xanthomonas.campestris.pred, file = "SDMs/Soybean_Xanthomonas.campestris.tif")
+
+#Rhizoctonia.solani SDM 
+occ.Rhizoctonia.solani<-Rhizoctonia.solani.xy[,-1]
+model.extent<-extent(-180,180,-90,90)
+modelEnv=crop(currentEnv,model.extent)
+fold <- kfold(occ.Rhizoctonia.solani, k=5) # add an index that makes five random groups of observations
+occ.Rhizoctonia.solani.test <- occ.Rhizoctonia.solani[fold == 1, ] # hold out one fifth as test data
+occ.Rhizoctonia.solani.train <- occ.Rhizoctonia.solani.test[fold != 1, ] # the other four fifths are training data
+maxent()
+Rhizoctonia.solani.me <- maxent(modelEnv, occ.Rhizoctonia.solani.train ) # just using the training data
+print(Rhizoctonia.solani.me)
+plot(Rhizoctonia.solani.me) #Variable Importance 
+occ.Rhizoctonia.solani.pred <- predict(Rhizoctonia.solani.me, modelEnv)
+plot(occ.Rhizoctonia.solani.pred)
+bg <- randomPoints(modelEnv, 1000) #make psuedorandom background points
+e1 <- evaluate(Rhizoctonia.solani.me, p=occ.Rhizoctonia.solani.test, a=bg, x=modelEnv)
+plot(e1, 'ROC')
+#writeRaster(occ.Rhizoctonia.solani.pred, file = "SDMs/Soybean_Rhizoctonia.solani.tif")
+
+#Spodoptera.exigua SDM 
+occ.Spodoptera.exigua<-Spodoptera.exigua.xy[,-1]
+model.extent<-extent(-180,180,-90,90)
+modelEnv=crop(currentEnv,model.extent)
+fold <- kfold(occ.Spodoptera.exigua, k=5) # add an index that makes five random groups of observations
+occ.Spodoptera.exigua.test <- occ.Spodoptera.exigua[fold == 1, ] # hold out one fifth as test data
+occ.Spodoptera.exigua.train <- occ.Spodoptera.exigua.test[fold != 1, ] # the other four fifths are training data
+maxent()
+Spodoptera.exigua.me <- maxent(modelEnv, occ.Spodoptera.exigua.train ) # just using the training data
+print(Spodoptera.exigua.me)
+plot(Spodoptera.exigua.me) #Variable Importance 
+occ.Spodoptera.exigua.pred <- predict(Spodoptera.exigua.me, modelEnv)
+plot(occ.Spodoptera.exigua.pred)
+bg <- randomPoints(modelEnv, 1000) #make psuedorandom background points
+e1 <- evaluate(occ.Spodoptera.exigua.me, p=occ.Spodoptera.exigua.test, a=bg, x=modelEnv)
+plot(e1, 'ROC')
+#writeRaster(occ.Spodoptera.exigua.pred, file = "SDMs/Soybean_Spodoptera.exigua.tif")
+
+#Diabrotica.undecimpunctata SDM 
+occ.Diabrotica.undecimpunctata<-Diabrotica.undecimpunctata.xy[,-1]
+model.extent<-extent(-180,180,-90,90)
+modelEnv=crop(currentEnv,model.extent)
+fold <- kfold(occ.Diabrotica.undecimpunctata, k=5) # add an index that makes five random groups of observations
+occ.Diabrotica.undecimpunctata.test <- occ.Diabrotica.undecimpunctata[fold == 1, ] # hold out one fifth as test data
+occ.Diabrotica.undecimpunctata.train <- occ.Diabrotica.undecimpunctata.test[fold != 1, ] # the other four fifths are training data
+maxent()
+Diabrotica.undecimpunctata.me <- maxent(modelEnv, occ.Diabrotica.undecimpunctata.train ) # just using the training data
+print(Diabrotica.undecimpunctata.me)
+plot(Diabrotica.undecimpunctata.me) #Variable Importance 
+occ.Diabrotica.undecimpunctata.pred <- predict(Diabrotica.undecimpunctata.me, modelEnv)
+plot(occ.Diabrotica.undecimpunctata.pred)
+bg <- randomPoints(modelEnv, 1000) #make psuedorandom background points
+e1 <- evaluate(Diabrotica.undecimpunctata.me, p=occ.Diabrotica.undecimpunctata.test, a=bg, x=modelEnv)
+plot(e1, 'ROC')
+#writeRaster(occ.Diabrotica.undecimpunctata.pred, file = "SDMs/Soybean_Diabrotica.undecimpunctata.tif")
+
+
 
 
