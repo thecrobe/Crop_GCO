@@ -317,6 +317,7 @@ ggplot(maize.m, aes(x=maize.m$maize_GCO, y=maize.m$value)) +  geom_boxplot(fill=
 #millet.perm<-perm.t.test(millet.inside$millet_HgHa,millet.outside$millet_HgHa, progress=FALSE)
 #print(millet.perm)
 
+# Potato
 potato.yield<-read.csv(file="Near_All/Potato_Near_Centroid.csv", header=T)
 potato.merged<-merge(mapping, potato.yield)
 potato<-na.omit(potato.merged %>% dplyr::select(mean_potat,Potato_GCO))
