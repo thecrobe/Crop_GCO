@@ -779,35 +779,61 @@ AIC(sunflower.ols, sunflower.fixed, sunflower.power, sunflower.ConstPower, sunfl
 summary(sunflower.exp)
 ```
 
-#Potato -
-```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Potato Near near Model, "}
 
-#Select Data and Rescale Distance
-near<-read.csv(file="./Near_All/Potato_Near_Centroid.csv", header=T)
-near$rescale_ND <- near$NEAR_DIST/(1000*1000)
-potato.near<-near %>% select(mean_potat,rescale_ND)
-potato.near<-potato.near %>% filter(mean_potat > 0, na.rm=TRUE)
-potato.near<-potato.near %>% filter(rescale_ND > 0, na.rm=TRUE)
-potato.near$logRapeseed<-log10(potato.near$mean_potat)
 
-#Plot
-ggplot(potato.near, aes(x=rescale_ND, y=logRapeseed)) +geom_point(alpha=0.2, color="#FFAF02") + geom_smooth(method = "lm",color="#DB3500") +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
 
-###  Model - Potato 
+## Potato 
+```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
+potato<-read.csv(file="./Near_All/Potato_Near_Centroid.csv", header=T)
+data<-potato %>% filter(potato_Fe > 0, na.rm=TRUE) #select Fertilizer > 0 
+data$rescale_ND<-data$NEAR_DIST/(1000*1000) #Rescale distances 
+#Pivot Table To ID Top Fertilizer Applications by Country Sum 
+potato.pivot<-dcast(data, COUNTRY ~., value.var=data$"potato_Fe", fun.aggregate=sum)
+potato.pivot<-arrange(potato.pivot,.)
+tail(potato.pivot, 3) #ID Top 3 Fertilizer Countries
+sum(potato.pivot$.) #Total Fertilizer
+#Filter Countries
+canada<-filter(data, COUNTRY == "Canada") 
+canada.Perc<-sum(canada$potato_Fe)/sum(potato.pivot$.) 
+print(canada.Perc) # % of Global Fertilizer For Crop 
+canada.color<-"#98C24B"
+
+china<-filter(data, COUNTRY == "China")
+china.Perc<-sum(china$potato_Fe)/sum(potato.pivot$.) 
+print(china.Perc) # % of Global Fertilizer For Crop 
+china.color<-"#1665AF"
+
+usa<-filter(data, COUNTRY == "United States")
+usa.Perc<-sum(usa$potato_Fe)/sum(potato.pivot$.) 
+print(usa.Perc) # % of Global Fertilizer For Crop 
+usa.color<-"#8F4A33"
+
+sum(china.Perc,france.Perc,india.Perc) 
+
+#Plot 
+ggplot(data, aes(x=data$rescale_ND,y=log10(data$potato_Fe))) + 
+  geom_point(alpha=0.3) +theme_justin + 
+  geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$potato_Fe)), color=usa.color, alpha=0.1) + 
+  geom_point(data=china, aes(x=rescale_ND, y=log10(china$potato_Fe)), color=china.color, alpha=0.2) + 
+  geom_point(data=canada, aes(x=rescale_ND, y=log10(canada$potato_Fe)), color=canada.color, alpha=0.3) + 
+  ylab("Log10 Fertilizer") + 
+  xlab("Distance From GCO (1000's km)") +
+  geom_abline(aes(intercept=coef(potato.exp)[1], slope=coef(potato.exp)[2]), color="red", size=2)
+
+###  Model - Potato Fertilizer Near
+library(nlme)
 # regular OLS no variance structure
-potato.ols <- gls(logRapeseed ~ rescale_ND, data = potato.near)
+data$logFert<-log10(data$potato_Fe)
+potato.ols <- gls(logFert ~ rescale_ND, data = data)
 # varFixed (variance changes linearly with X)
 potato.fixed <- update(potato.ols, .~., weights = varFixed(~rescale_ND))
 # varPower (variance changes as a power function with X)
-potato.power <- update(potato.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+#potato.power <- update(potato.ols, . ~ ., weights = varPower(form = ~rescale_ND))
 # varExp (variance changes as an exponential function of x)
 potato.exp <- update(potato.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
 # varConstPower (constant plus a power function of X (useful if X includes 0))
-potato.ConstPower <- update(potato.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+#potato.ConstPower <- update(potato.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
 # compare all models by AIC
-AIC(potato.ols, potato.fixed, potato.power, potato.ConstPower, potato.exp)
-#varPower
-summary(potato.exp)
+AIC(potato.ols, potato.fixed, potato.exp)
+summary(potato.ols)
 ```
-
-

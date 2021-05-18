@@ -193,31 +193,61 @@ summary(maize.exp)
 ```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Millet Near near Model, "}
 
 #Select Data and Rescale Distance
-near<-read.csv(file="Near_All/Millet_Near_Centroid.csv", header=T)
-near$rescale_ND <- near$NEAR_DIST/(1000*1000)
-millet.near<-near %>% select(mean_mille,rescale_ND)
-millet.near<-millet.near %>% filter(mean_mille > 0, na.rm=TRUE)
-millet.near<-millet.near %>% filter(rescale_ND > 0, na.rm=TRUE)
-millet.near$logMillet<-log10(millet.near$mean_mille)
+#near<-read.csv(file="Near_All/Millet_Near_Centroid.csv", header=T)
+#near$rescale_ND <- near$NEAR_DIST/(1000*1000)
+#millet.near<-near %>% select(mean_mille,rescale_ND)
+#millet.near<-millet.near %>% filter(mean_mille > 0, na.rm=TRUE)
+#millet.near<-millet.near %>% filter(rescale_ND > 0, na.rm=TRUE)
+#millet.near$logMillet<-log10(millet.near$mean_mille)
 
 #Plot
-ggplot(millet.near, aes(x=rescale_ND, y=logMillet)) + geom_point(alpha=0.2, color="#FFB100") + geom_smooth(method = "lm",color="#DB3500") +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+#ggplot(millet.near, aes(x=rescale_ND, y=logMillet)) + geom_point(alpha=0.2, color="#FFB100") + geom_smooth(method = "lm",color="#DB3500") +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
 
 ###  Model - Millet 
 # regular OLS no variance structure
-millet.ols <- gls(logMillet ~ rescale_ND, data = millet.near)
+#millet.ols <- gls(logMillet ~ rescale_ND, data = millet.near)
 # varFixed (variance changes linearly with X)
-millet.fixed <- update(millet.ols, .~., weights = varFixed(~rescale_ND))
+#millet.fixed <- update(millet.ols, .~., weights = varFixed(~rescale_ND))
 # varPower (variance changes as a power function with X)
-millet.power <- update(millet.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+#millet.power <- update(millet.ols, . ~ ., weights = varPower(form = ~rescale_ND))
 # varExp (variance changes as an exponential function of x)
-millet.exp <- update(millet.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+#millet.exp <- update(millet.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
 # varConstPower (constant plus a power function of X (useful if X includes 0))
-millet.ConstPower <- update(millet.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+#millet.ConstPower <- update(millet.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
 # compare all models by AIC
-AIC(millet.ols, millet.fixed, millet.power, millet.ConstPower, millet.exp)
+#AIC(millet.ols, millet.fixed, millet.power, millet.ConstPower, millet.exp)
 #varPower
-summary(millet.power)
+#summary(millet.power)
+```
+#Potato -
+```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Potato Near near Model, "}
+
+#Select Data and Rescale Distance
+near<-read.csv(file="./Near_All/Potato_Near_Centroid.csv", header=T)
+near$rescale_ND <- near$NEAR_DIST/(1000*1000)
+potato.near<-near %>% select(mean_potat,rescale_ND)
+potato.near<-potato.near %>% filter(mean_potat > 0, na.rm=TRUE)
+potato.near<-potato.near %>% filter(rescale_ND > 0, na.rm=TRUE)
+potato.near$logRapeseed<-log10(potato.near$mean_potat)
+
+#Plot
+ggplot(potato.near, aes(x=rescale_ND, y=logRapeseed)) +geom_point(alpha=0.2, color="#FFAF02") + geom_smooth(method = "lm",color="#DB3500") +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+
+###  Model - Potato 
+# regular OLS no variance structure
+potato.ols <- gls(logRapeseed ~ rescale_ND, data = potato.near)
+# varFixed (variance changes linearly with X)
+potato.fixed <- update(potato.ols, .~., weights = varFixed(~rescale_ND))
+# varPower (variance changes as a power function with X)
+potato.power <- update(potato.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+# varExp (variance changes as an exponential function of x)
+potato.exp <- update(potato.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+# varConstPower (constant plus a power function of X (useful if X includes 0))
+potato.ConstPower <- update(potato.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+# compare all models by AIC
+AIC(potato.ols, potato.fixed, potato.power, potato.ConstPower, potato.exp)
+#varPower
+summary(potato.exp)
 ```
 #Rapeseed -
 ```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Rapeseed Near near Model, "}
