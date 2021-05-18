@@ -246,14 +246,58 @@ head(modelerror) #make sure it worked honeyyyy
 
 
 ### Millet RFR 
-rf.millet<-read.csv(file="Models/Millet_RF.csv", header = T, row.names = 1)
-rf<-na.omit(rf.millet)
-rf<-log10(rf+1)
-summary(rf)
-sapply(rf.millet, "class")
+#rf.millet<-read.csv(file="Models/Millet_RF.csv", header = T, row.names = 1)
+#rf<-na.omit(rf.millet)
+#rf<-log10(rf+1)
+#summary(rf)
+#sapply(rf.millet, "class")
 
 # create a list of 60% of the rows in the original dataset we can use for training
-validation_index <- createDataPartition(rf$millet_HgHa, p=0.60, list=FALSE)
+#validation_index <- createDataPartition(rf$millet_HgHa, p=0.60, list=FALSE)
+# select 20% of the data for validation
+#validation <- rf[-validation_index,]
+# use the remaining 60% of data to training and testing the models
+#dataset <- rf[validation_index,]     
+# Run algorithms using 10-fold cross validation
+#control <- trainControl(method="repeatedcv", repeats = 10)  
+#metric <- "RMSE" 
+
+# set up clusters
+
+#library(doParallel)
+#cl <- makePSOCKcluster(max(1,detectCores()-5))
+#registerDoParallel(cl)
+
+# Random Forest
+#set.seed(7)
+#fit.rf.millet <- train(millet_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+#print(fit.rf.millet) #print results
+#write.csv(fit.rf.millet$results, "Models/millet_rfFIT.csv")
+
+
+#stopCluster(cl)
+
+#millet.varIMP<-(varImp(fit.rf.millet)) #identify variable importance
+#plot(millet.varIMP)
+#write.csv(millet.varIMP$importance, file = "Models/millet_varIMP.csv")
+# Model Performance
+#predictions <- predict(fit.rf.millet, validation) #predict 
+#pred.error<-RMSE(predictions,validation$millet_HgHa) #get the Root Mean Standard Error of predicted values
+#exp(pred.error) #put in yield values
+
+#modelerror <- exp(predict(fit.rf.millet, rf )-1) #predict on whole dataset
+#head(modelerror) #make sure it worked honeyyyy
+#write.csv(modelerror,file="Models/Predictions/millet_predictions.csv") # export for mapping
+
+### Potato RFR 
+rf.potato<-read.csv(file="Models/Potato_RF.csv", header = T, row.names = 1)
+rf<-na.omit(rf.potato)
+rf<-log10(rf+1)
+summary(rf)
+sapply(rf.potato, "class")
+
+# create a list of 60% of the rows in the original dataset we can use for training
+validation_index <- createDataPartition(rf$potato_HgHa, p=0.60, list=FALSE)
 # select 20% of the data for validation
 validation <- rf[-validation_index,]
 # use the remaining 60% of data to training and testing the models
@@ -270,24 +314,25 @@ registerDoParallel(cl)
 
 # Random Forest
 set.seed(7)
-fit.rf.millet <- train(millet_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
-print(fit.rf.millet) #print results
-#write.csv(fit.rf.millet$results, "Models/millet_rfFIT.csv")
-
+fit.rf.potato <- train(potato_HgHa~., data=dataset, method="rf", metric=metric, trControl=control) #remove # to run again
+print(fit.rf.potato) #print results
+#write.csv(fit.rf.potato$results, "Models/potato_rfFIT.csv")
 
 stopCluster(cl)
 
-millet.varIMP<-(varImp(fit.rf.millet)) #identify variable importance
-plot(millet.varIMP)
-#write.csv(millet.varIMP$importance, file = "Models/millet_varIMP.csv")
-# Model Performance
-predictions <- predict(fit.rf.millet, validation) #predict 
-pred.error<-RMSE(predictions,validation$millet_HgHa) #get the Root Mean Standard Error of predicted values
-exp(pred.error) #put in yield values
 
-modelerror <- exp(predict(fit.rf.millet, rf )-1) #predict on whole dataset
-head(modelerror) #make sure it worked honeyyyy
-#write.csv(modelerror,file="Models/Predictions/millet_predictions.csv") # export for mapping
+potato.varIMP<-(varImp(fit.rf.potato)) #identify variable importance
+plot(potato.varIMP)
+#write.csv(potato.varIMP$importance, file = "Models/potato_varIMP.csv")
+# Model Performance
+predictions <- predict(fit.rf.potato, validation) #predict 
+pred.error<-RMSE(predictions,validation$potato_HgHa) #get the Root Mean Standard Error of predicted values
+exp(pred.error-1) #put in yield values
+
+modelerror <- exp(predict(fit.rf.potato, rf )-1) #predict on whole dataset
+summary(modelerror) #make sure it worked honeyyyy
+
+#write.csv(modelerror,file="Models/Predictions/potato_predictions.csv") # export for mapping
 
 
 ### Rapeseed RFR

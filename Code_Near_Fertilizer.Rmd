@@ -785,10 +785,10 @@ summary(sunflower.exp)
 ## Potato 
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
 potato<-read.csv(file="./Near_All/Potato_Near_Centroid.csv", header=T)
-data<-potato %>% filter(potato_Fe > 0, na.rm=TRUE) #select Fertilizer > 0 
+data<-potato %>% filter(potato$potato_Fe> 0, na.rm=TRUE) #select Fertilizer > 0 
 data$rescale_ND<-data$NEAR_DIST/(1000*1000) #Rescale distances 
 #Pivot Table To ID Top Fertilizer Applications by Country Sum 
-potato.pivot<-dcast(data, COUNTRY ~., value.var=data$"potato_Fe", fun.aggregate=sum)
+potato.pivot<-dcast(data, COUNTRY ~., value.var="potato_Fe", fun.aggregate=sum)
 potato.pivot<-arrange(potato.pivot,.)
 tail(potato.pivot, 3) #ID Top 3 Fertilizer Countries
 sum(potato.pivot$.) #Total Fertilizer
