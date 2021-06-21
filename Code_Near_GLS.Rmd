@@ -246,8 +246,8 @@ potato.exp <- update(potato.ols, . ~., weights = varExp(form = ~ rescale_ND)) # 
 potato.ConstPower <- update(potato.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
 # compare all models by AIC
 AIC(potato.ols, potato.fixed, potato.power, potato.ConstPower, potato.exp)
-#varPower
-summary(potato.exp)
+#OLS
+summary(potato.ols)
 ```
 #Rapeseed -
 ```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Rapeseed Near near Model, "}
