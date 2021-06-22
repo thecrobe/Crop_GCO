@@ -74,8 +74,9 @@ dim(yield)
 #colors
 sighigh<-"#00ADB6"
 siglow<-"#FFA800"
-insig<-"#38474E"
+insig<-"#7DA3B2"
 
+#merge
 yield.mapping<-merge(mapping,yield)
 
 # Barley 
@@ -179,7 +180,7 @@ ggplot(groundnut.m, aes(x=groundnut.m$GroundnutGCO, y=groundnut.m$value)) +  geo
 
 
 ## Maize 
-maize<-na.omit(yield.mapping %>% dplyr::select(maize_HgHa,maize_GCO))
+maize<-na.omit(yield.mapping %>% dplyr::select(maize_HgHa,MaizeGCO))
 
 #Outlier removal
 hist(maize$maize_HgHa)
@@ -193,8 +194,8 @@ maize<-maize.filter
  
 
 #Inside vs Outside GCO 
-maize.inside<-filter(maize, maize_GCO == "Inside")
-maize.outside<-filter(maize, maize_GCO == "Outside")
+maize.inside<-filter(maize, MaizeGCO == "Inside")
+maize.outside<-filter(maize, MaizeGCO == "Outside")
 maize.m<-melt(maize)
 summary(maize.inside)
 summary(maize.outside)
@@ -205,97 +206,54 @@ maize.perm<-perm.t.test(maize.inside$maize_HgHa,maize.outside$maize_HgHa, progre
 print(maize.perm)
 
 #Plot
-ggplot(maize.m, aes(x=maize.m$maize_GCO, y=maize.m$value)) +  geom_boxplot(fill="#B9BEBE", fill="transparent", width=0.4)+
+ggplot(maize.m, aes(x=maize.m$MaizeGCO, y=maize.m$value)) +  geom_boxplot(fill=sighigh, fill="transparent", width=0.4)+
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.border = element_blank(),
         panel.background = element_blank()) + 
-  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+  ylab("Yield (Tons/Ha)") +xlab("") + labs(color='GCO') 
 
-## Millet 
-#millet<-na.omit(yield.mapping %>% dplyr::select(millet_HgHa,millet_GCO))
-
-#Outlier removal
-#hist(millet$millet_HgHa)
-#qqnorm(millet$millet_HgHa)
-#millet.filter<-millet %>% filter(between(millet_HgHa, quantile(millet_HgHa, .01), quantile(millet_HgHa, .99))) #remove top and bottom 1% 
-#hist(millet.filter$millet_HgHa)
-#qqnorm(millet.filter$millet_HgHa)
-#dim(millet) - dim(millet.filter) # Num Outliers Removed#
-#summary(millet.filter)
-#millet<-millet.filter
-
-
-#Inside vs Outside GCO 
-#millet.inside<-filter(millet, millet_GCO == "Inside")
-#millet.outside<-filter(millet, millet_GCO == "Outside")
-#millet.m<-melt(millet)
-#summary(millet.inside)
-#summary(millet.outside)
-
-# Permutational T Test
-#set.seed(8675309)
-#millet.perm<-perm.t.test(millet.inside$millet_HgHa,millet.outside$millet_HgHa, progress=FALSE)
-#print(millet.perm)
-
-#Plot
-#ggplot(millet.m, aes(x=millet.m$millet_GCO, y=millet.m$value)) +  geom_boxplot(fill=siglow, fill="transparent", width=0.4)+
-#  theme_bw() +
-#  theme(axis.line = element_line(colour = "black"),
-#       panel.grid.major = element_blank(),
-#       panel.grid.minor = element_blank(),
-#        panel.border = element_blank(),
-#        panel.background = element_blank()) + 
-#  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
-
-
-# Permutational T Test
-#set.seed(8675309)
-#millet.perm<-perm.t.test(millet.inside$millet_HgHa,millet.outside$millet_HgHa, progress=FALSE)
-#print(millet.perm)
 
 # Potato
-potato.yield<-read.csv(file="Near_All/Potato_Near_Centroid.csv", header=T)
-potato.merged<-merge(mapping, potato.yield)
-potato<-na.omit(potato.merged %>% dplyr::select(mean_potat,Potato_GCO))
+potato<-na.omit(yield.mapping %>% dplyr::select(mean_potato,PotatoGCO))
 
 #Outlier removal
-hist(potato$mean_potat)
-qqnorm(potato$mean_potat)
-potato.filter<-potato %>% filter(between(mean_potat, quantile(mean_potat, .01), quantile(mean_potat, .99))) #remove top and bottom 1% 
-hist(potato.filter$mean_potat)
-qqnorm(potato.filter$mean_potat)
+hist(potato$mean_potato)
+qqnorm(potato$mean_potato)
+potato.filter<-potato %>% filter(between(mean_potato, quantile(mean_potato, .01), quantile(mean_potato, .99))) #remove top and bottom 1% 
+hist(potato.filter$mean_potato)
+qqnorm(potato.filter$mean_potato)
 dim(potato) - dim(potato.filter) # Num Outliers Removed
 summary(potato.filter)
 potato<-potato.filter
 
 
 #Inside vs Outside GCO 
-potato.inside<-filter(potato, Potato_GCO == "Inside")
-potato.outside<-filter(potato, Potato_GCO == "Outside")
+potato.inside<-filter(potato, PotatoGCO == "Inside")
+potato.outside<-filter(potato, PotatoGCO == "Outside")
 potato.m<-melt(potato)
 summary(potato.inside)
 summary(potato.outside)
 
 # Permutational T Test
 set.seed(8675309)
-potato.perm<-perm.t.test(potato.inside$mean_potat, potato.outside$mean_potat, progress=FALSE)
+potato.perm<-perm.t.test(potato.inside$mean_potato, potato.outside$mean_potato, progress=FALSE)
 print(potato.perm)
 
 #Plot
-ggplot(potato.m, aes(x=potato.m$Potato_GCO, y=potato.m$value)) +  geom_boxplot(fill=sighigh, fill="transparent", width=0.4)+
+ggplot(potato.m, aes(x=potato.m$PotatoGCO, y=potato.m$value)) +  geom_boxplot(fill=sighigh, fill="transparent", width=0.4)+
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.border = element_blank(),
         panel.background = element_blank()) + 
-  ylab("Yield (tons/hectare)") +xlab("") + labs(color='GCO')
+  ylab("Yield (Tons/Ha)") +xlab("") + labs(color='GCO')
 
 ## Rapeseed 
-rapeseed<-na.omit(yield.mapping %>% dplyr::select(rapeseed_HgHa,rapeseed_GCO))
+rapeseed<-na.omit(yield.mapping %>% dplyr::select(rapeseed_HgHa,RapeseedGCO))
 
 #Outlier removal
 hist(rapeseed$rapeseed_HgHa)
@@ -309,8 +267,8 @@ rapeseed<-rapeseed.filter
 
 
 #Inside vs Outside GCO 
-rapeseed.inside<-filter(rapeseed, rapeseed_GCO == "Inside")
-rapeseed.outside<-filter(rapeseed, rapeseed_GCO == "Outside")
+rapeseed.inside<-filter(rapeseed, RapeseedGCO == "Inside")
+rapeseed.outside<-filter(rapeseed, RapeseedGCO == "Outside")
 rapeseed.m<-melt(rapeseed)
 summary(rapeseed.inside)
 summary(rapeseed.outside)
@@ -328,12 +286,12 @@ ggplot(rapeseed.m, aes(x=rapeseed.m$rapeseed_GCO, y=rapeseed.m$value)) +  geom_b
         panel.grid.minor = element_blank(),
         panel.border = element_blank(),
         panel.background = element_blank()) + 
-  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+  ylab("Yield (Tons/Ha)") +xlab("") + labs(color='GCO') 
 
 
 
 ## Rice 
-rice<-na.omit(yield.mapping %>% dplyr::select(rice_HgHa,rice_GCO))
+rice<-na.omit(yield.mapping %>% dplyr::select(rice_HgHa,RiceGCO))
 
 #Outlier removal
 hist(rice$rice_HgHa)
@@ -347,8 +305,8 @@ rice<-rice.filter
 
 
 #Filter
-rice.inside<-filter(rice, rice_GCO == "Inside")
-rice.outside<-filter(rice, rice_GCO == "Outside")
+rice.inside<-filter(rice, RiceGCO == "Inside")
+rice.outside<-filter(rice, RiceGCO == "Outside")
 rice.m<-melt(rice)
 summary(rice.inside)
 summary(rice.outside)
@@ -359,18 +317,18 @@ rice.perm<-perm.t.test(rice.inside$rice_HgHa,rice.outside$rice_HgHa, progress=FA
 print(rice.perm)
 
 #Plot
-ggplot(rice.m, aes(x=rice.m$rice_GCO, y=rice.m$value)) +  geom_boxplot(fill=siglow, fill="transparent", width=0.4)+
+ggplot(rice.m, aes(x=rice.m$RiceGCO, y=rice.m$value)) +  geom_boxplot(fill=siglow, fill="transparent", width=0.4)+
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.border = element_blank(),
         panel.background = element_blank()) + 
-  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+  ylab("Yield (Tons/Ha)") +xlab("") + labs(color='GCO') 
 
 
 ## Rye 
-rye<-na.omit(yield.mapping %>% dplyr::select(rye_HgHa,rye_GCO))
+rye<-na.omit(yield.mapping %>% dplyr::select(rye_HgHa,RyeGCO))
 
 #Outlier removal
 hist(rye$rye_HgHa)
@@ -384,8 +342,8 @@ rye<-rye.filter
 
 
 #Inside vs Outside GCO 
-rye.inside<-filter(rye, rye_GCO == "Inside")
-rye.outside<-filter(rye, rye_GCO == "Outside")
+rye.inside<-filter(rye, RyeGCO == "Inside")
+rye.outside<-filter(rye, RyeGCO == "Outside")
 rye.m<-melt(rye)
 summary(rye.inside)
 summary(rye.outside)
@@ -397,18 +355,18 @@ print(rye.perm)
 
 
 #Plot
-ggplot(rye.m, aes(x=rye.m$rye_GCO, y=rye.m$value)) +  geom_boxplot(fill=sighigh, fill="transparent", width=0.4)+
+ggplot(rye.m, aes(x=rye.m$RyeGCO, y=rye.m$value)) +  geom_boxplot(fill=sighigh, fill="transparent", width=0.4)+
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.border = element_blank(),
         panel.background = element_blank()) + 
-  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+  ylab("Yield (Tons/Ha)") +xlab("") + labs(color='GCO') 
 
 
 ## Sorghum 
-sorghum<-na.omit(yield.mapping %>% dplyr::select(sorghum_HgHa,sorghum_GCO))
+sorghum<-na.omit(yield.mapping %>% dplyr::select(sorghum_HgHa,SorghumGCO))
 
 #Outlier removal
 hist(sorghum$sorghum_HgHa)
@@ -421,8 +379,8 @@ summary(sorghum.filter)
 sorghum<-sorghum.filter
 
 #Inside vs Outside GCO 
-sorghum.inside<-filter(sorghum, sorghum_GCO == "Inside")
-sorghum.outside<-filter(sorghum, sorghum_GCO == "Outside")
+sorghum.inside<-filter(sorghum, SorghumGCO == "Inside")
+sorghum.outside<-filter(sorghum, SorghumGCO == "Outside")
 sorghum.m<-melt(sorghum)
 summary(sorghum.inside)
 summary(sorghum.outside)
@@ -433,19 +391,19 @@ sorghum.perm<-perm.t.test(sorghum.inside$sorghum_HgHa,sorghum.outside$sorghum_Hg
 print(sorghum.perm)
 
 #Plot
-ggplot(sorghum.m, aes(x=sorghum.m$sorghum_GCO, y=sorghum.m$value)) +  geom_boxplot(fill=sighigh, fill="transparent", width=0.4)+
+ggplot(sorghum.m, aes(x=sorghum.m$SorghumGCO, y=sorghum.m$value)) +  geom_boxplot(fill=sighigh, fill="transparent", width=0.4)+
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.border = element_blank(),
         panel.background = element_blank()) + 
-  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+  ylab("Yield (Tons/Ha)") +xlab("") + labs(color='GCO') 
 
 
 
 ## Soybean 
-soybean<-na.omit(yield.mapping %>% dplyr::select(soybean_HgHa,soybean_GCO))
+soybean<-na.omit(yield.mapping %>% dplyr::select(soybean_HgHa,SoybeanGCO))
 
 #Outlier Removal
 hist(soybean$soybean_HgHa)
@@ -461,8 +419,8 @@ soybean<-soybean.filter
 
 
 #Inside vs Outside GCO 
-soybean.inside<-filter(soybean, soybean_GCO == "Inside")
-soybean.outside<-filter(soybean, soybean_GCO == "Outside")
+soybean.inside<-filter(soybean, SoybeanGCO == "Inside")
+soybean.outside<-filter(soybean, SoybeanGCO == "Outside")
 soybean.m<-melt(soybean)
 summary(soybean.inside)
 summary(soybean.outside)
@@ -473,18 +431,18 @@ soybean.perm<-perm.t.test(soybean.inside$soybean_HgHa,soybean.outside$soybean_Hg
 print(soybean.perm)
 
 #Plot
-ggplot(soybean.m, aes(x=soybean.m$soybean_GCO, y=soybean.m$value)) +  geom_boxplot(fill=siglow, fill="transparent", width=0.4)+
+ggplot(soybean.m, aes(x=soybean.m$SoybeanGCO, y=soybean.m$value)) +  geom_boxplot(fill=siglow, fill="transparent", width=0.4)+
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.border = element_blank(),
         panel.background = element_blank()) + 
-  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+  ylab("Yield (Tons/Ha)") +xlab("") + labs(color='GCO') 
 
 
 ## Sunflower 
-sunflower<-na.omit(yield.mapping %>% dplyr::select(sunflower_HgHa,sunflower_GCO))
+sunflower<-na.omit(yield.mapping %>% dplyr::select(sunflower_HgHa,SunflowerGCO))
 
 #Outlier Removal
 hist(sunflower$sunflower_HgHa)
@@ -499,8 +457,8 @@ sunflower<-sunflower.filter
 
 
 #Inside vs Outside GCO 
-sunflower.inside<-filter(sunflower, sunflower_GCO == "Inside")
-sunflower.outside<-filter(sunflower, sunflower_GCO == "Outside")
+sunflower.inside<-filter(sunflower, SunflowerGCO == "Inside")
+sunflower.outside<-filter(sunflower, SunflowerGCO == "Outside")
 sunflower.m<-melt(sunflower)
 summary(sunflower.inside)
 summary(sunflower.outside)
@@ -510,21 +468,18 @@ sunflower.perm<-perm.t.test(sunflower.inside$sunflower_HgHa,sunflower.outside$su
 print(sunflower.perm)
 
 #Plot
-ggplot(sunflower.m, aes(x=sunflower.m$sunflower_GCO, y=sunflower.m$value, color=sunflower.m$sunflower_GCO)) + 
-  geom_jitter(alpha=0.4, width=0.2) + 
-  geom_boxplot(color="black", fill="transparent", width=0.4)+
-  scale_color_manual(values = wes_palette("Darjeeling1",type = "discrete")) + 
+ggplot(sunflower.m, aes(x=sunflower.m$SunflowerGCO, y=sunflower.m$value, color=sunflower.m$sunflower_GCO)) + 
+  geom_boxplot(fill=sighigh, fill="transparent", width=0.4)+
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    panel.border = element_blank(),
-    panel.background = element_blank()) + 
-  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
-
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) + 
+  ylab("Yield (Tons/Ha)") +xlab("") + labs(color='GCO') 
 
 ## Wheat 
-wheat<-na.omit(yield.mapping %>% dplyr::select(wheat_HgHa,wheat_GCO))
+wheat<-na.omit(yield.mapping %>% dplyr::select(wheat_HgHa,WheatGCO))
 
 #Outlier Removal
 hist(wheat$wheat_HgHa)
@@ -539,8 +494,8 @@ wheat<-wheat.filter
 
 
 #Inside vs Outside GCO 
-wheat.inside<-filter(wheat, wheat_GCO == "Inside")
-wheat.outside<-filter(wheat, wheat_GCO == "Outside")
+wheat.inside<-filter(wheat, WheatGCO == "Inside")
+wheat.outside<-filter(wheat, WheatGCO == "Outside")
 wheat.m<-melt(wheat)
 summary(wheat.inside)
 summary(wheat.outside)
@@ -550,16 +505,14 @@ wheat.perm<-perm.t.test(wheat.inside$wheat_HgHa,wheat.outside$wheat_HgHa, progre
 print(wheat.perm)
 
 #Plot
-ggplot(wheat.m, aes(x=wheat.m$wheat_GCO, y=wheat.m$value, color=wheat.m$wheat_GCO)) + 
-  geom_jitter(alpha=0.4, width=0.2) + 
-  geom_boxplot(color="black", fill="transparent", width=0.4)+
-  scale_color_manual(values = wes_palette("Darjeeling1",type = "discrete")) + 
+ggplot(wheat.m, aes(x=wheat.m$WheatGCO, y=wheat.m$value, color=wheat.m$wheat_GCO)) + 
+  geom_boxplot(fill=insig, fill="transparent", width=0.4)+
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
     panel.border = element_blank(),
     panel.background = element_blank()) + 
-  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+  ylab("Yield (Tons/Ha)") +xlab("") + labs(color='GCO') 
 
 ```
