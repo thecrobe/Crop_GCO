@@ -18,69 +18,8 @@ editor_options:
 
 #This document can be regenerated using Rmarkdown and the associated R-script (Analyses_Figures.R). This R-script, in combination with the supplementary data files (available online at github.com/thecrobe) also allows for full reproducibility of all the the figures and analyses conducted in R. All other analyses are conducted in ArcMap by ESRI. 
 
-## Focal Crops (n=12) Barley, Cassava, Groundnuts, Maize, Millet, Rapeseed, Rice, Rye, Sorghum, Soybean, Sunflower, Wheat
-  
-## Data Sources:
-### Crop Yields:
-#Resolution: Five minute by five minute (~10km x 10km at equator)) 
-  
-#Data is extracted from EarthStat for average yields per hectare from 1997-2003 as raster images and then the mean value per country is then calculated using zonal statistics. Data is derived from United Nations Food and Agriculture Organization (FAO), the International Food Policy Research Institute (IFPRI), the Center for Sustainability and the Global Environment (SAGE). When subnational statistics were unavailable, national figures from the Food and Agriculture Organization’s statistical database were used. List of all sources is available on EarthStat 
+## Focal Crops (n=12) Barley, Cassava, Groundnuts, Maize, Potato, Rapeseed, Rice, Rye, Sorghum, Soybean, Sunflower, Wheat
 
-
-### Inputs
-
-#Fertilizer 
-#Resolution: Five minute by five minute (~10km x 10km at equator)) 
-  
-#List of all sources is available on EarthStat.A major source of data was the fifth edition of “Fertilizer Use by Crop” (the FUBC5 dataset), a joint publication from the International Fertilizer Industry Association (IFA), the International Fertilizer Development Center (IFDC), the International Potash Institute (IPI), the Phosphate and Potash Institute (PPI), and the Food and Agriculture Organization of the United Nations (FAO). 
-
-#The publication contains national-level application rate data by crop for 42 countries, compiled from the following data sources: FAO questionnaires given to member countries; IFA questionnaires given to industry companies, research institutes, and fertilizer associations; IFDC questionnaires sent to experts attending courses, seminars, and professional meetings; and IPI and PPI communications with experts. Most of the application rate data from the FUBC5 dataset are for the years 1999 or 2000, but data for some countries are as old as 1994 and as recent as 2001. 
-
-## Drivers to test
-  
-### Climate: 
-#Resolution: ~4-km (1/24th degree) spatial resolution averaged across 1997-2003. 
-#TerraClimate uses climatically aided interpolation, combining high-spatial resolution climatological normals from the WorldClim dataset, with coarser spatial resolution, but time-varying data from CRU Ts4.0 and the Japanese 55-year Reanalysis (JRA55). 
-
-#### Pests: 
-#Resolution: Resolution: Country level. Mean from 1997-2003 derived from FAO
-
-### GDP: 
-#Resolution: Country level. Mean from 1997-2003 derived from WorldBank
-
-## Geographic Centers of Origin: 
-###These are defined at the country level for each crop with regions being taken from FAOSTAT labels and publications of origins from a mixture of molecular and archaeological studies.
-  
-### Near East
-#  * Barley
-#  * Wheat
-    
-### South America
-#  * Cassava
-#  * Groundnuts
-
-### Central America 
-#  * Maize
-    
-### China + SE Asia + India
-#  * Rice
-  
-### China
-#  * Soybean
-#  * Millet
-  
-### North America 
-#  * Sunflower
-
-### North East Africa
-#  * Sorghum
-
-### Central Asia, Turkey, Transcaucasia,and Iran  
-#  * Rye
-  
-### Central Europe 
-#  * Rapeseed
-  
 ```
 
 
@@ -109,7 +48,7 @@ library(Hmisc)
 ## Boxplots: Inside-Outside GCO
 
 <div class = "col-md-4">
-<br><br> **What Was Tested:** Do crop yields vary inside and outside GCO? How do they vary across distance?
+<br><br> **What Was Tested:** Do crop yields vary inside and outside GCO? 
 </div>
 
 <div class = "col-md-4">
@@ -128,9 +67,10 @@ library(Hmisc)
 
 
 ```{r Boxplots, Merge Mapping,echo=FALSE,warning=FALSE}
-mapping<-read.csv("Fishnets/mapping_GCOfishnet.csv", header=T, fileEncoding = "UTF-8-BOM")
+mapping<-read.csv("Fishnets/GCO_Mapping.csv", header=T, fileEncoding = "UTF-8-BOM")
 yield<-read.csv("Fishnets/yield_fishnet.csv", header=T)
-
+dim(mapping)
+dim(yield)
 #colors
 sighigh<-"#00ADB6"
 siglow<-"#FFA800"
@@ -139,11 +79,11 @@ insig<-"#38474E"
 yield.mapping<-merge(mapping,yield)
 
 # Barley 
-barley<-na.omit(yield.mapping %>% dplyr::select(barley_HgHa,barley_GCO))
+barley<-na.omit(yield.mapping %>% dplyr::select(barley_HgHa,BarleyGCO))
 
 #Inside vs Outside GCO 
-barley.inside<-filter(barley, barley_GCO == "Inside")
-barley.outside<-filter(barley, barley_GCO == "Outside")
+barley.inside<-filter(barley, BarleyGCO == "Inside")
+barley.outside<-filter(barley, BarleyGCO == "Outside")
 barley.m<-melt(barley)
 summary(barley.inside)
 summary(barley.outside)
@@ -166,7 +106,7 @@ ggplot(barley.m, aes(x=barley.m$barley_GCO, y=barley.m$value)) +
 
 
 # Cassava 
-cassava<-na.omit(yield.mapping %>% dplyr::select(cassava_HgHa,cassava_GCO))
+cassava<-na.omit(yield.mapping %>% dplyr::select(cassava_HgHa,CassavaGCO))
 
 #Outlier removal
 hist(cassava$cassava_HgHa)
@@ -180,8 +120,8 @@ cassava<-cassava.filter
 
 
 #Inside vs Outside GCO 
-cassava.inside<-filter(cassava, cassava_GCO == "Inside")
-cassava.outside<-filter(cassava, cassava_GCO == "Outside")
+cassava.inside<-filter(cassava, CassavaGCO == "Inside")
+cassava.outside<-filter(cassava, CassavaGCO == "Outside")
 cassava.m<-melt(cassava)
 summary(cassava.inside)
 summary(cassava.outside)
@@ -192,19 +132,19 @@ cassava.perm<-perm.t.test(cassava.inside$cassava_HgHa,cassava.outside$cassava_Hg
 print(cassava.perm)
 
 #Plot
-ggplot(cassava.m, aes(x=cassava.m$cassava_GCO, y=cassava.m$value)) +  geom_boxplot(fill=sighigh, fill="transparent", width=0.4)+
+ggplot(cassava.m, aes(x=cassava.m$CassavaGCO, y=cassava.m$value)) +  geom_boxplot(fill=sighigh, fill="transparent", width=0.4)+
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.border = element_blank(),
         panel.background = element_blank()) + 
-  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+  ylab("Yield (TonsHa)") +xlab("") + labs(color='GCO') 
 
 
 
 ## Groundnut 
-groundnut<-na.omit(yield.mapping %>% dplyr::select(groundnut_HgHa,groundnut_GCO))
+groundnut<-na.omit(yield.mapping %>% dplyr::select(groundnut_HgHa,GroundnutGCO))
 #Outlier removal
 hist(groundnut$groundnut_HgHa)
 qqnorm(groundnut$groundnut_HgHa)
@@ -215,10 +155,9 @@ dim(groundnut) - dim(groundnut.filter) # Num Outliers Removed
 summary(groundnut.filter)
 groundnut<-groundnut.filter
 
-
 #Inside vs Outside GCO 
-groundnut.inside<-filter(groundnut, groundnut_GCO == "Inside")
-groundnut.outside<-filter(groundnut, groundnut_GCO == "Outside")
+groundnut.inside<-filter(groundnut, GroundnutGCO == "Inside")
+groundnut.outside<-filter(groundnut, GroundnutGCO == "Outside")
 groundnut.m<-melt(groundnut)
 summary(groundnut.inside)
 summary(groundnut.outside)
@@ -229,14 +168,14 @@ groundnut.perm<-perm.t.test(groundnut.inside$groundnut_HgHa,groundnut.outside$gr
 print(groundnut.perm)
 
 #Plot
-ggplot(groundnut.m, aes(x=groundnut.m$groundnut_GCO, y=groundnut.m$value)) +  geom_boxplot(fill=sighigh, fill="transparent", width=0.4)+
+ggplot(groundnut.m, aes(x=groundnut.m$GroundnutGCO, y=groundnut.m$value)) +  geom_boxplot(fill=sighigh, fill="transparent", width=0.4)+
   theme_bw() +
   theme(axis.line = element_line(colour = "black"),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.border = element_blank(),
         panel.background = element_blank()) + 
-  ylab("Yield (Hg/Ha)") +xlab("") + labs(color='GCO') 
+  ylab("Yield (Tons/Ha)") +xlab("") + labs(color='GCO') 
 
 
 ## Maize 
