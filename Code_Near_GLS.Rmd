@@ -66,18 +66,23 @@ theme_justin<-theme_bw() +theme(axis.line = element_line(colour = "black"),
 #Barley -
 ```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Barley Near near Model, "}
 
-#Select Data and Rescale Distance
-near<-read.csv(file = "Near_All/Barley_Near_Centroid.csv", header=T)
-near$rescale_ND <- near$NEAR_DIST/(1000*1000)
-barley.near<-near %>% select(mean_barle,rescale_ND)
+fishnet<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Fishnet/", layer="Fishnet_yield_NoAntarctica")
+fishnet.barley<-subset(fishnet, fishnet$mean_barle > 0 ) #yield > 0 
+xy <- coordinates(fishnet.barley)
+yield <- fishnet.barley@data
+
+barleyGCO<-readOGR(dsn = "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/GCO_Shapefiles/",layer="BarleyWheat_GC")
+
+barleyGCOcentroid<-gCentroid(barleyGCO)
+
+library(dplyr)
+distances <- spDistsN1(xy,barleyGCOcentroid, longlat = FALSE)
+yield$rescale_ND<-distances/(1000*1000)
+barley.near<-yield %>% dplyr::select(mean_barle,rescale_ND,COUNTRY)
 barley.near<-barley.near %>% filter(mean_barle > 0, na.rm=TRUE)
 barley.near<-barley.near %>% filter(rescale_ND > 0, na.rm=TRUE)
 barley.near$logBarley<-log10(barley.near$mean_barle)
 
-#Plot
-#Plot
-ggplot(barley.near, aes(x=rescale_ND, y=logBarley)) +
-  geom_point(alpha=0.1, color="#00A9B4") + geom_smooth(method = "lm",color="#DB3500") + labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
 ###  Model - Barley 
 # regular OLS no variance structure
 barley.ols <- gls(logBarley ~ rescale_ND, data = barley.near)
@@ -91,374 +96,86 @@ barley.exp <- update(barley.ols, . ~., weights = varExp(form = ~ rescale_ND)) # 
 barley.ConstPower <- update(barley.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
 # compare all models by AIC
 AIC(barley.ols, barley.fixed, barley.power, barley.ConstPower, barley.exp)
-#varPower
 summary(barley.exp)
+
+#Pivot Table To ID Top Producers by Country Sum 
+barley.pivot<-dcast(barley.near, COUNTRY ~., value.var="mean_barle", fun.aggregate=sum)
+barley.pivot<-arrange(barley.pivot,.)
+tail(barley.pivot, 3) #ID Top 3 Producing Countries
+barley.top<-tail(barley.pivot, 3)
+sum(barley.pivot$.) #Total Production
+sum(barley.top$.)/sum(barley.pivot$.) # % produced by top 3 
+
+#Filter Countries
+china<-filter(barley.near, COUNTRY == "China") 
+china.Perc<-sum(china$mean_barle)/sum(barley.pivot$.) 
+print(china.Perc) # % of Global Production For Crop 
+china.color<-"#1665AF"
+summary(china)
+
+usa<-filter(barley.near, COUNTRY == "United States")
+usa.Perc<-sum(usa$mean_barle)/sum(barley.pivot$.) 
+print(usa.Perc) # % of Global Production For Crop 
+usa.color<-"#8F4A33"
+
+russia<-filter(barley.near, COUNTRY == "Russian Federation")
+russia.Perc<-sum(russia$mean_barle)/sum(barley.pivot$.) 
+print(russia.Perc) # % of Global Fertilizer For Crop 
+russia.color<-"#D3867A"
+
+#Plot
+ggplot(barley.near, aes(x=rescale_ND, y=logBarley)) +
+  geom_point(alpha=0.3) +theme_justin + 
+  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_barle)), color        =china.color, alpha=0.9) + 
+  geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$mean_barle)), color        =usa.color, alpha=0.5) + 
+  geom_point(data=russia, aes(x=rescale_ND, y=log10(russia$mean_barle)),        color=russia.color, alpha=0.2) +
+  geom_abline(aes(intercept=coef(barley.exp)[1], slope=coef(barley.exp)[2]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+
 ```
 
 #Cassava -
 ```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Cassava Near near Model, "}
 
-#Select Data and Rescale Distance
-near<-read.csv(file = "Near_All/Cassava_Near_Centroid.csv", header=T)
-near$rescale_ND <- near$NEAR_DIST/(1000*1000)
-cassava.near<-near %>% select(mean_cassa,rescale_ND)
-cassava.near<-cassava.near %>% filter(mean_cassa > 0, na.rm=TRUE)
-cassava.near<-cassava.near %>% filter(rescale_ND > 0, na.rm=TRUE)
-cassava.near$logCassava<-log10(cassava.near$mean_cassa)
-
-summary(cassava.near)
-
-#Plot
-ggplot(cassava.near, aes(x=rescale_ND, y=logCassava)) +
-  geom_point(alpha=0.2, color="#00A9B4") + geom_smooth(method = "lm",color="#DB3500") +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
-
-###  Model - Cassava 
-# regular OLS no variance structure
-cassava.ols <- gls(logCassava ~ rescale_ND, data = cassava.near)
-# varFixed (variance changes linearly with X)
-cassava.fixed <- update(cassava.ols, .~., weights = varFixed(~rescale_ND))
-# varPower (variance changes as a power function with X)
-cassava.power <- update(cassava.ols, . ~ ., weights = varPower(form = ~rescale_ND))
-# varExp (variance changes as an exponential function of x)
-cassava.exp <- update(cassava.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
-# varConstPower (constant plus a power function of X (useful if X includes 0))
-cassava.ConstPower <- update(cassava.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
-# compare all models by AIC
-AIC(cassava.ols, cassava.fixed, cassava.power, cassava.ConstPower, cassava.exp)
-#varExp
-summary(cassava.exp)
 ```
 #Groundnut -
 ```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Groundnut Near near Model, "}
 
-#Select Data and Rescale Distance
-near<-read.csv(file = "Near_All/Groundnut_Near_Centroid.csv", header=T)
-near$rescale_ND <- near$NEAR_DIST/(1000*1000)
-groundnut.near<-near %>% select(mean_groun,rescale_ND)
-groundnut.near<-groundnut.near %>% filter(mean_groun > 0, na.rm=TRUE)
-groundnut.near<-groundnut.near %>% filter(rescale_ND > 0, na.rm=TRUE)
-groundnut.near$logGroundnut<-log10(groundnut.near$mean_groun)
-
-#Plot
-ggplot(groundnut.near, aes(x=rescale_ND, y=logGroundnut)) +
-  geom_point(alpha=0.2, color="#00A9B4") + geom_smooth(method = "lm",color="#DB3500") +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
-
-###  Model - Groundnut 
-# regular OLS no variance structure
-groundnut.ols <- gls(logGroundnut ~ rescale_ND, data = groundnut.near)
-# varFixed (variance changes linearly with X)
-groundnut.fixed <- update(groundnut.ols, .~., weights = varFixed(~rescale_ND))
-# varPower (variance changes as a power function with X)
-groundnut.power <- update(groundnut.ols, . ~ ., weights = varPower(form = ~rescale_ND))
-# varExp (variance changes as an exponential function of x)
-groundnut.exp <- update(groundnut.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
-# varConstPower (constant plus a power function of X (useful if X includes 0))
-groundnut.ConstPower <- update(groundnut.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
-# compare all models by AIC
-AIC(groundnut.ols, groundnut.ConstPower,groundnut.power, groundnut.fixed, groundnut.exp)
-#varPower
-summary(groundnut.exp)
 ```
 #Maize -
 ```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Maize Near near Model, "}
 
-#Select Data and Rescale Distance
-near<-read.csv(file = "Near_All/Maize_Near_Centroid.csv", header=T)
-near$rescale_ND <- near$NEAR_DIST/(1000*1000)
-maize.near<-near %>% select(mean_maize,rescale_ND)
-maize.near<-maize.near %>% filter(mean_maize > 0, na.rm=TRUE)
-maize.near<-maize.near %>% filter(rescale_ND > 0, na.rm=TRUE)
-maize.near$logMaize<-log10(maize.near$mean_maize)
-
-#Plot
-ggplot(maize.near, aes(x=rescale_ND, y=logMaize)) +geom_point(alpha=0.2, color="#F0AB00") +geom_smooth(method = "lm",color="#DB3500") +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
-
-###  Model - Maize 
-# regular OLS no variance structure
-maize.ols <- gls(logMaize ~ rescale_ND, data = maize.near)
-# varFixed (variance changes linearly with X)
-maize.fixed <- update(maize.ols, .~., weights = varFixed(~rescale_ND))
-# varPower (variance changes as a power function with X)
-maize.power <- update(maize.ols, . ~ ., weights = varPower(form = ~rescale_ND))
-# varExp (variance changes as an exponential function of x) - Does not Converge
-maize.exp <- update(maize.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
-# varConstPower (constant plus a power function of X (useful if X includes 0))
-maize.ConstPower <- update(maize.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
-# compare all models by AIC
-AIC(maize.ols, maize.fixed, maize.power, maize.ConstPower,maize.exp)
-#varExp
-summary(maize.exp)
-```
-#Millet -
-```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Millet Near near Model, "}
-
-#Select Data and Rescale Distance
-#near<-read.csv(file="Near_All/Millet_Near_Centroid.csv", header=T)
-#near$rescale_ND <- near$NEAR_DIST/(1000*1000)
-#millet.near<-near %>% select(mean_mille,rescale_ND)
-#millet.near<-millet.near %>% filter(mean_mille > 0, na.rm=TRUE)
-#millet.near<-millet.near %>% filter(rescale_ND > 0, na.rm=TRUE)
-#millet.near$logMillet<-log10(millet.near$mean_mille)
-
-#Plot
-#ggplot(millet.near, aes(x=rescale_ND, y=logMillet)) + geom_point(alpha=0.2, color="#FFB100") + geom_smooth(method = "lm",color="#DB3500") +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
-
-###  Model - Millet 
-# regular OLS no variance structure
-#millet.ols <- gls(logMillet ~ rescale_ND, data = millet.near)
-# varFixed (variance changes linearly with X)
-#millet.fixed <- update(millet.ols, .~., weights = varFixed(~rescale_ND))
-# varPower (variance changes as a power function with X)
-#millet.power <- update(millet.ols, . ~ ., weights = varPower(form = ~rescale_ND))
-# varExp (variance changes as an exponential function of x)
-#millet.exp <- update(millet.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
-# varConstPower (constant plus a power function of X (useful if X includes 0))
-#millet.ConstPower <- update(millet.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
-# compare all models by AIC
-#AIC(millet.ols, millet.fixed, millet.power, millet.ConstPower, millet.exp)
-#varPower
-#summary(millet.power)
 ```
 #Potato -
-```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Potato Near near Model, "}
+```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Millet Near near Model, "}
 
-#Select Data and Rescale Distance
-near<-read.csv(file="./Near_All/Potato_Near_Centroid.csv", header=T)
-near$rescale_ND <- near$NEAR_DIST/(1000*1000)
-potato.near<-near %>% select(mean_potat,rescale_ND)
-potato.near<-potato.near %>% filter(mean_potat > 0, na.rm=TRUE)
-potato.near<-potato.near %>% filter(rescale_ND > 0, na.rm=TRUE)
-potato.near$logRapeseed<-log10(potato.near$mean_potat)
-
-#Plot
-ggplot(potato.near, aes(x=rescale_ND, y=logRapeseed)) +geom_point(alpha=0.2, color="#FFAF02") + geom_smooth(method = "lm",color="#DB3500") +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
-
-###  Model - Potato 
-# regular OLS no variance structure
-potato.ols <- gls(logRapeseed ~ rescale_ND, data = potato.near)
-# varFixed (variance changes linearly with X)
-potato.fixed <- update(potato.ols, .~., weights = varFixed(~rescale_ND))
-# varPower (variance changes as a power function with X)
-potato.power <- update(potato.ols, . ~ ., weights = varPower(form = ~rescale_ND))
-# varExp (variance changes as an exponential function of x)
-potato.exp <- update(potato.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
-# varConstPower (constant plus a power function of X (useful if X includes 0))
-potato.ConstPower <- update(potato.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
-# compare all models by AIC
-AIC(potato.ols, potato.fixed, potato.power, potato.ConstPower, potato.exp)
-#OLS
-summary(potato.ols)
 ```
 #Rapeseed -
 ```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Rapeseed Near near Model, "}
 
-#Select Data and Rescale Distance
-near<-read.csv(file="./Near_All/Rapeseed_Near_Centroid.csv", header=T)
-near$rescale_ND <- near$NEAR_DIST/(1000*1000)
-rapeseed.near<-near %>% select(mean_rapes,rescale_ND)
-rapeseed.near<-rapeseed.near %>% filter(mean_rapes > 0, na.rm=TRUE)
-rapeseed.near<-rapeseed.near %>% filter(rescale_ND > 0, na.rm=TRUE)
-rapeseed.near$logRapeseed<-log10(rapeseed.near$mean_rapes)
-
-#Plot
-ggplot(rapeseed.near, aes(x=rescale_ND, y=logRapeseed)) +geom_point(alpha=0.2, color="#FFAF02") + geom_smooth(method = "lm",color="#DB3500") +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
-
-###  Model - Rapeseed 
-# regular OLS no variance structure
-rapeseed.ols <- gls(logRapeseed ~ rescale_ND, data = rapeseed.near)
-# varFixed (variance changes linearly with X)
-rapeseed.fixed <- update(rapeseed.ols, .~., weights = varFixed(~rescale_ND))
-# varPower (variance changes as a power function with X)
-rapeseed.power <- update(rapeseed.ols, . ~ ., weights = varPower(form = ~rescale_ND))
-# varExp (variance changes as an exponential function of x)
-rapeseed.exp <- update(rapeseed.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
-# varConstPower (constant plus a power function of X (useful if X includes 0))
-rapeseed.ConstPower <- update(rapeseed.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
-# compare all models by AIC
-AIC(rapeseed.ols, rapeseed.fixed, rapeseed.power, rapeseed.ConstPower, rapeseed.exp)
-#varPower
-summary(rapeseed.exp)
 ```
 #Rice -
 ```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Rice Near near Model, "}
 
-#Select Data and Rescale Distance
-near<-read.csv(file="./Near_All/Rice_Near_Centroid.csv", header=T)
-near$rescale_ND <- near$NEAR_DIST/(1000*1000)
-rice.near<-near %>% select(mean_rice,rescale_ND)
-rice.near<-rice.near %>% filter(mean_rice > 0, na.rm=TRUE)
-rice.near<-rice.near %>% filter(rescale_ND > 0, na.rm=TRUE)
-rice.near$logRice<-log10(rice.near$mean_rice)
-
-#Plot
-ggplot(rice.near, aes(x=rescale_ND, y=logRice)) +geom_point(alpha=0.2, color="#FBA900") + geom_smooth(method = "lm",color="#DB3500") +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
-
-###  Model - Rice 
-# regular OLS no variance structure
-rice.ols <- gls(logRice ~ rescale_ND, data = rice.near)
-# varFixed (variance changes linearly with X)
-rice.fixed <- update(rice.ols, .~., weights = varFixed(~rescale_ND))
-# varPower (variance changes as a power function with X)
-rice.power <- update(rice.ols, . ~ ., weights = varPower(form = ~rescale_ND))
-# varExp (variance changes as an exponential function of x)
-rice.exp <- update(rice.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
-# varConstPower (constant plus a power function of X (useful if X includes 0))
-rice.ConstPower <- update(rice.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
-# compare all models by AIC
-AIC(rice.ols, rice.fixed, rice.power, rice.ConstPower, rice.exp)
-#varPower
-summary(rice.power)
 ```
 #Rye -
 ```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Rye Near near Model, "}
 
-#Select Data and Rescale Distance
-near<-read.csv(file="./Near_All/Rye_Near_Centroid.csv", header=T)
-near$rescale_ND <- near$NEAR_DIST/(1000*1000)
-rye.near<-near %>% select(mean_rye_Y,rescale_ND)
-rye.near<-rye.near %>% filter(mean_rye_Y > 0, na.rm=TRUE)
-rye.near<-rye.near %>% filter(rescale_ND > 0, na.rm=TRUE)
-rye.near$logRye<-log10(rye.near$mean_rye_Y)
-
-#Plot
-ggplot(rye.near, aes(x=rescale_ND, y=logRye)) +geom_point(alpha=0.2, color="#FFB200") +geom_smooth(method = "lm",color="#DB3500")  +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
-
-###  Model - Rye 
-# regular OLS no variance structure
-rye.ols <- gls(logRye ~ rescale_ND, data = rye.near)
-# varFixed (variance changes linearly with X)
-rye.fixed <- update(rye.ols, .~., weights = varFixed(~rescale_ND))
-# varPower (variance changes as a power function with X)
-rye.power <- update(rye.ols, . ~ ., weights = varPower(form = ~rescale_ND))
-# varExp (variance changes as an exponential function of x)
-rye.exp <- update(rye.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
-# varConstPower (constant plus a power function of X (useful if X includes 0))
-rye.ConstPower <- update(rye.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
-# compare all models by AIC
-AIC(rye.ols, rye.fixed, rye.power, rye.ConstPower, rye.exp)
-#varConstPower
-summary(rye.ConstPower)
 ```
 #Sorghum -
 ```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Sorghum Near near Model, "}
 
-#Select Data and Rescale Distance
-near<-read.csv(file="./Near_All/Sorghum_Near_Centroid.csv", header=T)
-near$rescale_ND <- near$NEAR_DIST/(1000*1000)
-sorghum.near<-near %>% select(mean_sorgh,rescale_ND)
-sorghum.near<-sorghum.near %>% filter(rescale_ND > 0, na.rm=TRUE)
-sorghum.near<-sorghum.near %>% filter(mean_sorgh > 0, na.rm=TRUE)
-sorghum.near$logSorghum<-log10(sorghum.near$mean_sorgh)
-
-#Plot
-ggplot(sorghum.near, aes(x=rescale_ND, y=logSorghum)) + geom_point(alpha=0.2, color="#00A9B4") +geom_smooth(method = "lm",color="#DB3500") +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
-
-###  Model - Sorghum 
-# regular OLS no variance structure
-sorghum.ols <- gls(logSorghum ~ rescale_ND, data = sorghum.near)
-# varFixed (variance changes linearly with X)
-sorghum.fixed <- update(sorghum.ols, .~., weights = varFixed(~rescale_ND))
-# varPower (variance changes as a power function with X)
-sorghum.power <- update(sorghum.ols, . ~ ., weights = varPower(form = ~rescale_ND))
-# varExp (variance changes as an exponential function of x)
-sorghum.exp <- update(sorghum.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
-# varConstPower (constant plus a power function of X (useful if X includes 0))
-sorghum.ConstPower <- update(sorghum.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
-# compare all models by AIC
-AIC(sorghum.ols, sorghum.fixed, sorghum.power, sorghum.ConstPower, sorghum.exp)
-#Exp
-summary(sorghum.exp)
 ```
 #Soybean -
 ```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Soybean Near near Model, "}
 
-#Select Data and Rescale Distance
-near<-read.csv(file="./Near_All/Soybean_Near_Centroid.csv", header=T)
-near$rescale_ND <- near$NEAR_DIST/(1000*1000)
-soybean.near<-near %>% select(mean_soybe,rescale_ND)
-soybean.near<-soybean.near %>% filter(mean_soybe > 0, na.rm=TRUE)
-soybean.near<-soybean.near %>% filter(rescale_ND > 0, na.rm=TRUE)
-soybean.near$logSoybean<-log10(soybean.near$mean_soybe)
-
-#Plot
-ggplot(soybean.near, aes(x=rescale_ND, y=logSoybean)) +geom_point(alpha=0.2, color="#00A9B4") +geom_smooth(method = "lm",color="#DB3500") +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
-
-###  Model - Soybean 
-# regular OLS no variance structure
-soybean.ols <- gls(logSoybean ~ rescale_ND, data = soybean.near)
-# varFixed (variance changes linearly with X)
-soybean.fixed <- update(soybean.ols, .~., weights = varFixed(~rescale_ND))
-# varPower (variance changes as a power function with X)
-soybean.power <- update(soybean.ols, . ~ ., weights = varPower(form = ~rescale_ND))
-# varExp (variance changes as an exponential function of x)
-soybean.exp <- update(soybean.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
-# varConstPower (constant plus a power function of X (useful if X includes 0))
-soybean.ConstPower <- update(soybean.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
-# compare all models by AIC
-AIC(soybean.ols, soybean.fixed, soybean.power, soybean.exp, soybean.ConstPower)
-#varPower
-summary(soybean.exp)
 ```
 
 #Sunflower -
 ```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Sunflower Near near Model, "}
 
-#Select Data and Rescale Distance
-near<-read.csv(file="Near_All/Sunflower_Near_Centroid.csv", header=T)
-near$rescale_ND <- near$NEAR_DIST/(1000*1000)
-sunflower.near<-near %>% select(mean_sunfl,rescale_ND)
-sunflower.near<-sunflower.near %>% filter(mean_sunfl > 0, na.rm=TRUE)
-sunflower.near<-sunflower.near %>% filter(rescale_ND > 0, na.rm=TRUE)
-sunflower.near$logSunflower<-log10(sunflower.near$mean_sunfl)
-
-#Plot
-ggplot(sunflower.near, aes(x=rescale_ND, y=logSunflower)) +geom_point(alpha=0.2, color="#FFB200") +geom_smooth(method = "lm",color="#DB3500")  +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
-
-###  Model - Sunflower 
-# regular OLS no variance structure
-sunflower.ols <- gls(logSunflower ~ rescale_ND, data = sunflower.near)
-# varFixed (variance changes linearly with X)
-sunflower.fixed <- update(sunflower.ols, .~., weights = varFixed(~rescale_ND))
-# varPower (variance changes as a power function with X)
-sunflower.power <- update(sunflower.ols, . ~ ., weights = varPower(form = ~rescale_ND))
-# varExp (variance changes as an exponential function of x)
-sunflower.exp <- update(sunflower.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
-# varConstPower (constant plus a power function of X (useful if X includes 0))
-sunflower.ConstPower <- update(sunflower.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
-# compare all models by AIC
-AIC(sunflower.ols, sunflower.fixed, sunflower.power,sunflower.ConstPower, sunflower.exp)
-#varPower
-summary(sunflower.ConstPower)
 ```
 #Wheat -
 ```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Wheat Near near Model, "}
 
-#Select Data and Rescale Distance
-near<-read.csv(file="Near_All/Wheat_Near_Centroid.csv", header=T)
-near$rescale_ND <- near$NEAR_DIST/(1000*1000)
-wheat.near<-near %>% select(mean_wheat,rescale_ND)
-wheat.near<-wheat.near %>% filter(mean_wheat > 0, na.rm=TRUE)
-wheat.near<-wheat.near %>% filter(rescale_ND> 0, na.rm=TRUE)
-wheat.near$logWheat<-log10(wheat.near$mean_wheat)
-
-#Plot
-ggplot(wheat.near, aes(x=rescale_ND, y=logWheat)) +
-  geom_point(alpha=0.2, color="#00A9B4") + geom_smooth(method = "lm",color="#DB3500")+theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
-
-###  Model - Wheat 
-# regular OLS no variance structure
-wheat.ols <- gls(logWheat ~ rescale_ND, data = wheat.near)
-# varFixed (variance changes linearly with X)
-wheat.fixed <- update(wheat.ols, .~., weights = varFixed(~rescale_ND))
-# varPower (variance changes as a power function with X)
-wheat.power <- update(wheat.ols, . ~ ., weights = varPower(form = ~rescale_ND))
-# varExp (variance changes as an exponential function of x)
-wheat.exp <- update(wheat.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
-# varConstPower (constant plus a power function of X (useful if X includes 0))
-wheat.ConstPower <- update(wheat.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
-# compare all models by AIC
-AIC(wheat.ols, wheat.fixed, wheat.power, wheat.ConstPower, wheat.exp)
-#varPower
-summary(wheat.power)
 ```
 
