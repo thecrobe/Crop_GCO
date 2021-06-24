@@ -200,7 +200,7 @@ china.color<-"#1665AF"
 summary(china)
 
 india<-filter(data, COUNTRY == "India")
-india.Perc<-sum(canada$groundnut_)/sum(groundnut.pivot$.) 
+india.Perc<-sum(india$groundnut_)/sum(groundnut.pivot$.) 
 print(india.Perc) # % of Global Fertilizer For Crop 
 india.color<-"#078D40"
 
@@ -390,7 +390,7 @@ print(usa.Perc) # % of Global Fertilizer For Crop
 usa.color<-"#8F4A33"
 
 india<-filter(data, COUNTRY == "India")
-india.Perc<-sum(canada$wheat_Fert)/sum(wheat.pivot$.) 
+india.Perc<-sum(india$wheat_Fert)/sum(wheat.pivot$.) 
 print(india.Perc) # % of Global Fertilizer For Crop 
 india.color<-"#078D40"
 
