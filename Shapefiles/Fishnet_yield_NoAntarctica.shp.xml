@@ -1,2 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<metadata xml:lang="en"><Esri><CreaDate>20210216</CreaDate><CreaTime>14092300</CreaTime><ArcGISFormat>1.0</ArcGISFormat><SyncOnce>TRUE</SyncOnce><DataProperties><lineage><Process ToolSource="c:\program files (x86)\arcgis\desktop10.7\ArcToolbox\Toolboxes\Data Management Tools.tbx\DeleteField" Date="20201130" Time="145215">DeleteField Fishnet_yield_world mean_cotto;mean_oilpa;mean_sugar;mean_sug_1;FID_1;OBJECTID;Id</Process></lineage></DataProperties></Esri></metadata>

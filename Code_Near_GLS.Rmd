@@ -374,7 +374,7 @@ potat.exp <- update(potat.ols, . ~., weights = varExp(form = ~ rescale_ND))
 potat.ConstPower <- update(potat.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
 # compare all models by AIC
 AIC(potat.ols, potat.fixed, potat.power, potat.exp, potat.ConstPower)
-summary(potat.ConstPower)
+print(potat.ConstPower)
 
 #Pivot Table To ID Top Producers by Country Sum 
 potat.pivot<-dcast(potat.near, COUNTRY ~., value.var="mean_potat", fun.aggregate=sum)
