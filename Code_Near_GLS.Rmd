@@ -344,6 +344,73 @@ ggplot(maize.near, aes(x=rescale_ND, y=logmaize)) +
 #Potato -
 ```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Millet Near near Model, "}
 
+fishnet<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Fishnet/", layer="Fishnet_yield_NoAntarctica")
+fishnet.potat<-subset(fishnet, fishnet$mean_potat > 0 ) #yield > 0 
+xy <- coordinates(fishnet.potat)
+yield <- fishnet.potat@data
+
+potatGCO<-readOGR(dsn = "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/GCO_Shapefiles/",layer="Potato")
+
+potatGCOcentroid<-gCentroid(potatGCO)
+
+library(dplyr)
+distances <- spDistsN1(xy,potatGCOcentroid, longlat = FALSE)
+yield$rescale_ND<-distances/(1000*1000)
+potat.near<-yield %>% dplyr::select(mean_potat,rescale_ND,COUNTRY)
+potat.near<-potat.near %>% filter(mean_potat > 0, na.rm=TRUE)
+potat.near<-potat.near %>% filter(rescale_ND > 0, na.rm=TRUE)
+potat.near$logpotat<-log10(potat.near$mean_potat)
+
+###  Model - potat 
+# regular OLS no variance structure
+potat.ols <- gls(logpotat ~ rescale_ND, data = potat.near)
+# varFixed (variance changes linearly with X)
+potat.fixed <- update(potat.ols, .~., weights = varFixed(~rescale_ND))
+# varPower (variance changes as a power function with X)
+potat.power <- update(potat.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+# varExp (variance changes as an exponential function of x)
+potat.exp <- update(potat.ols, . ~., weights = varExp(form = ~ rescale_ND)) 
+# varConstPower (constant plus a power function of X (useful if X includes 0))
+potat.ConstPower <- update(potat.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+# compare all models by AIC
+AIC(potat.ols, potat.fixed, potat.power, potat.exp, potat.ConstPower)
+summary(potat.ConstPower)
+
+#Pivot Table To ID Top Producers by Country Sum 
+potat.pivot<-dcast(potat.near, COUNTRY ~., value.var="mean_potat", fun.aggregate=sum)
+potat.pivot<-arrange(potat.pivot,.)
+tail(potat.pivot, 3) #ID Top 3 Producing Countries
+potat.top<-tail(potat.pivot, 3)
+sum(potat.pivot$.) #Total Production
+sum(potat.top$.)/sum(potat.pivot$.) # % produced by top 3 
+
+#Filter Countries
+
+usa<-filter(potat.near, COUNTRY == "United States")
+usa.Perc<-sum(usa$mean_potat)/sum(potat.pivot$.) 
+print(usa.Perc) # % of Global Production For Crop 
+usa.color<-"#8F4A33"
+
+china<-filter(potat.near, COUNTRY == "China") 
+china.Perc<-sum(china$mean_potat)/sum(potat.pivot$.) 
+print(china.Perc) # % of Global Production For Crop 
+china.color<-"#1665AF"
+
+canada<-filter(potat.near, COUNTRY == "Canada") 
+canada.Perc<-sum(canada$mean_potat)/sum(potato.pivot$.) 
+print(canada.Perc) # % of Global Production For Crop 
+canada.color<-"#98C24B"
+
+
+#Plot
+ggplot(potat.near, aes(x=rescale_ND, y=logpotat)) +
+  geom_point(alpha=0.3) +theme_justin + 
+  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_potat)),                color=china.color, alpha=0.8) +
+  geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$mean_potat)),           color=usa.color, alpha=0.4) + 
+  geom_point(data=canada, aes(x=rescale_ND, y=log10(canada$mean_potat)), color=canada.color, alpha=0.3) + 
+  geom_abline(aes(intercept=coef(potat.ConstPower)[1], slope=coef(potat.ConstPower)[2]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+
+
 ```
 #Rapeseed -
 ```{r, message=TRUE, warning=FALSE, cache=TRUE, fig.cap="Rapeseed Near near Model, "}
