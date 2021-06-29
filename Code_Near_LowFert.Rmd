@@ -33,9 +33,9 @@ library(rgdal)
 library(maptools)
 library(rgeos)
 library(ggplot2)
-library(dplyr)
 library(reshape2)
 library(nlme)
+library(dplyr)
 
 #ggplot graphic parameters
 theme_justin<-theme_bw() +theme(axis.line = element_line(colour = "black"),
@@ -44,8 +44,8 @@ theme_justin<-theme_bw() +theme(axis.line = element_line(colour = "black"),
         panel.border = element_blank(),
         panel.background = element_blank())
 
-fishnet<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Fishnet/", layer="Fishnet_yield_NoAntarctica")
-fertilizer<-read.csv(file="Fertilizer_Near/Near_Fertilizer_Fishnet.csv", header=T) #import fert
+fishnet<- readOGR(dsn= "Shapefiles/", layer="Fishnet_yield_NoAntarctica")
+fertilizer<-read.csv(file="Fertilizer_Near/FertilizerNear.csv", header=T) #import fert
 fishnet.m <- na.omit(merge(fishnet, fertilizer, by='Fishnet_ID'))#merge 
 ```
 
@@ -73,7 +73,7 @@ for(i in 1:N){
   # calculate distances from that point
   distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
   metadata$rescale_ND_barley<-distances/(1000*1000)
-  barley.near.low<-metadata %>% select(mean_barle,rescale_ND_barley)
+  barley.near.low<-metadata %>% dplyr::select(mean_barle,rescale_ND_barley)
   barley.near.low<-barley.near.low %>% filter(mean_barle > 0, na.rm=TRUE)
   barley.near.low<-barley.near.low %>% filter(rescale_ND_barley > 0, na.rm=TRUE)
   barley.near.low$logBarley<-log10(barley.near.low$mean_barle)
@@ -115,7 +115,7 @@ for(i in 1:N){
   # calculate distances from that point
   distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
   metadata$rescale_ND_cassava<-distances/(1000*1000)
-  cassava.near.low<-metadata %>% select(mean_cassa,rescale_ND_cassava)
+  cassava.near.low<-metadata %>% dplyr::select(mean_cassa,rescale_ND_cassava)
   cassava.near.low<-cassava.near.low %>% filter(mean_cassa > 0, na.rm=TRUE)
   cassava.near.low<-cassava.near.low %>% filter(rescale_ND_cassava > 0, na.rm=TRUE)
   cassava.near.low$logCassava<-log10(cassava.near.low$mean_cassa)
@@ -158,7 +158,7 @@ for(i in 1:N){
   # calculate distances from that point
   distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
   metadata$rescale_ND_groundnut<-distances/(1000*1000)
-  groundnut.near.low<-metadata %>% select(mean_groun,rescale_ND_groundnut)
+  groundnut.near.low<-metadata %>% dplyr::select(mean_groun,rescale_ND_groundnut)
   groundnut.near.low<-groundnut.near.low %>% filter(mean_groun > 0, na.rm=TRUE)
   groundnut.near.low<-groundnut.near.low %>% filter(rescale_ND_groundnut > 0, na.rm=TRUE)
   groundnut.near.low$logGroundnut<-log10(groundnut.near.low$mean_groun)
@@ -200,7 +200,7 @@ for(i in 1:N){
   # calculate distances from that point
   distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
   metadata$rescale_ND_maize<-distances/(1000*1000)
-  maize.near.low<-metadata %>% select(mean_maize,rescale_ND_maize)
+  maize.near.low<-metadata %>% dplyr::select(mean_maize,rescale_ND_maize)
   maize.near.low<-maize.near.low %>% filter(mean_maize > 0, na.rm=TRUE)
   maize.near.low<-maize.near.low %>% filter(rescale_ND_maize > 0, na.rm=TRUE)
   maize.near.low$logMaize<-log10(maize.near.low$mean_maize)
@@ -219,18 +219,18 @@ ggplot(output.low, aes(x=x, y=y, color=slope)) +geom_point()
 #write.csv(output.low,file="Low_Fert_Analyses/RandomGCOs/maize_low50percNull.csv")
 ```
 
-#Millet
+#Potato
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE,echo=FALSE}
 #### readins and preprocess ######################
-fishnet.low<-subset(fishnet.m, fishnet.m$millet_FertMean > 0 ) #fert > 0 
-fishnet.low<-subset(fishnet.m, fishnet.m$mean_mille > 0 ) # yield > 0 
+fishnet.low<-subset(fishnet.m, fishnet.m$Potato_FertMean > 0 ) #fert > 0 
+fishnet.low<-subset(fishnet.m, fishnet.m$mean_potat > 0 ) # yield > 0 
 dim(fishnet) - dim(fishnet.low) # pixels left
-quantile(fishnet.low$millet_FertMean,na.rm = TRUE) #identify quantiles
-fishnet.low.millet<-subset(fishnet.m, fishnet.m$millet_FertMean < 10.84) #subset below 50% of data
+quantile(fishnet.low$Potato_FertMean,na.rm = TRUE) #identify quantiles
+fishnet.low.potato<-subset(fishnet.m, fishnet.m$Potato_FertMean < 26.91) #subset below 50% of data
 
 ### Get Lat-Long Baby Girl 
-xy <- coordinates(fishnet.low.millet)
-metadata <- fishnet.low.millet@data
+xy <- coordinates(fishnet.low.potato)
+metadata <- fishnet.low.potato@data
 
 # the loop
 
@@ -241,25 +241,26 @@ for(i in 1:N){
   random.point <- sample(1:nrow(xy), 1)
   # calculate distances from that point
   distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
-  metadata$rescale_ND_millet<-distances/(1000*1000)
-  millet.near.low<-metadata %>% select(mean_mille,rescale_ND_millet)
-  millet.near.low<-millet.near.low %>% filter(mean_mille > 0, na.rm=TRUE)
-  millet.near.low<-millet.near.low %>% filter(rescale_ND_millet > 0, na.rm=TRUE)
-  millet.near.low$logMillet<-log10(millet.near.low$mean_mille)
+  metadata$rescale_ND_potato<-distances/(1000*1000)
+  potato.near.low<-metadata %>% dplyr::select(mean_mille,rescale_ND_potato)
+  potato.near.low<-potato.near.low %>% filter(mean_mille > 0, na.rm=TRUE)
+  potato.near.low<-potato.near.low %>% filter(rescale_ND_potato > 0, na.rm=TRUE)
+  potato.near.low$logPotato<-log10(potato.near.low$mean_mille)
   
   # fit yield ~ distance model
-  millet.low.gls <- gls(logMillet ~ rescale_ND_millet, data = millet.near.low)
+  potato.low.gls <- gls(logPotato ~ rescale_ND_potato, data = potato.near.low)
   
   # associate it to the point
-  output.low[i,] <- c(coef(millet.low.gls)[2], xy[random.point,],    summary(millet.low.gls)$tTable[2,4] )
+  output.low[i,] <- c(coef(potato.low.gls)[2], xy[random.point,],    summary(potato.low.gls)$tTable[2,4] )
 }
 
 #Map 
 output.low<-output.low %>% filter (output.low$P < 0.05) #remove insig p values
 ggplot(output.low, aes(x=x, y=y, color=slope)) +geom_point()
 
-#write.csv(output,lw,file="Low_Fert/millet_low50percNull.csv")
+#write.csv(output.low,file="Low_Fert/potato_low50percNull.csv")
 ```
+
 
 #Rapeseed
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE,echo=FALSE}
@@ -284,7 +285,7 @@ for(i in 1:N){
   # calculate distances from that point
   distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
   metadata$rescale_ND_rapeseed<-distances/(1000*1000)
-  rapeseed.near.low<-metadata %>% select(mean_rapes,rescale_ND_rapeseed)
+  rapeseed.near.low<-metadata %>% dplyr::select(mean_rapes,rescale_ND_rapeseed)
   rapeseed.near.low<-rapeseed.near.low %>% filter(mean_rapes > 0, na.rm=TRUE)
   rapeseed.near.low<-rapeseed.near.low %>% filter(rescale_ND_rapeseed > 0, na.rm=TRUE)
   rapeseed.near.low$logRapeseed<-log10(rapeseed.near.low$mean_rapes)
@@ -326,7 +327,7 @@ for(i in 1:N){
   # calculate distances from that point
   distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
   metadata$rescale_ND_rice<-distances/(1000*1000)
-  rice.near.low<-metadata %>% select(mean_rice_,rescale_ND_rice)
+  rice.near.low<-metadata %>% dplyr::select(mean_rice_,rescale_ND_rice)
   rice.near.low<-rice.near.low %>% filter(mean_rice_ > 0, na.rm=TRUE)
   rice.near.low<-rice.near.low %>% filter(rescale_ND_rice > 0, na.rm=TRUE)
   rice.near.low$logRice<-log10(rice.near.low$mean_rice_)
@@ -368,7 +369,7 @@ for(i in 1:N){
   # calculate distances from that point
   distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
   metadata$rescale_ND_rye<-distances/(1000*1000)
-  rye.near.low<-metadata %>% select(mean_groun,rescale_ND_rye)
+  rye.near.low<-metadata %>% dplyr::select(mean_groun,rescale_ND_rye)
   rye.near.low<-rye.near.low %>% filter(mean_groun > 0, na.rm=TRUE)
   rye.near.low<-rye.near.low %>% filter(rescale_ND_rye > 0, na.rm=TRUE)
   rye.near.low$logRye<-log10(rye.near.low$mean_groun)
@@ -410,7 +411,7 @@ for(i in 1:N){
   # calculate distances from that point
   distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
   metadata$rescale_ND_sorghum<-distances/(1000*1000)
-  sorghum.near.low<-metadata %>% select(mean_sorgh,rescale_ND_sorghum)
+  sorghum.near.low<-metadata %>% dplyr::select(mean_sorgh,rescale_ND_sorghum)
   sorghum.near.low<-sorghum.near.low %>% filter(mean_sorgh > 0, na.rm=TRUE)
   sorghum.near.low<-sorghum.near.low %>% filter(rescale_ND_sorghum > 0,   
                                                 na.rm=TRUE)
@@ -454,7 +455,7 @@ for(i in 1:N){
   # calculate distances from that point
   distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
   metadata$rescale_ND_soybean<-distances/(1000*1000)
-  soybean.near.low<-metadata %>% select(mean_soybe,rescale_ND_soybean)
+  soybean.near.low<-metadata %>% dplyr::select(mean_soybe,rescale_ND_soybean)
   soybean.near.low<-soybean.near.low %>% filter(mean_soybe > 0, na.rm=TRUE)
   soybean.near.low<-soybean.near.low %>% filter(rescale_ND_soybean > 0,   
                                                 na.rm=TRUE)
@@ -498,7 +499,7 @@ for(i in 1:N){
   # calculate distances from that point
   distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
   metadata$rescale_ND_sunflower<-distances/(1000*1000)
-  sunflower.near.low<-metadata %>% select(mean_sunfl,rescale_ND_sunflower)
+  sunflower.near.low<-metadata %>% dplyr::select(mean_sunfl,rescale_ND_sunflower)
   sunflower.near.low<-sunflower.near.low %>% filter(mean_sunfl > 0, na.rm=TRUE)
   sunflower.near.low<-sunflower.near.low %>% filter(rescale_ND_sunflower > 0,   
                                                 na.rm=TRUE)
@@ -542,7 +543,7 @@ for(i in 1:N){
   # calculate distances from that point
   distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
   metadata$rescale_ND_wheat<-distances/(1000*1000)
-  wheat.near.low<-metadata %>% select(mean_wheat,rescale_ND_wheat)
+  wheat.near.low<-metadata %>% dplyr::select(mean_wheat,rescale_ND_wheat)
   wheat.near.low<-wheat.near.low %>% filter(mean_wheat > 0, na.rm=TRUE)
   wheat.near.low<-wheat.near.low %>% filter(rescale_ND_wheat > 0,   
                                                 na.rm=TRUE)
