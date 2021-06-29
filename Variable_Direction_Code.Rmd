@@ -86,6 +86,9 @@ barley.pest<-perm.relation(rf.barley$barley_HgHa,rf.barley$Pesticide,method = "p
 #Fertilizer
 barley.fert<-perm.relation(rf.barley$barley_HgHa,rf.barley$Barley_Fertilizer,method = "pearson") #print(barley.fert)
 
+```
+
+```{r Variable Direction Estimation,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Cassava
 rf.cassava<-read.csv(file="Models/Cassava_RF.csv", header = T, row.names = 1)
 rf.cassava$Growing_Mean<-as.numeric(rf.cassava$Growing_Mean)
@@ -107,7 +110,9 @@ cassava.pest<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$Pesticide,method 
 #Fertilizer
 cassava.fert<-perm.relation(rf.cassava$cassava_HgHa,rf.cassava$cassava_Fertilizer,method = "pearson")
 #print(cassava.fert)
+```
 
+```{r Variable Direction Estimation,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Groundnut
 rf.groundnut<-read.csv(file="Models/Groundnut_RF.csv", header = T, row.names = 1)
 rf.groundnut$Growing_Mean<-as.numeric(rf.groundnut$Growing_Mean)
@@ -129,7 +134,9 @@ groundnut.pest<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$Pesticide
 #Fertilizer
 groundnut.fert<-perm.relation(rf.groundnut$groundnut_HgHa,rf.groundnut$groundnut_Fertilizer,method = "pearson")
 #print(groundnut.fert)
+```
 
+```{r Variable Direction Estimation,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Maize
 rf.maize<-read.csv(file="Models/Maize_RF.csv", header = T, row.names = 1)
 rf.maize$Growing_Mean<-as.numeric(rf.maize$Growing_Mean)
@@ -151,30 +158,33 @@ maize.pest<-perm.relation(rf.maize$maize_HgHa,rf.maize$Pesticide,method = "pears
 #Fertilizer
 maize.fert<-perm.relation(rf.maize$maize_HgHa,rf.maize$maize_Fertilizer,method = "pearson")
 #print(maize.fert)
+```
 
-##Millet
+```{r Variable Direction Estimation,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
+##Potato
 
-rf.millet<-read.csv(file="Models/Millet_RF.csv", header = T, row.names = 1)
-rf.millet$Growing_Mean<-as.numeric(rf.millet$Growing_Mean)
-rf.millet<-na.omit(rf.millet)
-rf.millet<-log10(rf.millet+1)
+rf.Potato<-read.csv(file="Models/Potato_RF.csv", header = T, row.names = 1)
+rf.Potato<-na.omit(rf.Potato)
+rf.Potato<-log10(rf.Potato+1)
 
 #AET
-millet.aet<-perm.relation(rf.millet$millet_HgHa,rf.millet$AET_mean,method = "pearson") 
-#print(millet.aet)
+Potato.aet<-perm.relation(rf.Potato$mean_potat,rf.Potato$AET_mean,method = "pearson") 
+#print(Potato.aet)
 
 #GDP
-millet.gdp<-perm.relation(rf.millet$millet_HgHa,rf.millet$GDP_Mean,method = "pearson") 
-#print(millet.gdp)
+Potato.gdp<-perm.relation(rf.Potato$Potato_HgHa,rf.Potato$GDP_Mean,method = "pearson") 
+#print(Potato.gdp)
 
 #Pest
-millet.pest<-perm.relation(rf.millet$millet_HgHa,rf.millet$Pesticide,method = "pearson") 
-#print(millet.pest)
+Potato.pest<-perm.relation(rf.Potato$Potato_HgHa,rf.Potato$Pesticide,method = "pearson") 
+#print(Potato.pest)
 
 #Fertilizer
-millet.fert<-perm.relation(rf.millet$millet_HgHa,rf.millet$millet_Fertilizer,method = "pearson")
-#print(millet.fert)
+Potato.fert<-perm.relation(rf.Potato$Potato_HgHa,rf.Potato$Potato_Fertilizer,method = "pearson")
+#print(Potato.fert)
+```
 
+```{r Variable Direction Estimation,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Rapeseed
 rf.rapeseed<-read.csv(file="Models/Rapeseed_RF.csv", header = T, row.names = 1)
 rf.rapeseed<-na.omit(rf.rapeseed)
@@ -195,7 +205,9 @@ rapeseed.pest<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$Pesticide,met
 #Fertilizer
 rapeseed.fert<-perm.relation(rf.rapeseed$rapeseed_HgHa,rf.rapeseed$rapeseed_Fertilizer,method = "pearson")
 #print(rapeseed.fert)
+```
 
+```{r Variable Direction Estimation,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Rice
 rf.rice<-read.csv(file="Models/Rice_RF.csv", header = T, row.names = 1)
 rf.rice<-na.omit(rf.rice)
@@ -216,7 +228,9 @@ rice.pest<-perm.relation(rf.rice$rice_HgHa,rf.rice$Pesticide,method = "pearson")
 #Fertilizer
 rice.fert<-perm.relation(rf.rice$rice_HgHa,rf.rice$rice_Fertilizer,method = "pearson")
 #print(rice.fert)
+```
 
+```{r Variable Direction Estimation,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Rye
 rf.rye<-read.csv(file="Models/Rye_RF.csv", header = T, row.names = 1)
 rf.rye<-na.omit(rf.rye)
@@ -258,7 +272,9 @@ sorghum.pest<-perm.relation(rf.sorghum$Yield,rf.sorghum$Pesticide,method = "pear
 #Fertilizer
 sorghum.fert<-perm.relation(rf.sorghum$Yield,rf.sorghum$sorghum_Fertilizer,method = "pearson")
 #print(sorghum.fert)
+```
 
+```{r Variable Direction Estimation,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Soybean
 rf.soybean<-read.csv(file="Models/Soybean_RF.csv", header = T, row.names = 1)
 rf.soybean<-na.omit(rf.soybean)
@@ -279,7 +295,9 @@ soybean.pest<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$Pesticide,method 
 #Fertilizer
 soybean.fert<-perm.relation(rf.soybean$soybean_HgHa,rf.soybean$soybean_Fertilizer,method = "pearson")
 #print(soybean.fert)
+```
 
+```{r Variable Direction Estimation,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Sunflower
 rf.sunflower<-read.csv(file="Models/Sunflower_RF.csv", header = T, row.names = 1)
 rf.sunflower<-na.omit(rf.sunflower)
@@ -300,7 +318,9 @@ sunflower.pest<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$Pesticide
 #Fertilizer
 sunflower.fert<-perm.relation(rf.sunflower$sunflower_HgHa,rf.sunflower$sunflower_Fertilizer,method = "pearson")
 #print(sunflower.fert)
+```
 
+```{r Variable Direction Estimation,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 ##Wheat
 rf.wheat<-read.csv(file="Models/Wheat_RF.csv", header = T, row.names = 1)
 rf.wheat<-na.omit(rf.wheat)
@@ -321,16 +341,11 @@ wheat.pest<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$Pesticide,method = "pears
 #Fertilizer
 wheat.fert<-perm.relation(rf.wheat$wheat_HgHa,rf.wheat$wheat_Fertilizer,method = "pearson")
 #print(wheat.fert)
+```
 
+```{r Variable Direction Estimation,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
 # Tabulate in Excel and then import
 vard<-read.csv(file="Models/VariableDirection/VariableDirection.csv", header=T, row.names = 1)
-
-distance<-dist(vard, method = "euclidean")
-vard.hc<-hclust(distance)
-plot(vard.hc) #reorder in excel 
-
-#reimport
-vard<-read.csv(file="Models/VariableDirection/VariableDirection.csv", header=T)
 
 vard$Crop<-factor(vard$Crop, levels=vard$Crop) #set factor
 vard.m<-melt(vard) #melt
@@ -344,7 +359,20 @@ ggplot(vard.m, aes(x=vard.m$variable, y=vard.m$Crop, fill=vard.m$value)) +
   scale_y_discrete(expand = c(0, 0))  + 
   coord_equal() +xlab("Variable") +ylab("Crop")  +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+ scale_fill_viridis(option = "D") 
+```
 
+```{r Variable Direction Estimation,fig.align='center',message=FALSE, warning=FALSE, cache=TRUE}
+# VarImportance
+varimp<-read.csv(file="Models/VariableDirection/VariableIMP_Pivot_Graph.csv", header=T)
 
+vi.m<-melt(varimp)
+
+ggplot(vi.m, aes(x=vard.m$variable, y=vard.m$Crop, fill=vard.m$value)) + 
+  geom_tile() + 
+  scale_fill_gradientn(colours = pal) + 
+  scale_x_discrete(expand = c(0, 0)) +
+  scale_y_discrete(expand = c(0, 0))  + 
+  coord_equal() +xlab("Variable") +ylab("Crop")  +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+ scale_fill_viridis(option = "B") 
 
 ```

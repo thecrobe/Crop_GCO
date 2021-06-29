@@ -1,13 +1,13 @@
-﻿Crop,Fertilizer ,Pesticide,Evapotranspiration,Economy
-Maize,100,0,8.2,35.3
-Rapeseed,100,0,28.98,22.71
-Wheat,100,0,21.52,7.13
-Rye,100,4.11,0,42.11
-Rice,100,4.8,8.06,0
-Sunflower,100,7.84,31.9,0
-Barley,100,10.12,17.54,0
-Groundnut,100,19.31,40.64,0
-Soybean,100,20.56,28.83,0
-Sorghum,100,24.74,0,2.6
-Millet,100,39.59,49.17,0
-Cassava,9.95,93.56,100,0
+﻿Crop,Fertilizer ,Evapotranspiration,Pesticide,Economy
+Groundnut,100,40.64,19.31,0
+Sunflower,100,31.9,7.84,0
+Rapeseed,100,28.98,0,22.71
+Soybean,100,28.83,20.56,0
+Wheat,100,21.52,0,7.13
+Barley,100,17.54,10.12,0
+Maize,100,8.2,0,35.3
+Rice,100,8.06,4.8,0
+Sorghum,100,0,24.74,2.6
+Rye,100,0,4.11,42.11
+Cassava,9.95,100,93.56,0
+Potato,4,100,0,74

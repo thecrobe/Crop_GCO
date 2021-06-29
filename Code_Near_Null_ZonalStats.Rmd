@@ -32,7 +32,9 @@ output: html_document
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
 library(ggplot2)
 library(dplyr)
+library(RVAideMemoire)
 
+fishnet<-read.csv(file="Fishnets/GCO_Mapping.csv", header=T, fileEncoding="UTF-8-BOM")
 
 #ggplot graphic parameters
 theme_justin<-theme_bw() +theme(axis.line = element_line(colour = "black"),
@@ -48,7 +50,6 @@ theme_justin<-theme_bw() +theme(axis.line = element_line(colour = "black"),
 
 #data read-ins
 barley<-read.csv(file="Near_Null_ZonalStats/Barley_Null_ZS.csv", header=T)
-fishnet<-read.csv(file="Fishnets/GCO_Mapping.csv", header=T, fileEncoding="UTF-8-BOM")
 x<-inner_join(barley, fishnet)
 x[x==0] <- NA
 summary(x)
@@ -149,14 +150,14 @@ summary(x)
 data<-na.omit(x)
 
 #plot
-ggplot(data, aes(x=MEAN, fill=rapeseed_GCO)) +
+ggplot(data, aes(x=MEAN, fill=RapeseedGCO)) +
   geom_density(alpha=0.7) + 
   scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
   theme_justin
 
 #Inside vs Outside GCO 
-rapeseed.outside<-filter(x, rapeseed_GCO == "Outside")
-rapeseed.inside<-filter(x, rapeseed_GCO == "Inside")
+rapeseed.outside<-filter(x, RapeseedGCO == "Outside")
+rapeseed.inside<-filter(x, RapeseedGCO == "Inside")
 rapeseed.test<-perm.t.test(rapeseed.inside$MEAN,rapeseed.outside$MEAN)
 print(rapeseed.test)
 ```
@@ -172,14 +173,14 @@ x[x==0] <- NA
 summary(x)
 data<-na.omit(x)
 #plot
-ggplot(data, aes(x=MEAN, fill=rice_GCO)) +
+ggplot(data, aes(x=MEAN, fill=RiceGCO)) +
   geom_density(alpha=0.7) + 
   scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
   theme_justin
 
 #Inside vs Outside GCO 
-rice.outside<-filter(x, rice_GCO == "Outside")
-rice.inside<-filter(x, rice_GCO == "Inside")
+rice.outside<-filter(x, RiceGCO == "Outside")
+rice.inside<-filter(x, RiceGCO == "Inside")
 rice.test<-perm.t.test(rice.inside$MEAN,rice.outside$MEAN)
 print(rice.test)
 
@@ -196,14 +197,14 @@ x[x==0] <- NA
 summary(x)
 data<-na.omit(x)
 #plot
-ggplot(data, aes(x=MEAN, fill=rye_GCO)) +
+ggplot(data, aes(x=MEAN, fill=RyeGCO)) +
   geom_density(alpha=0.7) + 
   scale_fill_manual(values = c("#F75C02","#1132BF"))  + xlab("Mean Pixel Slope") +
   theme_justin
 
 #Inside vs Outside GCO 
-rye.outside<-filter(x, rye_GCO == "Outside")
-rye.inside<-filter(x, rye_GCO == "Inside")
+rye.outside<-filter(x, RyeGCO == "Outside")
+rye.inside<-filter(x, RyeGCO == "Inside")
 rye.test<-perm.t.test(rye.inside$MEAN,rye.outside$MEAN)
 print(rye.test)
 
@@ -215,19 +216,19 @@ print(rye.test)
 #data read-ins
 sorghum<-read.csv(file="Near_Null_ZonalStats/Sorghum_Null_ZS.csv", header=T)
 
-x<-inner_join(data1, fishnet)
+x<-inner_join(sorghum, fishnet)
 x[x==0] <- NA
 summary(x)
 data<-na.omit(x)
 #plot
-ggplot(data, aes(x=MEAN, fill=sorghum_GCO)) +
+ggplot(data, aes(x=MEAN, fill=SorghumGCO)) +
   geom_density(alpha=0.7) + 
   scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
   theme_justin
 
 #Inside vs Outside GCO 
-sorghum.outside<-filter(x, sorghum_GCO == "Outside")
-sorghum.inside<-filter(x, sorghum_GCO == "Inside")
+sorghum.outside<-filter(x, SorghumGCO == "Outside")
+sorghum.inside<-filter(x, SorghumGCO == "Inside")
 sorghum.test<-perm.t.test(sorghum.inside$MEAN,sorghum.outside$MEAN)
 print(sorghum.test)
 ```
@@ -243,14 +244,14 @@ x[x==0] <- NA
 summary(x)
 data<-na.omit(x)
 #plot
-ggplot(data, aes(x=MEAN, fill=soybean_GCO)) +
+ggplot(data, aes(x=MEAN, fill=SoybeanGCO)) +
   geom_density(alpha=0.7) + 
   scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
   theme_justin
 
 #Inside vs Outside GCO 
-soybean.outside<-filter(x, soybean_GCO == "Outside")
-soybean.inside<-filter(x, soybean_GCO == "Inside")
+soybean.outside<-filter(x, SoybeanGCO == "Outside")
+soybean.inside<-filter(x, SoybeanGCO == "Inside")
 soybean.test<-perm.t.test(soybean.inside$MEAN,soybean.outside$MEAN)
 print(soybean.test)
 
@@ -267,14 +268,14 @@ x[x==0] <- NA
 summary(x)
 data<-na.omit(x)
 #plot
-ggplot(data, aes(x=MEAN, fill=sunflower_GCO)) +
+ggplot(data, aes(x=MEAN, fill=SunflowerGCO)) +
   geom_density(alpha=0.7) + 
-  scale_fill_manual(values = c("#F75C02","#1132BF")) +
+  scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
   theme_justin
 
 #Inside vs Outside GCO 
-sunflower.outside<-filter(x, sunflower_GCO == "Outside")
-sunflower.inside<-filter(x, sunflower_GCO == "Inside")
+sunflower.outside<-filter(x, SunflowerGCO == "Outside")
+sunflower.inside<-filter(x, SunflowerGCO == "Inside")
 sunflower.test<-perm.t.test(sunflower.inside$MEAN,sunflower.outside$MEAN)
 print(sunflower.test)
 
@@ -291,15 +292,39 @@ x[x==0] <- NA
 summary(x)
 data<-na.omit(x)
 #plot
-ggplot(data, aes(x=MEAN, fill=wheat_GCO)) +
+ggplot(data, aes(x=MEAN, fill=WheatGCO)) +
   geom_density(alpha=0.7) + 
-  scale_fill_manual(values = c("#F75C02","#1132BF")) +
+  scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
   theme_justin
 
 #Inside vs Outside GCO 
-wheat.outside<-filter(x, wheat_GCO == "Outside")
-wheat.inside<-filter(x, wheat_GCO == "Inside")
+wheat.outside<-filter(x, WheatGCO == "Outside")
+wheat.inside<-filter(x, WheatGCO == "Inside")
 wheat.test<-perm.t.test(wheat.inside$MEAN,wheat.outside$MEAN)
 print(wheat.test)
+
+```
+
+#Potato
+```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
+
+#data read-ins
+Potato<-read.csv(file="Near_Null_ZonalStats/Potato_Null_ZS.csv", header=T)
+
+x<-inner_join(Potato, fishnet)
+x[x==0] <- NA
+summary(x)
+data<-na.omit(x)
+#plot
+ggplot(data, aes(x=MEAN, fill=PotatoGCO)) +
+  geom_density(alpha=0.7) + 
+  scale_fill_manual(values = c("#F75C02","#1132BF")) + xlab("Mean Pixel Slope") +
+  theme_justin
+
+#Inside vs Outside GCO 
+Potato.outside<-filter(x, PotatoGCO == "Outside")
+Potato.inside<-filter(x, PotatoGCO == "Inside")
+Potato.test<-perm.t.test(Potato.inside$MEAN,Potato.outside$MEAN)
+print(Potato.test)
 
 ```

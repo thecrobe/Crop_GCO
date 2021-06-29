@@ -21,7 +21,7 @@ output: html_document
 </div>
 
 <div class = "col-md-4">
-<br><br> **What This Allows Me To Do:** Identify if yield-distance relationships (near analysis) are a function of evolutionary escape or other fertilizer.
+<br><br> **What This Allows Me To Do:** Identify if yield-distance relationships (near analysis) are a function of fertilizer input. 
 </div>
 
 <div class = "col-md-4">
