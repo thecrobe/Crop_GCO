@@ -46,7 +46,7 @@ theme_justin<-theme_bw() +theme(axis.line = element_line(colour = "black"),
         panel.background = element_blank())
 
 #Import Fishnet
-fishnet<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Near_Fertilizer")
+fishnet<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="FertNear")
 ### Get Lat-Long Baby Girl and apply metadata
 xy <- coordinates(fishnet)
 metadata <- fishnet@data
@@ -55,9 +55,9 @@ plot(fishnet) #Fishnet only contains pixels with fertilizer input
 ```
 ## Barley 
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
-barley<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Barley_Wheat_Centroid") #Import GCO Centroid
+barley<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/GCO_Shapefiles/", layer="BarleyWheat_GC") #Import GCO Centroid
 plot(barley)
-barley.c<-coordinates(barley) #Extract Lat-Long
+barley.c<-gCentroid(barley) #Extract Lat-Long
 distances <- spDistsN1(xy,barley.c, longlat = FALSE) #Calculate Near Distances
 data<-cbind(data.frame(metadata),data.frame(distances)) #Merge into a DF
 data$rescale_ND<-data$distances/(1000*1000) #Rescale distances 
@@ -119,8 +119,8 @@ coef(barley.power)
 
 ## Cassava 
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
-cassava<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Cassava_Groundnut_Centroid") #Import GCO Centroid
-cassava.c<-coordinates(cassava) #Extract Lat-Long
+cassava<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/GCO_Shapefiles/", layer="Cassava_GC") #Import GCO Centroid
+cassava.c<-gCentroid(cassava) #Extract Lat-Long
 distances <- spDistsN1(xy,cassava.c, longlat = FALSE) #Calculate Near Distances
 data<-cbind(data.frame(metadata),data.frame(distances)) #Merge into a DF
 data$rescale_ND<-data$distances/(1000*1000) #Rescale distances 
@@ -147,7 +147,6 @@ usa<-filter(data, COUNTRY == "United States")
 usa.Perc<-sum(usa$cassava_Fe)/sum(cassava.pivot$.) 
 print(usa.Perc) # % of Global Fertilizer For Crop 
 usa.color<-"#8F4A33"
-
 
 
 #Plot 
@@ -179,8 +178,8 @@ summary(cassava.exp) #CHECK IT LINDa
 ```
 ## Groundnut 
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
-groundnut<-readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Cassava_Groundnut_Centroid") #Import GCO Centroid
-groundnut.c<-coordinates(groundnut) #Extract Lat-Long
+groundnut<-readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/GCO_Shapefiles/", layer="Groundnut_GC") #Import GCO Centroid
+groundnut.c<-gCentroid(groundnut) #Extract Lat-Long
 distances <- spDistsN1(xy,groundnut.c, longlat = FALSE) #Calculate Near Distances
 data<-cbind(data.frame(metadata),data.frame(distances)) #Merge into a DF
 data$rescale_ND<-data$distances/(1000*1000) #Rescale distances 
@@ -240,8 +239,8 @@ summary(groundnut.exp)
 ```
 ## Sorghum 
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
-sorghum<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Sorghum_Centroid") #Import GCO Centroid
-sorghum.c<-coordinates(sorghum) #Extract Lat-Long
+sorghum<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/GCO_Shapefiles/", layer="Sorghum_GC") #Import GCO Centroid
+sorghum.c<-gCentroid(sorghum) #Extract Lat-Long
 distances <- spDistsN1(xy,sorghum.c, longlat = FALSE) #Calculate Near Distances
 data<-cbind(data.frame(metadata),data.frame(distances)) #Merge into a DF
 data$rescale_ND<-data$distances/(1000*1000) #Rescale distances 
@@ -269,8 +268,6 @@ mexico<-filter(data, COUNTRY == "Mexico")
 mexico.Perc<-sum(mexico$sorghum_Fe)/sum(sorghum.pivot$.) 
 print(mexico.Perc) # % of Global Fertilizer For Crop 
 mexico.color<-"#96AEEA"
-
-
 
 #Plot 
 ggplot(data, aes(x=rescale_ND,y=log10(data$sorghum_Fe))) + 
@@ -303,8 +300,8 @@ summary(sorghum.ConstPower)
 
 ## Soybean 
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
-soybean<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Soy_Millet_Centroid") #Import GCO Centroid
-soybean.c<-coordinates(soybean) #Extract Lat-Long
+soybean<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/GCO_Shapefiles/", layer="Soy_GC") #Import GCO Centroid
+soybean.c<-gCentroid(soybean) #Extract Lat-Long
 distances <- spDistsN1(xy,soybean.c, longlat = FALSE) #Calculate Near Distances
 data<-cbind(data.frame(metadata),data.frame(distances)) #Merge into a DF
 data$rescale_ND<-data$distances/(1000*1000) #Rescale distances 
@@ -425,8 +422,8 @@ summary(wheat.power)
 
 ## Maize 
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
-maize<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Maize") #Import GCO Centroid
-maize.c<-coordinates(maize) #Extract Lat-Long
+maize<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/GCO_Shapefiles/", layer="Maize_GC") #Import GCO Centroid
+maize.c<-gCentroid(maize) #Extract Lat-Long
 distances <- spDistsN1(xy,maize.c, longlat = FALSE) #Calculate Near Distances
 data<-cbind(data.frame(metadata),data.frame(distances)) #Merge into a DF
 data$rescale_ND<-data$distances/(1000*1000) #Rescale distances 
@@ -543,8 +540,8 @@ summary(millet.ConstPower)
 
 ## Rapeseed 
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
-rapeseed<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Rapeseed_Centroid") #Import GCO Centroid
-rapeseed.c<-coordinates(rapeseed) #Extract Lat-Long
+rapeseed<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/GCO_Shapefiles", layer="Rapeseed") #Import GCO Centroid
+rapeseed.c<-gCentroid(rapeseed) #Extract Lat-Long
 distances <- spDistsN1(xy,rapeseed.c, longlat = FALSE) #Calculate Near Distances
 data<-cbind(data.frame(metadata),data.frame(distances)) #Merge into a DF
 data$rescale_ND<-data$distances/(1000*1000) #Rescale distances 
@@ -603,8 +600,8 @@ summary(rapeseed.ConstPower)
 ```
 ## Rice 
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
-rice<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Rice_Centroid") #Import GCO Centroid
-rice.c<-coordinates(rice) #Extract Lat-Long
+rice<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/GCO_Shapefiles/", layer="Rice_GC1") #Import GCO Centroid
+rice.c<-gCentroid(rice) #Extract Lat-Long
 distances <- spDistsN1(xy,rice.c, longlat = FALSE) #Calculate Near Distances
 data<-cbind(data.frame(metadata),data.frame(distances)) #Merge into a DF
 data$rescale_ND<-data$distances/(1000*1000) #Rescale distances 
@@ -662,8 +659,8 @@ summary(rice.ConstPower)
 ```
 ## Rye 
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
-rye<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Rye_Centroid") #Import GCO Centroid
-rye.c<-coordinates(rye) #Extract Lat-Long
+rye<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/GCO_Shapefiles/", layer="Rye") #Import GCO Centroid
+rye.c<-gCentroid(rye) #Extract Lat-Long
 distances <- spDistsN1(xy,rye.c, longlat = FALSE) #Calculate Near Distances
 data<-cbind(data.frame(metadata),data.frame(distances)) #Merge into a DF
 data$rescale_ND<-data$distances/(1000*1000) #Rescale distances 
@@ -690,6 +687,8 @@ russia<-filter(data, COUNTRY == "Russian Federation")
 russia.Perc<-sum(russia$rye_FertMe)/sum(rye.pivot$.) 
 print(russia.Perc) # % of Global Fertilizer For Crop 
 russia.color<-"#D3867A"
+
+
 
 #Plot 
 ggplot(data, aes(x=rescale_ND,y=log10(data$rye_FertMe))) + 
@@ -720,8 +719,8 @@ summary(rye.exp)
 ```
 ## Sunflower 
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
-sunflower<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Sunflower_Centroid") #Import GCO Centroid
-sunflower.c<-coordinates(sunflower) #Extract Lat-Long
+sunflower<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/GCO_Shapefiles/", layer="Sunflower_GC") #Import GCO Centroid
+sunflower.c<-gCentroid(sunflower) #Extract Lat-Long
 distances <- spDistsN1(xy,sunflower.c, longlat = FALSE) #Calculate Near Distances
 data<-cbind(data.frame(metadata),data.frame(distances)) #Merge into a DF
 data$rescale_ND<-data$distances/(1000*1000) #Rescale distances 
@@ -808,7 +807,7 @@ usa.Perc<-sum(usa$potato_Fe)/sum(potato.pivot$.)
 print(usa.Perc) # % of Global Fertilizer For Crop 
 usa.color<-"#8F4A33"
 
-sum(china.Perc,france.Perc,india.Perc) 
+sum(china.Perc,usa.Perc,india.Perc) 
 
 #Plot 
 ggplot(data, aes(x=data$rescale_ND,y=log10(data$potato_Fe))) + 
