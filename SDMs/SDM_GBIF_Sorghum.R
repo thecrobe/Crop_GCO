@@ -188,3 +188,6 @@ bg <- randomPoints(modelEnv, 1000) #make psuedorandom background points
 e1 <- evaluate(Xanthium.spinosum.me, p=occ.Xanthium.spinosum.test, a=bg, x=modelEnv)
 plot(e1, 'ROC')
 #writeRaster(Xanthium.spinosum.pred, file = "SDMs/Sorghum_Xanthium.spinosum.tif")
+
+### Analysis 
+

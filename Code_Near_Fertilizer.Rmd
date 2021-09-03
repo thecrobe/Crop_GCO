@@ -362,8 +362,8 @@ summary(soybean.exp)
 
 ## Wheat 
 ```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
-wheat<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Near_Fertilizer/", layer="Barley_Wheat_Centroid") #Import GCO Centroid
-wheat.c<-coordinates(wheat) #Extract Lat-Long
+wheat<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/GCO_Shapefiles/", layer="BarleyWheat_GC") #Import GCO Centroid
+wheat.c<-gCentroid(wheat) #Extract Lat-Long
 distances <- spDistsN1(xy,wheat.c, longlat = FALSE) #Calculate Near Distances
 data<-cbind(data.frame(metadata),data.frame(distances)) #Merge into a DF
 data$rescale_ND<-data$distances/(1000*1000) #Rescale distances 
@@ -392,6 +392,7 @@ print(india.Perc) # % of Global Fertilizer For Crop
 india.color<-"#078D40"
 
 
+
 #Plot 
 ggplot(data, aes(x=rescale_ND,y=log10(data$wheat_Fert))) + 
       geom_point(alpha=0.3) +theme_justin + 
@@ -400,7 +401,7 @@ ggplot(data, aes(x=rescale_ND,y=log10(data$wheat_Fert))) +
       geom_point(data=india, aes(x=rescale_ND, y=log10(india$wheat_Fert)), color=india.color, alpha=0.3) + 
       ylab("Log10 Fertilizer") + 
       xlab("Distance From GCO (1000's km)") +
-      geom_abline(aes(intercept=coef(wheat.power)[1], slope=coef(wheat.power)[2]), color="red", size=2)
+      geom_abline(aes(intercept=coef(wheat.ConstPower)[1], slope=coef(wheat.ConstPower)[2]), color="red", size=2)
 
 ###  Model - Wheat Fertilizer Near
 library(nlme)
@@ -417,7 +418,7 @@ wheat.exp <- update(wheat.ols, . ~., weights = varExp(form = ~ rescale_ND)) # er
 wheat.ConstPower <- update(wheat.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
 # compare all models by AIC
 AIC(wheat.ols, wheat.fixed, wheat.power, wheat.ConstPower, wheat.exp)
-summary(wheat.power)
+summary(wheat.ConstPower)
 ```
 
 ## Maize 

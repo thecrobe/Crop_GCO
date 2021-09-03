@@ -24,10 +24,11 @@ editor_options:
 library(wPerm)
 library(caret)
 library(wPerm)
-#library(spatialEco)
-#library(rgdal)
+library(spatialEco)
+library(rgdal)
 library(RVAideMemoire)
 library(nlme)
+library(rgeos)
 
 #plots
 library(RColorBrewer)

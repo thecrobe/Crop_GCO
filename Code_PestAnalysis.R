@@ -1,6 +1,3 @@
-##### Pest Analysis Models
-
-```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
 library(rgdal)
 library(maptools)
 library(rgeos)
@@ -15,17 +12,16 @@ theme_justin<-theme_bw() +theme(axis.line = element_line(colour = "black"),
                                 panel.grid.minor = element_blank(),
                                 panel.border = element_blank(),
                                 panel.background = element_blank())
-### Sorghum
+
+########## Sorghum ##########
 #Import Fishnet
 sorghum<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Pests/", layer="Sorghum_Pests")
-### Get Lat-Long Baby Girl and apply metadata
+### Get Lat-Long and apply metadata
 sorghum.xy <- coordinates(sorghum)
 sorghum.metadata <- sorghum@data
 sapply(sorghum.metadata, "class")
-plot(sorghum) #Fishnet only contains pixels with fertilizer input
-```
 
-```{r,  message=TRUE, warning=FALSE, cache=TRUE, message=FALSE}
+
 sorghum.gco<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/GCO_Shapefiles/", layer="Sorghum_GC") #Import GCO Centroid
 plot(sorghum.gco)
 sorghum.c<-gCentroid(sorghum.gco) #Extract Lat-Long
@@ -33,8 +29,7 @@ distances <- spDistsN1(sorghum.xy,sorghum.c,longlat = FALSE) #Calculate Near Dis
 data<-cbind(data.frame(sorghum.metadata),data.frame(distances)) #Merge into a DF
 data$rescale_ND<-data$distances/(1000*1000) #Rescale distances 
 
-
-s.achatina<-data %>% filter(data$Achatina > .7, na.rm=TRUE) #select greater than 70
+s.achatina<-data %>% filter(data$Achatina > 0.5, na.rm=TRUE) #select greater than 70
 dim(s.achatina) # data points
 
 library(nlme)
@@ -50,19 +45,16 @@ Achatina.exp <- update(Achatina.ols, . ~., weights = varExp(form = ~ rescale_ND)
 Achatina.ConstPower <- update(Achatina.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
 # compare all models by AIC
 AIC(Achatina.ols, Achatina.fixed, Achatina.power, Achatina.ConstPower, Achatina.exp)
-summary(barley.power)
 summary(Achatina.ols)
 
 ggplot(s.achatina, aes(x=rescale_ND, y=Achatina)) +
   geom_point() +
   ylab("Presence Probability") + 
   xlab("Distance From GCO (1000's km)") +
-  geom_abline(aes(intercept=coef(Achatina.ols)[1], slope=coef(Achatina.ols)[2]), color="blue", size=2) +
+  geom_abline(aes(intercept=coef(Achatina.ConstPower)[1], slope=coef(Achatina.ConstPower)[2]), color="blue", size=2) +
   theme_justin 
-sorghum$Paspalum
 
-
-s.Paspalum<-data %>% filter(data$Paspalum > .7, na.rm=TRUE) #select greater than 70
+s.Paspalum<- data %>% filter(Paspalum > .5, na.rm=TRUE) #select greater than 70
 dim(s.Paspalum) # data points
 
 library(nlme)
@@ -84,10 +76,10 @@ ggplot(s.Paspalum, aes(x=rescale_ND, y=Paspalum)) +
   geom_point() +
   ylab("Presence Probability") + 
   xlab("Distance From GCO (1000's km)") +
-  geom_abline(aes(intercept=coef(Paspalum.ols)[1], slope=coef(Paspalum.ols)[2]), color="grey", size=2) +
+  geom_abline(aes(intercept=coef(Paspalum.ols)[1], slope=coef(Paspalum.ols)[2]), color="blue", size=2) +
   theme_justin
 
-s.Spodoptera<-data %>% filter(data$Spodoptera > .7, na.rm=TRUE) #select greater than 70
+s.Spodoptera<-data %>% filter(data$Spodoptera > .5, na.rm=TRUE) #select greater than 70
 dim(s.Spodoptera) # data points
 
 library(nlme)
@@ -109,11 +101,11 @@ ggplot(s.Spodoptera, aes(x=rescale_ND, y=Spodoptera)) +
   geom_point() +
   ylab("Presence Probability") + 
   xlab("Distance From GCO (1000's km)") +
-  geom_abline(aes(intercept=coef(Spodoptera.ols)[1], slope=coef(Spodoptera.ols)[2]), color="grey", size=2) +
+  geom_abline(aes(intercept=coef(Spodoptera.ols)[1], slope=coef(Spodoptera.ols)[2]), color="blue", size=2) +
   theme_justin
 
 
-s.Verbesina<-data %>% filter(data$Verbesina > .7, na.rm=TRUE) #select greater than 70
+s.Verbesina<-data %>% filter(data$Verbesina > .5, na.rm=TRUE) #select greater than 70
 dim(s.Verbesina) # data points
 
 library(nlme)
@@ -129,16 +121,16 @@ Verbesina.exp <- update(Verbesina.ols, . ~., weights = varExp(form = ~ rescale_N
 Verbesina.ConstPower <- update(Verbesina.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
 # compare all models by AIC
 AIC(Verbesina.ols, Verbesina.fixed, Verbesina.power, Verbesina.ConstPower, Verbesina.exp)
-summary(Verbesina.ols)
+summary(Verbesina.exp)
 
 ggplot(s.Verbesina, aes(x=rescale_ND, y=Verbesina)) +
   geom_point() +
   ylab("Presence Probability") + 
   xlab("Distance From GCO (1000's km)") +
-  geom_abline(aes(intercept=coef(Verbesina.ols)[1], slope=coef(Verbesina.ols)[2]), color="blue", size=2) +
+  geom_abline(aes(intercept=coef(Verbesina.exp)[1], slope=coef(Verbesina.exp)[2]), color="blue", size=2) +
   theme_justin
 
-s.Xanthium<-data %>% filter(data$Xanthium > .7, na.rm=TRUE) #select greater than 70
+s.Xanthium<-data %>% filter(data$Xanthium > .5, na.rm=TRUE) #select greater than 70
 dim(s.Xanthium) # data points
 
 library(nlme)
@@ -154,19 +146,156 @@ Xanthium.exp <- update(Xanthium.ols, . ~., weights = varExp(form = ~ rescale_ND)
 Xanthium.ConstPower <- update(Xanthium.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
 # compare all models by AIC
 AIC(Xanthium.ols, Xanthium.fixed, Xanthium.power, Xanthium.ConstPower, Xanthium.exp)
-summary(Xanthium.ols)
+summary(Xanthium.exp)
 
 ggplot(s.Xanthium, aes(x=rescale_ND, y=Xanthium)) +
   geom_point() +
   ylab("Presence Probability") + 
   xlab("Distance From GCO (1000's km)") +
-  geom_abline(aes(intercept=coef(Xanthium.ols)[1], slope=coef(Xanthium.ols)[2]), color="blue", size=2) +
+  geom_abline(aes(intercept=coef(Xanthium.exp)[1], slope=coef(Xanthium.exp)[2]), color="blue", size=2) +
   theme_justin
 
-```
+########## Soybean ##########
+
+### Sorghum
+#Import Fishnet
+soybean<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Pests/", layer="Soybean_Pests")
+### Get Lat-Long and apply metadata
+soybean.xy <- coordinates(soybean)
+soybean.metadata <- soybean@data
+sapply(soybean.metadata, "class")
+
+soybean.gco<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/GCO_Shapefiles/", layer="Soy_GC") #Import GCO Centroid
+plot(soybean.gco)
+soybean.c<-gCentroid(soybean.gco) #Extract Lat-Long
+distances <- spDistsN1(soybean.xy,soybean.c,longlat = FALSE) #Calculate Near Distances
+data<-cbind(data.frame(soybean.metadata),data.frame(distances)) #Merge into a DF
+data$rescale_ND<-data$distances/(1000*1000) #Rescale distances 
 
 
+s.Diabrotica<-data %>% filter(data$Diabrotica > 0.5, na.rm=TRUE) #select greater than 70
+dim(s.Diabrotica) # data points
 
+library(nlme)
+# regular OLS no variance structure
+Diabrotica.ols <- gls(Diabrotica ~ rescale_ND, data = s.Diabrotica)
+# varFixed (variance changes linearly with X)
+Diabrotica.fixed <- update(Diabrotica.ols, .~., weights = varFixed(~rescale_ND))
+# varPower (variance changes as a power function with X)
+Diabrotica.power <- update(Diabrotica.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+# varExp (variance changes as an exponential function of x)
+Diabrotica.exp <- update(Diabrotica.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+# varConstPower (constant plus a power function of X (useful if X includes 0))
+Diabrotica.ConstPower <- update(Diabrotica.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+# compare all models by AIC
+AIC(Diabrotica.ols, Diabrotica.fixed, Diabrotica.power, Diabrotica.ConstPower, Diabrotica.exp)
+summary(Diabrotica.ols)
 
+ggplot(s.Diabrotica, aes(x=rescale_ND, y=Diabrotica)) +
+  geom_point() +
+  ylab("Presence Probability") + 
+  xlab("Distance From GCO (1000's km)") +
+  geom_abline(aes(intercept=coef(Diabrotica.ols)[1], slope=coef(Diabrotica.ols)[2]), color="grey", size=2) +
+  theme_justin 
+
+s.Pseudo<-data %>% filter(data$Pseudo > 0.5, na.rm=TRUE) #select greater than 70
+dim(s.Pseudo) # data points
+
+library(nlme)
+# regular OLS no variance structure
+Pseudo.ols <- gls(Pseudo ~ rescale_ND, data = s.Pseudo)
+# varFixed (variance changes linearly with X)
+Pseudo.fixed <- update(Pseudo.ols, .~., weights = varFixed(~rescale_ND))
+# varPower (variance changes as a power function with X)
+Pseudo.power <- update(Pseudo.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+# varExp (variance changes as an exponential function of x)
+Pseudo.exp <- update(Pseudo.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+# varConstPower (constant plus a power function of X (useful if X includes 0))
+Pseudo.ConstPower <- update(Pseudo.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+# compare all models by AIC
+AIC(Pseudo.ols, Pseudo.fixed, Pseudo.power, Pseudo.ConstPower, Pseudo.exp)
+summary(Pseudo.power)
+
+ggplot(s.Pseudo, aes(x=rescale_ND, y=Pseudo)) +
+  geom_point() +
+  ylab("Presence Probability") + 
+  xlab("Distance From GCO (1000's km)") +
+  geom_abline(aes(intercept=coef(Pseudo.power)[1], slope=coef(Pseudo.power)[2]), color="blue", size=2) +
+  theme_justin
+
+s.Rhizoc<-data %>% filter(data$Rhizoc > 0.5, na.rm=TRUE) #select greater than 70
+dim(s.Rhizoc) # data points
+
+library(nlme)
+# regular OLS no variance structure
+Rhizoc.ols <- gls(Rhizoc ~ rescale_ND, data = s.Rhizoc)
+# varFixed (variance changes linearly with X)
+Rhizoc.fixed <- update(Rhizoc.ols, .~., weights = varFixed(~rescale_ND))
+# varPower (variance changes as a power function with X)
+Rhizoc.power <- update(Rhizoc.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+# varExp (variance changes as an exponential function of x)
+Rhizoc.exp <- update(Rhizoc.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+# varConstPower (constant plus a power function of X (useful if X includes 0))
+Rhizoc.ConstPower <- update(Rhizoc.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+# compare all models by AIC
+AIC(Rhizoc.ols, Rhizoc.fixed, Rhizoc.power, Rhizoc.ConstPower, Rhizoc.exp)
+summary(Rhizoc.ols)
+
+ggplot(s.Rhizoc, aes(x=rescale_ND, y=Rhizoc)) +
+  geom_point() +
+  ylab("Presence Probability") + 
+  xlab("Distance From GCO (1000's km)") +
+  geom_abline(aes(intercept=coef(Rhizoc.ols)[1], slope=coef(Rhizoc.ols)[2]), color="grey", size=2) +
+  theme_justin
+
+s.Spodop<-data %>% filter(data$Spodop > 0.5, na.rm=TRUE) #select greater than 70
+dim(s.Spodop) # data points
+
+library(nlme)
+# regular OLS no variance structure
+Spodop.ols <- gls(Spodop ~ rescale_ND, data = s.Spodop)
+# varFixed (variance changes linearly with X)
+Spodop.fixed <- update(Spodop.ols, .~., weights = varFixed(~rescale_ND))
+# varPower (variance changes as a power function with X)
+Spodop.power <- update(Spodop.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+# varExp (variance changes as an exponential function of x)
+Spodop.exp <- update(Spodop.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+# varConstPower (constant plus a power function of X (useful if X includes 0))
+Spodop.ConstPower <- update(Spodop.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+# compare all models by AIC
+AIC(Spodop.ols, Spodop.fixed, Spodop.power, Spodop.ConstPower, Spodop.exp)
+summary(Spodop.ols)
+
+ggplot(s.Spodop, aes(x=rescale_ND, y=Spodop)) +
+  geom_point() +
+  ylab("Presence Probability") + 
+  xlab("Distance From GCO (1000's km)") +
+  geom_abline(aes(intercept=coef(Spodop.ols)[1], slope=coef(Spodop.ols)[2]), color="grey", size=2) +
+  theme_justin
+
+s.Xantho<-data %>% filter(data$Xantho > 0.5, na.rm=TRUE) #select greater than 70
+dim(s.Xantho) # data points
+
+library(nlme)
+# regular OLS no variance structure
+Xantho.ols <- gls(Xantho ~ rescale_ND, data = s.Xantho)
+# varFixed (variance changes linearly with X)
+Xantho.fixed <- update(Xantho.ols, .~., weights = varFixed(~rescale_ND))
+# varPower (variance changes as a power function with X)
+Xantho.power <- update(Xantho.ols, . ~ ., weights = varPower(form = ~rescale_ND))
+# varExp (variance changes as an exponential function of x)
+Xantho.exp <- update(Xantho.ols, . ~., weights = varExp(form = ~ rescale_ND)) # error
+# varConstPower (constant plus a power function of X (useful if X includes 0))
+Xantho.ConstPower <- update(Xantho.ols, . ~., weights = varConstPower(form = ~ rescale_ND))
+# compare all models by AIC
+AIC(Xantho.ols, Xantho.fixed, Xantho.power, Xantho.ConstPower, Xantho.exp)
+summary(Xantho.ols)
+
+ggplot(s.Xantho, aes(x=rescale_ND, y=Xantho)) +
+  geom_point() +
+  ylab("Presence Probability") + 
+  xlab("Distance From GCO (1000's km)") +
+  geom_abline(aes(intercept=coef(Xantho.ols)[1], slope=coef(Xantho.ols)[2]), color="grey", size=2) +
+  theme_justin
 
 
