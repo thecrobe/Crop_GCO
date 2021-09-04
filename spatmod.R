@@ -8,6 +8,7 @@ library(rgdal)
 library(RVAideMemoire)
 library(nlme)
 library(rgeos)
+library(spdep)
 
 #plots
 library(RColorBrewer)
@@ -27,12 +28,12 @@ theme_justin<-theme_bw() +theme(axis.line = element_line(colour = "black"),
                                 panel.border = element_blank(),
                                 panel.background = element_blank())
 
-fishnet<- readOGR(dsn= "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/Fishnet/", layer="Fishnet_yield_NoAntarctica")
+fishnet<- readOGR(dsn= "GIS/", layer="Fishnet_yield_NoAntarctica")
 fishnet.barley<-subset(fishnet, fishnet$mean_barle > 0 ) #yield > 0 
 xy <- coordinates(fishnet.barley)
 yield <- fishnet.barley@data
 
-barleyGCO<-readOGR(dsn = "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/GCO_Shapefiles/",layer="BarleyWheat_GC")
+barleyGCO<-readOGR(dsn = "GIS/",layer="BarleyWheat_GC")
 
 barleyGCOcentroid<-gCentroid(barleyGCO)
 
@@ -46,31 +47,57 @@ barley.near$logBarley<-log10(barley.near$mean_barle)
 
 
 library(latticeExtra)
-## Loading required package: lattice
 library(RColorBrewer)
-grps <- 10
-brks <- quantile(fishnet.barley$mean_barle, 0:(grps-1)/(grps-1), na.rm=TRUE)
-p <- spplot(fishnet.barley, "mean_barle", at=brks, col.regions=rev(brewer.pal(grps, "RdBu")), col="transparent" )
-## Warning in wkt(obj): CRS object has no comment
-## Warning in wkt(obj): CRS object has no comment
-p + layer(sp.polygons(fishnet.barley))
 
-f1 <- mean_barle ~ barley.near$rescale_ND 
-m1 <- lm(f1, data=fishnet.barley)
-summary(m1)
-
-fishnet.barley$residuals <- residuals(m1)
-brks <- quantile(fishnet.barley$residuals, 0:(grps-1)/(grps-1), na.rm=TRUE)
-spplot(fishnet.barley, "residuals", at=brks, col.regions=rev(brewer.pal(grps, "RdBu")), col="transparent")
-## Warning in wkt(obj): CRS object has no comment
-## Warning in wkt(obj): CRS object has no comment
-
+#Links
 nb <- poly2nb(fishnet.barley)
-resnb <- sapply(nb, function(x) mean(fishnet.barley$residuals[x]))
-cor(fishnet.barley$residuals, resnb)
-## [1] 0.6311218
-plot(fishnet.barley$residuals, resnb, xlab='Residuals', ylab='Mean adjacent residuals')
 lw <- nb2listw(nb, zero.policy = TRUE)
-moran.mc(fishnet.barley$residuals, lw, 999,zero.policy = TRUE)
-m1e <- errorsarlm(f1, data=fishnet.barley, lw, tol.solve=1.0e-30,zero.policy  = TRUE)
+#Log Transform yields
+fishnet.barley$logBarley<-log10(fishnet.barley$mean_barle)
+#Spatial Error Model
+barley.sper <- errorsarlm(logBarley ~ barley.near$rescale_ND, data=fishnet.barley, lw, tol.solve=1.0e-30,zero.policy  = TRUE)
+summary(barley.sper) #Summary
+fishnet.barley$residualsSpecError <- residuals(barley.sper) #Residuals
+moran.mc(fishnet.barley$residualsSpecError, lw, 999,zero.policy = TRUE) #Test for autocorrelation
+resnb.se <- sapply(nb, function(x) mean(fishnet.barley$residualsSpecError[x])) #avg value for polygon neighbors
+plot(fishnet.barley$residualsSpecError, resnb.se, xlab='Residuals', ylab='Mean adjacent residuals') #check plot
+brks <- quantile(fishnet.barley$residualsSpecError, 0:(grps-1)/(grps-1), na.rm=TRUE) #apply breaks
+p <- spplot(fishnet.barley, "residualsSpecError", at=brks, col.regions=rev(brewer.pal(grps, "RdBu")),
+            col="transparent") 
+print( p + layer(sp.polygons(fishnet)) ) #plot residuals
+
+
+#Pivot Table To ID Top Producers by Country Sum 
+barley.pivot<-dcast(barley.near, COUNTRY ~., value.var="mean_barle", fun.aggregate=sum)
+barley.pivot<-arrange(barley.pivot,.)
+tail(barley.pivot, 3) #ID Top 3 Producing Countries
+barley.top<-tail(barley.pivot, 3)
+sum(barley.pivot$.) #Total Production
+sum(barley.top$.)/sum(barley.pivot$.) # % produced by top 3 
+
+
+#Filter Countries
+china<-filter(barley.near, COUNTRY == "China") 
+china.Perc<-sum(china$mean_barle)/sum(barley.pivot$.) 
+print(china.Perc) # % of Global Production For Crop 
+china.color<-"#1665AF"
+summary(china)
+
+usa<-filter(barley.near, COUNTRY == "United States")
+usa.Perc<-sum(usa$mean_barle)/sum(barley.pivot$.) 
+print(usa.Perc) # % of Global Production For Crop 
+usa.color<-"#8F4A33"
+
+russia<-filter(barley.near, COUNTRY == "Russian Federation")
+russia.Perc<-sum(russia$mean_barle)/sum(barley.pivot$.) 
+print(russia.Perc) # % of Global Production For Crop 
+russia.color<-"#D3867A"
+
+#Plot
+ggplot(barley.near, aes(x=rescale_ND, y=barley.near$mean_barle)) +
+  geom_point(alpha=0.3) +theme_justin + 
+  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_barle)), color=china.color, alpha=0.9) + 
+  geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$mean_barle)), color=usa.color, alpha=0.5) + 
+  geom_point(data=russia, aes(x=rescale_ND, y=log10(russia$mean_barle)),color=russia.color, alpha=0.2) +
+  geom_abline(aes(intercept=coef(barley.sper)[1], slope=coef(barley.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
 
