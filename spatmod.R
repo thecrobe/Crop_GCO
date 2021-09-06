@@ -561,7 +561,6 @@ usa.Perc<-sum(usa$mean_rye_Y)/sum(rye.pivot$.)
 print(usa.Perc) # % of Global Fertilizer For Crop 
 usa.color<-"#8F4A33"
 
-
 #Plot
 ggplot(Rye.near, aes(x=rescale_ND, y=logRye)) +
   geom_point(alpha=0.3) +theme_justin + 
@@ -569,3 +568,71 @@ ggplot(Rye.near, aes(x=rescale_ND, y=logRye)) +
   geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_rye_Y)),color=china.color, alpha=0.8) +
   geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$mean_rye_Y)),color=usa.color, alpha=0.3) + 
   geom_abline(aes(intercept=coef(rye.sper)[2], slope=coef(rye.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+
+
+#Sorghum 
+fishnet.sorghum<-subset(fishnet, fishnet$mean_sorgh> 0 ) #yield > 0 
+xy <- coordinates(fishnet.sorghum)
+xy1<-data.frame(xy) 
+yield <- fishnet.sorghum@data
+sorghumGCO<-readOGR(dsn = "GIS/",layer="Sorghum_GC")
+sorghumGCOcentroid<-gCentroid(sorghumGCO)
+
+#Distances + Yield Transformation
+distances <- spDistsN1(xy,sorghumGCOcentroid, longlat = FALSE)
+yield$rescale_ND<-distances/(1000*1000)
+sorghum.near<-yield %>% dplyr::select(mean_sorgh,rescale_ND,COUNTRY)
+sorghum.near<-sorghum.near %>% filter(mean_sorgh > 0, na.rm=TRUE)
+sorghum.near<-sorghum.near %>% filter(rescale_ND > 0, na.rm=TRUE)
+sorghum.near$logSorghum<-log10(sorghum.near$mean_sorgh)
+
+
+#Links
+nb <- poly2nb(fishnet.sorghum)
+lw <- nb2listw(nb, zero.policy = TRUE)
+#Log Transform yields
+fishnet.sorghum$logSorghum<-log10(fishnet.sorghum$mean_sorgh)
+#Spatial Error Model
+sorghum.sper <- errorsarlm(logSorghum ~ sorghum.near$rescale_ND, data=fishnet.sorghum, lw, tol.solve=1.0e-30,zero.policy  = TRUE)
+summary(sorghum.sper) #Summary
+fishnet.sorghum$residualsSpecError <- residuals(sorghum.sper) #Residuals
+moran.mc(fishnet.sorghum$residualsSpecError, lw, 999,zero.policy = TRUE) #Test for autocorrelation
+#plot residuals
+ggplot(xy1, aes(x=X1,y=X2, color=fishnet.sorghum$residualsSpecError, )) + 
+  geom_point(size=1.0) #plot residuals
+
+
+#Pivot Table To ID Top Producers by Country Sum 
+sorghum.pivot<-dcast(sorghum.near, COUNTRY ~., value.var="mean_sorgh", fun.aggregate=sum)
+sorghum.pivot<-arrange(sorghum.pivot,.)
+tail(sorghum.pivot, 3) #ID Top 3 Producing Countries
+sorghum.top<-tail(sorghum.pivot, 3)
+sum(sorghum.pivot$.) #Total Production
+sum(sorghum.top$.)/sum(sorghum.pivot$.) # % produced by top 3 
+
+#Filter Countries
+
+china<-filter(sorghum.near, COUNTRY == "China") 
+china.Perc<-sum(china$mean_sorgh)/sum(sorghum.pivot$.) 
+print(china.Perc) # % of Global Production For Crop 
+china.color<-"#1665AF"
+
+usa<-filter(sorghum.near, COUNTRY == "United States")
+usa.Perc<-sum(usa$mean_sorgh)/sum(sorghum.pivot$.) 
+print(usa.Perc) # % of Global Production For Crop 
+usa.color<-"#8F4A33"
+
+russia<-filter(sorghum.near, COUNTRY == "Russian Federation")
+russia.Perc<-sum(russia$mean_sorgh)/sum(sorghum.pivot$.) 
+print(russia.Perc) # % of Global Production For Crop 
+russia.color<-"#D3867A"
+
+
+#Plot
+ggplot(sorghum.near, aes(x=rescale_ND, y=logSorghum)) +
+  geom_point(alpha=0.3) +theme_justin + 
+  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_sorgh)),color=china.color, alpha=0.8) +
+  geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$mean_sorgh)),color=usa.color, alpha=0.5) + 
+  geom_point(data=russia, aes(x=rescale_ND, y=log10(russia$mean_sorgh)), color=russia.color, alpha=0.3) + 
+  geom_abline(aes(intercept=coef(sorghum.sper)[2], slope=coef(sorghum.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+
