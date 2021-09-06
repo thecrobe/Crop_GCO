@@ -314,9 +314,9 @@ potatoGCOcentroid<-gCentroid(potatoGCO)
 distances <- spDistsN1(xy,potatoGCOcentroid, longlat = FALSE)
 yield$rescale_ND<-distances/(1000*1000)
 potat.near<-yield %>% dplyr::select(mean_potat,rescale_ND,COUNTRY)
-potat.near<-potato.near %>% filter(mean_potat > 0, na.rm=TRUE)
-potat.near<-potato.near %>% filter(rescale_ND > 0, na.rm=TRUE)
-potat.near$logPotato<-log10(potato.near$mean_potat)
+potat.near<-potat.near %>% filter(mean_potat > 0, na.rm=TRUE)
+potat.near<-potat.near %>% filter(rescale_ND > 0, na.rm=TRUE)
+potat.near$logPotato<-log10(potat.near$mean_potat)
 
 
 #Links
@@ -370,28 +370,28 @@ ggplot(potat.near, aes(x=rescale_ND, y=logPotato)) +
 
 
 #Rapeseed 
-fishnet.rapeseed<-subset(fishnet, fishnet$mean_rapeseed > 0 ) #yield > 0 
+fishnet.rapeseed<-subset(fishnet, fishnet$mean_rapes > 0 ) #yield > 0 
 xy <- coordinates(fishnet.rapeseed)
 xy1<-data.frame(xy) 
 yield <- fishnet.rapeseed@data
-rapeseedGCO<-readOGR(dsn = "GIS/",layer="Rapeseed_GC")
+rapeseedGCO<-readOGR(dsn = "GIS/",layer="Rapeseed")
 
 rapeseedGCOcentroid<-gCentroid(rapeseedGCO)
 
 #Distances + Yield Transformation
 distances <- spDistsN1(xy,rapeseedGCOcentroid, longlat = FALSE)
 yield$rescale_ND<-distances/(1000*1000)
-rapeseed.near<-yield %>% dplyr::select(mean_rapes,rescale_ND,COUNTRY)
-rapeseed.near<-rapeseed.near %>% filter(mean_rapes > 0, na.rm=TRUE)
-rapeseed.near<-rapeseed.near %>% filter(rescale_ND > 0, na.rm=TRUE)
-rapeseed.near$logRapeseed<-log10(rapeseed.near$mean_rapes)
+rapes.near<-yield %>% dplyr::select(mean_rapes,rescale_ND,COUNTRY)
+rapes.near<-rapes.near %>% filter(mean_rapes > 0, na.rm=TRUE)
+rapes.near<-rapes.near %>% filter(rescale_ND > 0, na.rm=TRUE)
+rapes.near$logRapeseed<-log10(rapes.near$mean_rapes)
 
 
 #Links
 nb <- poly2nb(fishnet.rapeseed)
 lw <- nb2listw(nb, zero.policy = TRUE)
 #Log Transform yields
-fishnet.rapeseed$logRapeseed<-log10(fishnet.rapeseed$mean_rapeseed)
+fishnet.rapeseed$logRapeseed<-log10(fishnet.rapeseed$mean_rapes)
 #Spatial Error Model
 rapeseed.sper <- errorsarlm(logRapeseed ~ rapeseed.near$rescale_ND, data=fishnet.rapeseed, lw, tol.solve=1.0e-30,zero.policy  = TRUE)
 summary(rapeseed.sper) #Summary
@@ -428,12 +428,12 @@ russia.color<-"#D3867A"
 
 
 #Plot
-ggplot(rapes.near, aes(x=rescale_ND, y=lograpes)) +
+ggplot(rapes.near, aes(x=rescale_ND, y=logRapeseed)) +
   geom_point(alpha=0.3) +theme_justin + 
   geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_rapes)),color=china.color, alpha=0.5) +
   geom_point(data=russia, aes(x=rescale_ND, y=log10(russia$mean_rapes)),color=russia.color, alpha=0.3) + 
   geom_point(data=brazil, aes(x=rescale_ND, y=log10(brazil$mean_rapes)), color=brazil.color, alpha=0.8) + 
-  geom_abline(aes(intercept=coef(rapes.sper)[2], slope=coef(rapes.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+  geom_abline(aes(intercept=coef(rapeseed.sper)[2], slope=coef(rapeseed.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
 
 
 #Rice 
@@ -441,17 +441,17 @@ fishnet.rice<-subset(fishnet, fishnet$mean_rice_ > 0 ) #yield > 0
 xy <- coordinates(fishnet.rice)
 xy1<-data.frame(xy) 
 yield <- fishnet.rice@data
-riceGCO<-readOGR(dsn = "GIS/",layer="Rice_GC")
+riceGCO<-readOGR(dsn = "GIS/",layer="Rice_GC1")
 
 riceGCOcentroid<-gCentroid(riceGCO)
 
 #Distances + Yield Transformation
 distances <- spDistsN1(xy,riceGCOcentroid, longlat = FALSE)
 yield$rescale_ND<-distances/(1000*1000)
-rice.near<-yield %>% dplyr::select(mean_rice_,rescale_ND,COUNTRY)
-rice.near<-rice.near %>% filter(mean_rice_ > 0, na.rm=TRUE)
-rice.near<-rice.near %>% filter(rescale_ND > 0, na.rm=TRUE)
-rice.near$logRice<-log10(rice.near$mean_rice_)
+Rice.near<-yield %>% dplyr::select(mean_rice_,rescale_ND,COUNTRY)
+Rice.near<-Rice.near %>% filter(mean_rice_ > 0, na.rm=TRUE)
+Rice.near<-Rice.near %>% filter(rescale_ND > 0, na.rm=TRUE)
+Rice.near$logRice<-log10(Rice.near$mean_rice_)
 
 
 #Links
@@ -469,11 +469,103 @@ ggplot(xy1, aes(x=X1,y=X2, color=fishnet.rice$residualsSpecError, )) +
   geom_point(size=1.0) #plot residuals
 
 
+#Pivot Table To ID Top Producers by Country Sum 
+Rice.pivot<-dcast(Rice.near, COUNTRY ~., value.var="mean_rice_", fun.aggregate=sum)
+Rice.pivot<-arrange(Rice.pivot,.)
+tail(Rice.pivot, 3) #ID Top 3 Producing Countries
+Rice.top<-tail(Rice.pivot, 3)
+sum(Rice.pivot$.) #Total Production
+sum(Rice.top$.)/sum(Rice.pivot$.) # % produced by top 3 
+
+#Filter Countries
+china<-filter(Rice.near, COUNTRY == "China") 
+china.Perc<-sum(china$mean_Rice)/sum(Rice.pivot$.) 
+print(china.Perc) # % of Global Production For Crop 
+china.color<-"#1665AF"
+
+brazil<-filter(Rice.near, COUNTRY == "Brazil")
+brazil.Perc<-sum(brazil$mean_Rice)/sum(Rice.pivot$.) 
+print(brazil.Perc) # % of Global Production For Crop 
+brazil.color<-"#E28D15"
+
+india<-filter(Rice.near, COUNTRY == "India")
+india.Perc<-sum(india$mean_rice_)/sum(Rice.pivot$.) 
+print(india.Perc) # % of Global Production For Crop 
+india.color<-"#078D40"
+
+
 #Plot
 ggplot(Rice.near, aes(x=rescale_ND, y=logRice)) +
   geom_point(alpha=0.3) +theme_justin + 
   geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_rice_)),color=china.color, alpha=0.5) +
   geom_point(data=brazil, aes(x=rescale_ND, y=log10(brazil$mean_rice_)), color=brazil.color, alpha=0.8) + 
   geom_point(data=india, aes(x=rescale_ND, y=log10(india$mean_rice_)),color=russia.color, alpha=0.3) + 
-  geom_abline(aes(intercept=coef(Rice.power)[1], slope=coef(Rice.power)[2]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+  geom_abline(aes(intercept=coef(rice.sper)[2], slope=coef(rice.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
 
+
+#Rye 
+fishnet.rye<-subset(fishnet, fishnet$mean_rye_Y > 0 ) #yield > 0 
+xy <- coordinates(fishnet.rye)
+xy1<-data.frame(xy) 
+yield <- fishnet.rye@data
+ryeGCO<-readOGR(dsn = "GIS/",layer="Rye")
+
+ryeGCOcentroid<-gCentroid(ryeGCO)
+
+#Distances + Yield Transformation
+distances <- spDistsN1(xy,ryeGCOcentroid, longlat = FALSE)
+yield$rescale_ND<-distances/(1000*1000)
+Rye.near<-yield %>% dplyr::select(mean_rye_Y,rescale_ND,COUNTRY)
+Rye.near<-Rye.near %>% filter(mean_rye_Y > 0, na.rm=TRUE)
+Rye.near<-Rye.near %>% filter(rescale_ND > 0, na.rm=TRUE)
+Rye.near$logRye<-log10(rye.near$mean_rye_Y)
+
+
+#Links
+nb <- poly2nb(fishnet.rye)
+lw <- nb2listw(nb, zero.policy = TRUE)
+#Log Transform yields
+fishnet.rye$logRye<-log10(fishnet.rye$mean_rye_Y)
+#Spatial Error Model
+rye.sper <- errorsarlm(logRye ~ rye.near$rescale_ND, data=fishnet.rye, lw, tol.solve=1.0e-30,zero.policy  = TRUE)
+summary(rye.sper) #Summary
+fishnet.rye$residualsSpecError <- residuals(rye.sper) #Residuals
+moran.mc(fishnet.rye$residualsSpecError, lw, 999,zero.policy = TRUE) #Test for autocorrelation
+#plot residuals
+ggplot(xy1, aes(x=X1,y=X2, color=fishnet.rye$residualsSpecError, )) + 
+  geom_point(size=1.0) #plot residuals
+
+
+#Pivot Table To ID Top Producers by Country Sum 
+rye.pivot<-dcast(Rye.near, COUNTRY ~., value.var="mean_rye_Y", fun.aggregate=sum)
+rye.pivot<-arrange(rye.pivot,.)
+tail(rye.pivot, 3) #ID Top 3 Producing Countries
+rye.top<-tail(rye.pivot, 3)
+sum(rye.pivot$.) #Total Production
+sum(rye.top$.)/sum(rye.pivot$.) # % produced by top 3 
+
+#Filter Countries
+
+russia<-filter(Rye.near, COUNTRY == "Russian Federation")
+russia.Perc<-sum(russia$mean_rye_Y)/sum(rye.pivot$.) 
+print(russia.Perc) # % of Global Production For Crop 
+russia.color<-"#D3867A"
+
+china<-filter(Rye.near, COUNTRY == "China") 
+china.Perc<-sum(china$mean_rye)/sum(rye.pivot$.) 
+print(china.Perc) # % of Global Production For Crop 
+china.color<-"#1665AF"
+
+usa<-filter(Rye.near, COUNTRY == "United States")
+usa.Perc<-sum(usa$mean_rye_Y)/sum(rye.pivot$.) 
+print(usa.Perc) # % of Global Fertilizer For Crop 
+usa.color<-"#8F4A33"
+
+
+#Plot
+ggplot(Rye.near, aes(x=rescale_ND, y=logRye)) +
+  geom_point(alpha=0.3) +theme_justin + 
+  geom_point(data=russia, aes(x=rescale_ND, y=log10(russia$mean_rye_Y)), color=russia.color, alpha=0.8) + 
+  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_rye_Y)),color=china.color, alpha=0.8) +
+  geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$mean_rye_Y)),color=usa.color, alpha=0.3) + 
+  geom_abline(aes(intercept=coef(rye.sper)[2], slope=coef(rye.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
