@@ -66,7 +66,6 @@ summary(pred.error)
 write.csv(x = pred.error,file="SpatialRF/Groundnut_Error.csv")
 
 
-
 #Data Prep 
 rf.maize<-read.csv(file="Models/Maize_RF.csv", header = T)  
 fish.maize<-subset(fishnet, fishnet$mean_maize > 0 ) #yield > 0 
@@ -178,13 +177,13 @@ sorgh.data<-log10(joined %>% select(mean_sorgh,sorghum_Fertilizer,GDP,Pesticide,
 sorgh.coords<-data.frame(cbind(joined$Latitude,joined$Longitude))
 
 #Random Forest Model
-sorgh.spatialrf<- grf(mean_sorgh~sorghum_Fertilizer+GDP+Pesticide+Evapotranspiration , sorgh.data, bw=100, kernel="adaptive", coords=sorgh.coords , ntree=500, mtry=NULL, importance=TRUE, forests = TRUE)
+sorgh.spatialrf<- grf(mean_sorgh~sorghum_Fertilizer+GDP+Pesticide+Evapotranspiraton , sorgh.data, bw=100, kernel="adaptive", coords=sorgh.coords , ntree=500, mtry=NULL, importance=TRUE, forests = TRUE)
 
 print(sorgh.spatialrf$LocalModelSummary)
 
 #Prediction and Error
 sorgh.predict<-predict(sorgh.spatialrf$Global.Model,sorgh.data)
-pred.error<-data.frame(10^((sorgh.predict-sorgh.data$mean_sorgh)-1)
+pred.error<-data.frame(10^((sorgh.predict-sorgh.data$mean_sorgh)-1))
 summary(pred.error) 
 write.csv(x = pred.error,file="SpatialRF/Sorgh_Error.csv")
 
@@ -204,7 +203,7 @@ print(soybe.spatialrf$LocalModelSummary)
 
 #Prediction and Error
 soybe.predict<-predict(soybe.spatialrf$Global.Model,soybe.data)
-pred.error<-data.frame(10^((soybe.predict-soybe.data$mean_soybe)-1)
+pred.error<-data.frame(10^((soybe.predict-soybe.data$mean_soybe)-1))
 summary(pred.error) 
 write.csv(x = pred.error,file="SpatialRF/Soybe_Error.csv")
 
@@ -224,9 +223,10 @@ print(sunfl.spatialrf$LocalModelSummary)
 
 #Prediction and Error
 sunfl.predict<-predict(sunfl.spatialrf$Global.Model,sunfl.data)
-pred.error<-data.frame(10^((sunfl.predict-sunfl.data$mean_sunfl)-1))
+pred.error<-data.frame(10^((sunfl.predict-sunfl.data$mean_sunfl))-1)
 summary(pred.error) 
 write.csv(x = pred.error,file="SpatialRF/Sunfl_Error.csv")
+
 
 #Data Prep 
 rf.wheat<-read.csv(file="Models/Wheat_RF.csv", header = T)  
@@ -243,20 +243,7 @@ print(wheat.spatialrf$LocalModelSummary)
 
 #Prediction and Error
 wheat.predict<-predict(wheat.spatialrf$Global.Model,wheat.data)
-pred.error<-data.frame(10^((wheat.predict-wheat.data$mean_wheat)-1))
+pred.error<-data.frame(10^((wheat.predict-wheat.data$mean_wheat))-1)
 summary(pred.error) 
 write.csv(x = pred.error,file="SpatialRF/Wheat_Error.csv")
 
-nb <- poly2nb(fish.wheat)
-lw <- nb2listw(nb, zero.policy = TRUE)
-moran.mc(pred.error$X10...wheat.predict...wheat.data.mean_wheat....1., lw, 999,zero.policy = TRUE) #Test for autocorrelation                       
-
-wheat.fish<-fish.wheat
-wheat.fish@data<- wheat.fish@data$%>% 
-  subset(1,3) #keeps column 1 and column 3 in the spdf object.
-dim(fish.wheat)
-dim(pred.error)
-
-mer
-
-library(sp)
