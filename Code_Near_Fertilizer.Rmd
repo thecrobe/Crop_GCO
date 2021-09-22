@@ -89,14 +89,14 @@ canada.color<-"#98C24B"
 
 
 #Plot 
-ggplot(data, aes(x=rescale_ND,y=log10(data$barley_Fer))) + 
+ggplot(fert, aes(x=rescale_ND,y=log10(fert$barley_Fer))) + 
       geom_point(alpha=0.3) +theme_justin + 
       geom_point(data=china, aes(x=rescale_ND, y=log10(china$barley_Fer)), color=china.color, alpha=0.1) + 
       geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$barley_Fer)), color=usa.color, alpha=0.2) + 
       geom_point(data=canada, aes(x=rescale_ND, y=log10(canada$barley_Fer)), color=canada.color, alpha=0.1) + 
       ylab("Log10 Fertilizer") + 
       xlab("Distance From GCO (1000's km)") +
-      geom_abline(aes(intercept=coef(barley.power)[1], slope=coef(barley.power)[2]), color="red", size=2)
+      geom_abline(aes(intercept=coef(barley.fert.sper)[2], slope=coef(barley.fert.sper)[3]), color="red", size=2)
 
 ###  Model - Barley Fertilizer Near
 library(nlme)

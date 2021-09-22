@@ -20,14 +20,10 @@ editor_options:
 
 ```{r Packages, include=TRUE, echo=FALSE, message=FALSE, eval=TRUE, warning=FALSE}
 
-#models
-library(wPerm)
+#models)
 library(caret)
-library(wPerm)
 #library(spatialEco)
 #library(rgdal)
-library(RVAideMemoire)
-library(nlme)
 
 #plots
 library(RColorBrewer)
@@ -99,12 +95,14 @@ barley.varIMP<-(varImp(fit.rf.barley)) #identify variable importance
 plot(barley.varIMP)
 #write.csv(barley.varIMP$importance, file = "Models/barley_varIMP.csv")
 # Model Performance
-predictions <- predict(fit.rf.barley, validation) #predict 
+predictions.val <- predict(fit.rf.barley, validation) #predict 
 pred.error<-RMSE(predictions,validation$barley_HgHa) #get the Root Mean Standard Error of predicted values
 exp(pred.error-1) #put in yield values
 
-modelerror <- exp(predict(fit.rf.barley, rf )-1) #predict on whole dataset
-summary(modelerror) #make sure it worked honeyyyy
+predictions.barley <- data.frame(10^(predict(fit.rf.barley, rf )-1)) #predict on whole dataset
+summary(predictions.barley) 
+barley.residuals<-rf$barley_HgHa-predictions.barley
+hist(barley.residuals)
 
 #write.csv(modelerror,file="Models/Predictions/barley_predictions.csv") # export for mapping
 

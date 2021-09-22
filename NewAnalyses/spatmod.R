@@ -34,7 +34,6 @@ xy <- coordinates(fishnet.barley)
 xy1<-data.frame(xy)
 yield <- fishnet.barley@data
 barleyGCO<-readOGR(dsn = "GIS/",layer="BarleyWheat_GC")
-
 barleyGCOcentroid<-gCentroid(barleyGCO)
 
 #Distances + Yield Transformation
@@ -171,7 +170,6 @@ xy <- coordinates(fishnet.groundnut)
 xy1<-data.frame(xy) 
 yield <- fishnet.groundnut@data
 groundnutGCO<-readOGR(dsn = "GIS/",layer="Groundnut_GC")
-
 groundnutGCOcentroid<-gCentroid(groundnutGCO)
 
 #Distances + Yield Transformation
@@ -194,7 +192,7 @@ summary(groundnut.sper) #Summary
 fishnet.groundnut$residualsSpecError <- residuals(groundnut.sper) #Residuals
 moran.mc(fishnet.groundnut$residualsSpecError, lw, 999,zero.policy = TRUE) #Test for autocorrelation
 #plot residuals
-ggplot(xy1, aes(x=X1,y=X2, color=fishnet.groundnut$residualsSpecError, )) + 
+ggplot(xy1, aes(x=X1,y=X2, color=fishnet.groundnut$residualsSpecError)) + 
   geom_point(size=1.0) #plot residuals
 
 
@@ -226,9 +224,9 @@ india.color<-"#078D40"
 #Plot
 ggplot(groundnut.near, aes(x=rescale_ND, y=logGroundnut)) +
   geom_point(alpha=0.3) +theme_justin + 
-  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_groun)), color        =china.color, alpha=0.5) + 
-  geom_point(data=indo, aes(x=rescale_ND, y=log10(indo$mean_groun)),                color=indo.color, alpha=0.8) +
-  geom_point(data=india, aes(x=rescale_ND, y=log10(india$mean_groun)),           color=india.color, alpha=0.5) + 
+  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_groun)), color=china.color, alpha=0.5) + 
+  geom_point(data=indo, aes(x=rescale_ND, y=log10(indo$mean_groun)),color=indo.color, alpha=0.8) +
+  geom_point(data=india, aes(x=rescale_ND, y=log10(india$mean_groun)),color=india.color, alpha=0.5) + 
   geom_abline(aes(intercept=coef(groundnut.sper)[2], slope=coef(groundnut.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
 
 
@@ -261,7 +259,7 @@ summary(maize.sper) #Summary
 fishnet.maize$residualsSpecError <- residuals(maize.sper) #Residuals
 moran.mc(fishnet.maize$residualsSpecError, lw, 999,zero.policy = TRUE) #Test for autocorrelation
 #plot residuals
-ggplot(xy1, aes(x=X1,y=X2, color=fishnet.maize$residualsSpecError, )) + 
+ggplot(xy1, aes(x=X1,y=X2, color=fishnet.maize$residualsSpecError)) + 
   geom_point(size=1.0) #plot residuals
 
 
@@ -330,7 +328,7 @@ summary(potato.sper) #Summary
 fishnet.potato$residualsSpecError <- residuals(potato.sper) #Residuals
 moran.mc(fishnet.potato$residualsSpecError, lw, 999,zero.policy = TRUE) #Test for autocorrelation
 #plot residuals
-ggplot(xy1, aes(x=X1,y=X2, color=fishnet.potato$residualsSpecError, )) + 
+ggplot(xy1, aes(x=X1,y=X2, color=fishnet.potato$residualsSpecError)) + 
   geom_point(size=1.0) #plot residuals
 
 
@@ -398,7 +396,7 @@ summary(rapeseed.sper) #Summary
 fishnet.rapeseed$residualsSpecError <- residuals(rapeseed.sper) #Residuals
 moran.mc(fishnet.rapeseed$residualsSpecError, lw, 999,zero.policy = TRUE) #Test for autocorrelation
 #plot residuals
-ggplot(xy1, aes(x=X1,y=X2, color=fishnet.rapeseed$residualsSpecError, )) + 
+ggplot(xy1, aes(x=X1,y=X2, color=fishnet.rapeseed$residualsSpecError)) + 
   geom_point(size=1.0) #plot residuals
 
 
@@ -465,7 +463,7 @@ summary(rice.sper) #Summary
 fishnet.rice$residualsSpecError <- residuals(rice.sper) #Residuals
 moran.mc(fishnet.rice$residualsSpecError, lw, 999,zero.policy = TRUE) #Test for autocorrelation
 #plot residuals
-ggplot(xy1, aes(x=X1,y=X2, color=fishnet.rice$residualsSpecError, )) + 
+ggplot(xy1, aes(x=X1,y=X2, color=fishnet.rice$residualsSpecError)) + 
   geom_point(size=1.0) #plot residuals
 
 
@@ -532,7 +530,7 @@ summary(rye.sper) #Summary
 fishnet.rye$residualsSpecError <- residuals(rye.sper) #Residuals
 moran.mc(fishnet.rye$residualsSpecError, lw, 999,zero.policy = TRUE) #Test for autocorrelation
 #plot residuals
-ggplot(xy1, aes(x=X1,y=X2, color=fishnet.rye$residualsSpecError, )) + 
+ggplot(xy1, aes(x=X1,y=X2, color=fishnet.rye$residualsSpecError)) + 
   geom_point(size=1.0) #plot residuals
 
 
@@ -598,7 +596,7 @@ summary(sorghum.sper) #Summary
 fishnet.sorghum$residualsSpecError <- residuals(sorghum.sper) #Residuals
 moran.mc(fishnet.sorghum$residualsSpecError, lw, 999,zero.policy = TRUE) #Test for autocorrelation
 #plot residuals
-ggplot(xy1, aes(x=X1,y=X2, color=fishnet.sorghum$residualsSpecError, )) + 
+ggplot(xy1, aes(x=X1,y=X2, color=fishnet.sorghum$residualsSpecError)) + 
   geom_point(size=1.0) #plot residuals
 
 
@@ -635,4 +633,204 @@ ggplot(sorghum.near, aes(x=rescale_ND, y=logSorghum)) +
   geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$mean_sorgh)),color=usa.color, alpha=0.5) + 
   geom_point(data=russia, aes(x=rescale_ND, y=log10(russia$mean_sorgh)), color=russia.color, alpha=0.3) + 
   geom_abline(aes(intercept=coef(sorghum.sper)[2], slope=coef(sorghum.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+
+
+#Soybean 
+fishnet.soybean<-subset(fishnet, fishnet$mean_soybe > 0 ) #yield > 0 
+xy <- coordinates(fishnet.soybean)
+xy1<-data.frame(xy) 
+yield <- fishnet.soybean@data
+soybeanGCO<-readOGR(dsn = "GIS/",layer="Soy_GC")
+soybeanGCOcentroid<-gCentroid(soybeanGCO)
+
+#Distances + Yield Transformation
+distances <- spDistsN1(xy,soybeanGCOcentroid, longlat = FALSE)
+yield$rescale_ND<-distances/(1000*1000)
+soybean.near<-yield %>% dplyr::select(mean_soybe,rescale_ND,COUNTRY)
+soybean.near<-soybean.near %>% filter(mean_soybe > 0, na.rm=TRUE)
+soybean.near<-soybean.near %>% filter(rescale_ND > 0, na.rm=TRUE)
+soybean.near$logSoybean<-log10(soybean.near$mean_soybe)
+
+
+#Links
+nb <- poly2nb(fishnet.soybean)
+lw <- nb2listw(nb, zero.policy = TRUE)
+#Log Transform yields
+fishnet.soybean$logSoybean<-log10(fishnet.soybean$mean_soybe)
+#Spatial Error Model
+soybean.sper <- errorsarlm(logSoybean ~ soybean.near$rescale_ND, data=fishnet.soybean, lw, tol.solve=1.0e-30,zero.policy  = TRUE)
+summary(soybean.sper) #Summary
+fishnet.soybean$residualsSpecError <- residuals(soybean.sper) #Residuals
+moran.mc(fishnet.soybean$residualsSpecError, lw, 999,zero.policy = TRUE) #Test for autocorrelation
+#plot residuals
+ggplot(xy1, aes(x=X1,y=X2, color=fishnet.soybean$residualsSpecError)) + 
+  geom_point(size=1.0) #plot residuals
+
+
+#Pivot Table To ID Top Producers by Country Sum 
+soybe.pivot<-dcast(soybean.near, COUNTRY ~., value.var="mean_soybe", fun.aggregate=sum)
+soybe.pivot<-arrange(soybe.pivot,.)
+tail(soybe.pivot, 3) #ID Top 3 Producing Countries
+soybe.top<-tail(soybe.pivot, 3)
+sum(soybe.pivot$.) #Total Production
+sum(soybe.top$.)/sum(soybe.pivot$.) # % produced by top 3 
+
+#Filter Countries
+china<-filter(soybean.near, COUNTRY == "China") 
+china.Perc<-sum(china$mean_soybe)/sum(soybe.pivot$.) 
+print(china.Perc) # % of Global Production For Crop 
+china.color<-"#1665AF"
+
+usa<-filter(soybean.near, COUNTRY == "United States")
+usa.Perc<-sum(usa$mean_soybe)/sum(soybe.pivot$.) 
+print(usa.Perc) # % of Global Production For Crop 
+usa.color<-"#8F4A33"
+
+russia<-filter(soybean.near, COUNTRY == "Russian Federation")
+russia.Perc<-sum(russia$mean_soybe)/sum(soybe.pivot$.) 
+print(russia.Perc) # % of Global Production For Crop 
+russia.color<-"#D3867A"
+
+
+#Plot
+ggplot(soybean.near, aes(x=rescale_ND, y=logSoybean)) +
+  geom_point(alpha=0.3) +theme_justin + 
+  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_soybe)),color=china.color, alpha=0.8) +
+  geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$mean_soybe)),color=usa.color, alpha=0.3) + 
+  geom_point(data=russia, aes(x=rescale_ND, y=log10(russia$mean_soybe)), color=russia.color, alpha=0.1) + 
+  geom_abline(aes(intercept=coef(soybean.sper)[2], slope=coef(soybean.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+
+
+#Sunflower 
+fishnet.sunflower<-subset(fishnet, fishnet$mean_sunfl > 0 ) #yield > 0 
+xy <- coordinates(fishnet.sunflower)
+xy1<-data.frame(xy) 
+yield <- fishnet.sunflower@data
+sunflowerGCO<-readOGR(dsn = "GIS/",layer="Sunflower_GC")
+sunflowerGCOcentroid<-gCentroid(sunflowerGCO)
+
+#Distances + Yield Transformation
+distances <- spDistsN1(xy,sunflowerGCOcentroid, longlat = FALSE)
+yield$rescale_ND<-distances/(1000*1000)
+sunflower.near<-yield %>% dplyr::select(mean_sunfl,rescale_ND,COUNTRY)
+sunflower.near<-sunflower.near %>% filter(mean_sunfl > 0, na.rm=TRUE)
+sunflower.near<-sunflower.near %>% filter(rescale_ND > 0, na.rm=TRUE)
+sunflower.near$logSunflower<-log10(sunflower.near$mean_sunfl)
+
+
+#Links
+nb <- poly2nb(fishnet.sunflower)
+lw <- nb2listw(nb, zero.policy = TRUE)
+#Log Transform yields
+fishnet.sunflower$logSunflower<-log10(fishnet.sunflower$mean_sunfl)
+#Spatial Error Model
+sunflower.sper <- errorsarlm(logSunflower ~ sunflower.near$rescale_ND, data=fishnet.sunflower, lw, tol.solve=1.0e-30,zero.policy  = TRUE)
+summary(sunflower.sper) #Summary
+fishnet.sunflower$residualsSpecError <- residuals(sunflower.sper) #Residuals
+moran.mc(fishnet.sunflower$residualsSpecError, lw, 999,zero.policy = TRUE) #Test for autocorrelation
+#plot residuals
+ggplot(xy1, aes(x=X1,y=X2, color=fishnet.sunflower$residualsSpecError)) + 
+  geom_point(size=1.0) #plot residuals
+
+
+#Pivot Table To ID Top Producers by Country Sum 
+sunflower.pivot<-dcast(sunflower.near, COUNTRY ~., value.var="mean_sunfl", fun.aggregate=sum)
+sunflower.pivot<-arrange(sunflower.pivot,.)
+tail(sunflower.pivot, 3) #ID Top 3 Producing Countries
+sunflower.top<-tail(sunflower.pivot, 3)
+sum(sunflower.pivot$.) #Total Production
+sum(sunflower.top$.)/sum(sunflower.pivot$.) # % produced by top 3 
+
+#Filter Countries
+usa<-filter(sunflower.near, COUNTRY == "United States")
+usa.Perc<-sum(usa$mean_sunfl)/sum(sunflower.pivot$.) 
+print(usa.Perc) # % of Global Production For Crop 
+usa.color<-"#8F4A33"
+
+china<-filter(sunflower.near, COUNTRY == "China") 
+china.Perc<-sum(china$mean_sunfl)/sum(sunflower.pivot$.) 
+print(china.Perc) # % of Global Production For Crop 
+china.color<-"#1665AF"
+
+brazil<-filter(sunflower.near, COUNTRY == "Brazil")
+brazil.Perc<-sum(brazil$mean_sunfle)/sum(cassava.pivot$.) 
+print(brazil.Perc) # % of Global Production For Crop 
+brazil.color<-"#E28D15"
+
+#Plot
+ggplot(sunflower.near, aes(x=rescale_ND, y=logSunflower)) +
+  geom_point(alpha=0.3) +theme_justin + 
+  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_sunfl)),color=china.color, alpha=0.8) +
+  geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$mean_sunfl)), color=usa.color, alpha=0.4) + 
+  geom_point(data=brazil, aes(x=rescale_ND, y=log10(brazil$mean_sunfl)), color=brazil.color, alpha=0.3) + 
+  geom_abline(aes(intercept=coef(sunflower.sper)[2], slope=coef(sunflower.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+
+
+#Wheat 
+fishnet.wheat<-subset(fishnet, fishnet$mean_wheat > 0 ) #yield > 0 
+xy <- coordinates(fishnet.wheat)
+xy1<-data.frame(xy) 
+yield <- fishnet.wheat@data
+wheatGCO<-readOGR(dsn = "GIS/",layer="BarleyWheat_GC")
+wheatGCOcentroid<-gCentroid(wheatGCO)
+
+#Distances + Yield Transformation
+distances <- spDistsN1(xy,wheatGCOcentroid, longlat = FALSE)
+yield$rescale_ND<-distances/(1000*1000)
+wheat.near<-yield %>% dplyr::select(mean_wheat,rescale_ND,COUNTRY)
+wheat.near<-wheat.near %>% filter(mean_wheat > 0, na.rm=TRUE)
+wheat.near<-wheat.near %>% filter(rescale_ND > 0, na.rm=TRUE)
+wheat.near$logWheat<-log10(wheat.near$mean_wheat)
+
+#Links
+nb <- poly2nb(fishnet.wheat)
+lw <- nb2listw(nb, zero.policy = TRUE)
+#Log Transform yields
+fishnet.wheat$logWheat<-log10(fishnet.wheat$mean_wheat)
+#Spatial Error Model
+wheat.sper <- errorsarlm(logWheat ~ wheat.near$rescale_ND, data=fishnet.wheat, lw, tol.solve=1.0e-30,zero.policy  = TRUE)
+summary(wheat.sper) #Summary
+fishnet.wheat$residualsSpecError <- residuals(wheat.sper) #Residuals
+moran.mc(fishnet.wheat$residualsSpecError, lw, 999,zero.policy = TRUE) #Test for autocorrelation
+#plot residuals
+ggplot(xy1, aes(x=X1,y=X2, color=fishnet.wheat$residualsSpecError, )) + 
+  geom_point(size=1.0) #plot residuals
+
+
+#Pivot Table To ID Top Producers by Country Sum 
+wheat.pivot<-dcast(wheat.near, COUNTRY ~., value.var="mean_wheat", fun.aggregate=sum)
+wheat.pivot<-arrange(wheat.pivot,.)
+tail(wheat.pivot, 3) #ID Top 3 Producing Countries
+wheat.top<-tail(wheat.pivot, 3)
+sum(wheat.pivot$.) #Total Production
+sum(wheat.top$.)/sum(wheat.pivot$.) # % produced by top 3 
+
+#Filter Countries
+
+usa<-filter(wheat.near, COUNTRY == "United States")
+usa.Perc<-sum(usa$mean_wheat)/sum(wheat.pivot$.) 
+print(usa.Perc) # % of Global Production For Crop 
+usa.color<-"#8F4A33"
+
+china<-filter(wheat.near, COUNTRY == "China") 
+china.Perc<-sum(china$mean_wheat)/sum(wheat.pivot$.) 
+print(china.Perc) # % of Global Production For Crop 
+china.color<-"#1665AF"
+
+russia<-filter(wheat.near, COUNTRY == "Russian Federation")
+russia.Perc<-sum(russia$mean_wheat)/sum(wheat.pivot$.) 
+print(russia.Perc) # % of Global Production For Crop 
+russia.color<-"#D3867A"
+
+
+#Plot
+ggplot(wheat.near, aes(x=rescale_ND, y=logWheat)) +
+  geom_point(alpha=0.3) +theme_justin + 
+  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_wheat)),color=china.color, alpha=0.8) +
+  geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$mean_wheat)),color=usa.color, alpha=0.4) + 
+  geom_point(data=russia, aes(x=rescale_ND, y=log10(russia$mean_wheat)), color=russia.color, alpha=0.3) + 
+  geom_abline(aes(intercept=coef(wheat.sper)[2], slope=coef(wheat.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+
+
+
 
