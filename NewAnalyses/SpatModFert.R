@@ -27,6 +27,7 @@ theme_justin<-theme_bw() +theme(axis.line = element_line(colour = "black"),
                                 panel.background = element_blank())
 
 fishnet<- readOGR(dsn= "GIS/", layer="FertNear")
+proj4string(fishnet) <- CRS("+init=epsg:3786")
 
 #Barley 
 fert.barley<-subset(fishnet, fishnet$barley_Fer > 0 ) #yield > 0 

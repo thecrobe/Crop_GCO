@@ -5,6 +5,7 @@ library(rgdal)
 
 #Read In
 fishnet<- readOGR(dsn= "GIS/", layer="Fishnet_yield_NoAntarctica")
+proj4string(fishnet) <- CRS("+init=epsg:3786")
 
 #Data Prep 
 rf.barley<-read.csv(file="Models/Barley_RF.csv", header = T)   
@@ -25,6 +26,8 @@ pred.error<-data.frame(10^((barley.predict-barley.data$mean_barle)-1))
 summary(pred.error) 
 write.csv(x = pred.error,file="SpatialRF/Barley_Error.csv")
 
+#Test for Spatial Autocorrelation 
+moran.wheat<-moran.mc(mean.wheat$residualsSpecError, lw, 999,zero.policy = TRUE) #Test for autocorrelation
 
 #Data Prep 
 rf.cassava<-read.csv(file="Models/Cassava_RF.csv", header = T)   
@@ -246,4 +249,6 @@ wheat.predict<-predict(wheat.spatialrf$Global.Model,wheat.data)
 pred.error<-data.frame(10^((wheat.predict-wheat.data$mean_wheat))-1)
 summary(pred.error) 
 write.csv(x = pred.error,file="SpatialRF/Wheat_Error.csv")
+
+
 
