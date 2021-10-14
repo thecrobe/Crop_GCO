@@ -1,9 +1,0 @@
-base
-sp
-rgdal
-maptools
-rgeos
-ggplot2
-dplyr
-reshape2
-nlme

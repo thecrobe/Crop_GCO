@@ -558,6 +558,3 @@ ggplot(wheat.m, aes(x=wheat.m$WheatGCO, y=wheat.m$value)) +
 
 
 
-
-
-

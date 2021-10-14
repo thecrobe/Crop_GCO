@@ -12,22 +12,25 @@ rf.barley<-read.csv(file="Models/Barley_RF.csv", header = T)
 fish.barley<-subset(fishnet, fishnet$mean_barle > 0 ) #yield > 0 
 fish.barley.subset<-fish.barley@data %>% select(Fishnet_ID,mean_barle, Latitude, Longitude)
 joined<-na.omit(inner_join(fish.barley.subset,rf.barley, by="Fishnet_ID"))
-barley.data<-log10(joined %>% select(mean_barle,Barley_Fertilizer,GDP_Mean,Pesticide,AET_mean)+1)
+barley.yield<-log10(joined %>% select(mean_barle,Barley_Fertilizer,GDP_Mean,Pesticide,AET_mean)+1)
+
+row.names(barley.yield) <- joined$Fishnet_ID
+barley.data[1] <- NULL
+head(barley.data)
+
 barley.coords<-data.frame(cbind(joined$Latitude,joined$Longitude))
 
 #Random Forest Model
-barley.spatialrf<- grf(mean_barle~Barley_Fertilizer+GDP_Mean+Pesticide+AET_mean , barley.data, bw=100, kernel="adaptive", coords=barley.coords , ntree=500, mtry=NULL, importance=TRUE, forests = TRUE)
+barley.spatialrf<- grf(mean_barle~Barley_Fertilizer+GDP_Mean+Pesticide+AET_mean , barley.yield, bw=100, kernel="adaptive", coords=barley.coords , ntree=500, mtry=NULL, importance=TRUE, forests = TRUE)
 
 print(barley.spatialrf$LocalModelSummary)
 
 #Prediction and Error
-barley.predict<-predict(barley.spatialrf$Global.Model,barley.data)
+barley.predict<-predict(barley.spatialrf$Global.Model,barley.yield)
 pred.error<-data.frame(10^((barley.predict-barley.data$mean_barle)-1))
-summary(pred.error) 
-write.csv(x = pred.error,file="SpatialRF/Barley_Error.csv")
+pred.error<-cbind(pred.error,barley.yield)
+write.csv(x = joined.error,file="SpatialRF/Barley_Error.csv")
 
-#Test for Spatial Autocorrelation 
-moran.wheat<-moran.mc(mean.wheat$residualsSpecError, lw, 999,zero.policy = TRUE) #Test for autocorrelation
 
 #Data Prep 
 rf.cassava<-read.csv(file="Models/Cassava_RF.csv", header = T)   
