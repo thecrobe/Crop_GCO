@@ -1,4 +1,3 @@
-SpatialRF_B
 library(spatialRF)
 library(spdep)
 library(spdplyr)

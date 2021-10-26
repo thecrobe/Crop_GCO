@@ -1,3 +1,4 @@
+#htop in term to monitor 
 
 #models
 library(spatialEco)
@@ -27,7 +28,7 @@ theme_justin<-theme_bw() +theme(axis.line = element_line(colour = "black"),
                                 panel.background = element_blank())
 
 fishnet<- readOGR(dsn= "GIS/", layer="Fishnet_yield_NoAntarctica")
-
+fishnet
 #Barley 
 fishnet.barley<-subset(fishnet, fishnet$mean_barle > 0 ) #yield > 0 
 xy <- coordinates(fishnet.barley)

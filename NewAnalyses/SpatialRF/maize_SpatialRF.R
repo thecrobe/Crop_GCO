@@ -501,7 +501,7 @@ spatialRF::plot_importance( model.spatial,verbose = FALSE) + ggtitle("Spatial mo
 write.csv(x=model.spatial$variable.importance, file="NewAnalyses/SpatialRF/Maize_South AmericaVarImp.csv")
 
 #Response Curves
-reponse.curves.df <- spatialRF::get_response_curves(model.spatial,variables = c("AET_mean", "Barley_Fertilizer", "Pesticide", "GDP_Mean"))
+reponse.curves.df <- spatialRF::get_response_curves(model.spatial,variables = c("AET_mean", "maize_Fertilizer", "Pesticide", "GDP_Mean"))
 spatialRF::plot_response_curves(model.spatial, quantiles = 0.5,ncol = 2,variables = c("Pesticide", "AET_mean", "maize_Fertilizer", "GDP_Mean"))
 write.csv(x=reponse.curves.df,file="NewAnalyses/SpatialRF/Maize_South America_RespCurv.csv")
 
