@@ -10,15 +10,20 @@ library(dplyr)
 #ggplot graphic parameters
 theme_justin<-theme_bw() +theme(axis.line = element_line(colour = "black"), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.border = element_blank(), panel.background = element_blank())
 
-fishnet<- readOGR(dsn= "/GIS/Fishnet/", layer="Fishnet_yield_NoAntarctica")
+fishnet<- readOGR(dsn= "GIS/", layer="Fishnet_yield_NoAntarctica")
 
-#Barley
+#Barley data prep
 fishnet.barley<-subset(fishnet, fishnet$mean_barle > 0 ) #yield > 0 
+fishnet.barley$logBarley<-log10(fishnet.barley$mean_barle)
 xy <- coordinates(fishnet.barley)
 xy1<-data.frame(xy)
-yield <- fishnet.barley@data
-barleyGCO<-readOGR(dsn = "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/GIS/GCO_Shapefiles/",layer="BarleyWheat_GC")
+barleyGCO<-readOGR(dsn = "GIS/",layer="BarleyWheat_GC")
 barleyGCOcentroid<-gCentroid(barleyGCO)
+
+#Neighborhoods
+nb <- poly2nb(fishnet.barley)
+lw <- nb2listw(nb,zero.policy = T)
+print(lw)
 
 #Register cluster
 cl <- parallel::makeCluster(2)
@@ -28,21 +33,19 @@ output <- data.frame(slope=numeric(N), x = numeric(N), y = numeric(N))
 iteration<-foreach(i = 1:N) %dopar% {
   #load package 
   library(dplyr)
-  library(sp)
+  library(sp) #try :: 
+  library(spdep)
   # pick a point
   random.point <- sample(1:nrow(xy), 1)
   # calculate distances from that point
   distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
-  yield$rescale_ND<-distances/(1000*1000)
-  barley.near<-yield %>% select(mean_barle,rescale_ND)
-  barley.near<-barley.near %>% filter(mean_barle > 0, na.rm=TRUE)
-  barley.near<-barley.near %>% filter(rescale_ND > 0, na.rm=TRUE)
-  barley.near$logBarley<-log10(barley.near$mean_barle)
   #fit model 
-  barley.sper<-lm(logBarley ~ rescale_ND, data=barley.near)
+  barley.sper<-errorsarlm(logBarley ~ distances, data=fishnet.barley@data, lw, tol.solve=1.0e-30,zero.policy  = TRUE)
   # associate it to the point
-  output[i,] <- c(coef(barley.sper)[2], xy[random.point,][1],xy[random.point,][2])
+  output[i,] <- c(coef(barley.sper)[3], xy[random.point,][1],xy[random.point,][2])
+
 }
+stopCluster(cl)
 x<-data.frame(do.call(rbind,iteration))
 
 ggplot(x, aes(x=x$V2,y=x$V3,color=x$rescale_ND)) +geom_point()
