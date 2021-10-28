@@ -1,5 +1,3 @@
-#htop in term to monitor 
-
 #models
 library(spatialEco)
 library(rgdal)

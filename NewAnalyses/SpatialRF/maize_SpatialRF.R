@@ -36,7 +36,6 @@ maize.catagory<-sp::merge(maize.cat,county.pivot, by="COUNTRY.x")
 maize.catagory<-maize.catagory@data
 
 
-
 ########## Asia #########
 #Select Continent
 maize.comb<-merge(maize.catagory,maize.scaled, by="FISHNET_ID")
@@ -74,7 +73,7 @@ model.non.spatial <- spatialRF::rf(
   distance.matrix = distance.matrix,
   distance.thresholds = distance.thresholds,
   xy = xy, #not needed by rf, but other functions read it from the model
-  seed = random.seed,n.cores = 24,
+  seed = random.seed,n.cores = 12,
   verbose = FALSE)
 
 # Moran's Plot
@@ -86,7 +85,7 @@ model.spatial <- spatialRF::rf_spatial(
   method = "mem.moran.sequential", #default method
   verbose = FALSE,
   seed = random.seed,
-  n.cores = 24
+  n.cores = 12
 )
 
 write.csv(x = model.spatial$residuals$values, file="NewAnalyses/SpatialRF/Maize_asia_residuals.csv")
@@ -152,7 +151,7 @@ model.non.spatial <- spatialRF::rf(
   distance.matrix = distance.matrix,
   distance.thresholds = distance.thresholds,
   xy = xy, #not needed by rf, but other functions read it from the model
-  seed = random.seed,n.cores = 24,
+  seed = random.seed,n.cores = 12,
   verbose = FALSE)
 
 # Moran's Plot
@@ -164,7 +163,7 @@ model.spatial <- spatialRF::rf_spatial(
   method = "mem.moran.sequential", #default method
   verbose = FALSE,
   seed = random.seed,
-  n.cores = 24
+  n.cores = 12
 )
 
 write.csv(x = model.spatial$residuals$values, file="NewAnalyses/SpatialRF/SpatialRF/Maize_africa_residuals.csv")
@@ -231,7 +230,7 @@ model.non.spatial <- spatialRF::rf(
   distance.matrix = distance.matrix,
   distance.thresholds = distance.thresholds,
   xy = xy, #not needed by rf, but other functions read it from the model
-  seed = random.seed,n.cores = 24,
+  seed = random.seed,n.cores = 12,
   verbose = FALSE)
 
 # Moran's Plot
@@ -243,7 +242,7 @@ model.spatial <- spatialRF::rf_spatial(
   method = "mem.moran.sequential", #default method
   verbose = FALSE,
   seed = random.seed,
-  n.cores = 24
+  n.cores = 12
 )
 
 write.csv(x = model.spatial$residuals$values, file="NewAnalyses/SpatialRF/Maize_NorthAmerica_residuals.csv")
@@ -310,7 +309,7 @@ model.non.spatial <- spatialRF::rf(
   distance.matrix = distance.matrix,
   distance.thresholds = distance.thresholds,
   xy = xy, #not needed by rf, but other functions read it from the model
-  seed = random.seed,n.cores = 24,
+  seed = random.seed,n.cores = 12,
   verbose = FALSE)
 
 # Moran's Plot
@@ -322,7 +321,7 @@ model.spatial <- spatialRF::rf_spatial(
   method = "mem.moran.sequential", #default method
   verbose = FALSE,
   seed = random.seed,
-  n.cores = 24
+  n.cores = 12
 )
 
 write.csv(x = model.spatial$residuals$values, file="NewAnalyses/SpatialRF/Maize_ausocean_residuals.csv")
@@ -388,7 +387,7 @@ model.non.spatial <- spatialRF::rf(
   distance.matrix = distance.matrix,
   distance.thresholds = distance.thresholds,
   xy = xy, #not needed by rf, but other functions read it from the model
-  seed = random.seed,n.cores = 24,
+  seed = random.seed,n.cores = 12,
   verbose = FALSE)
 
 # Moran's Plot
@@ -400,7 +399,7 @@ model.spatial <- spatialRF::rf_spatial(
   method = "mem.moran.sequential", #default method
   verbose = FALSE,
   seed = random.seed,
-  n.cores = 24
+  n.cores = 12
 )
 
 write.csv(x = model.spatial$residuals$values, file="NewAnalyses/SpatialRF/Maize_europe_residuals.csv")
@@ -465,7 +464,7 @@ model.non.spatial <- spatialRF::rf(
   distance.matrix = distance.matrix,
   distance.thresholds = distance.thresholds,
   xy = xy, #not needed by rf, but other functions read it from the model
-  seed = random.seed,n.cores = 24,
+  seed = random.seed,n.cores = 12,
   verbose = FALSE)
 
 # Moran's Plot
@@ -477,7 +476,7 @@ model.spatial <- spatialRF::rf_spatial(
   method = "mem.moran.sequential", #default method
   verbose = FALSE,
   seed = random.seed,
-  n.cores = 24
+  n.cores = 12
 )
 
 write.csv(x = model.spatial$residuals$values, file="NewAnalyses/SpatialRF/Maize_South America_residuals.csv")

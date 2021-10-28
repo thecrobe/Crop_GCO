@@ -29,7 +29,7 @@ print(lw)
 cl <- parallel::makeCluster(2)
 doParallel::registerDoParallel(cl)
 N=100 #sample size
-output <- data.frame(slope=numeric(N), x = numeric(N), y = numeric(N))
+output <- data.frame(slope=numeric(N), pvalue=numeric(N)m x = numeric(N), y = numeric(N), moran_p=numeric(N)
 iteration<-foreach(i = 1:N) %dopar% {
   #load package 
   library(dplyr)
@@ -41,8 +41,9 @@ iteration<-foreach(i = 1:N) %dopar% {
   distances <- spDistsN1(xy,xy[random.point,], longlat = FALSE)
   #fit model 
   barley.sper<-errorsarlm(logBarley ~ distances, data=fishnet.barley@data, lw, tol.solve=1.0e-30,zero.policy  = TRUE)
+  sa<-moran.mc(merged$residuals, lw, 1000, zero.policy = T)
   # associate it to the point
-  output[i,] <- c(coef(barley.sper)[3], xy[random.point,][1],xy[random.point,][2])
+  output[i,] <- c(coef(barley.sper)[3], #PVALUE, xy[random.point,][1],xy[random.point,][2], #MoranPvalue)
 
 }
 stopCluster(cl)
