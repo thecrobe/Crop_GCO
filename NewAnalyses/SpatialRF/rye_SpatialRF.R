@@ -6,7 +6,7 @@ library(rgdal)
 library(ggplot2)
 library(ranger)
 
-
+read
 
 #Read In
 #Fishnet- pixel = 100km^2
@@ -195,7 +195,6 @@ write.csv(x=model.spatial$variable.importance, file="NewAnalyses/SpatialRF/Rye_A
 reponse.curves.df <- spatialRF::get_response_curves(model.spatial,variables = c("AET_mean", "rye_Fertilizer", "Pesticide", "GDP_Mean"))
 africa.rc<-spatialRF::plot_response_curves(model.spatial, quantiles = 0.5,ncol = 2,variables = c("Pesticide", "AET_mean", "rye_Fertilizer", "GDP_Mean"))
 write.csv(x=reponse.curves.df,file="NewAnalyses/SpatialRF/Rye_Africa_RespCurv.csv")
-
 
 ########## North America #########
 #Select Continent

@@ -7,6 +7,7 @@ library(ranger)
 
 
 
+
 #Read In
 #Fishnet- pixel = 100km^2
 fishnet<- readOGR(dsn= "GIS/", layer="Fishnetield_NoAntarctica")
