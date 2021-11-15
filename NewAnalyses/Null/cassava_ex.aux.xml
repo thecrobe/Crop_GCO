@@ -1,0 +1,20 @@
+<PAMDataset>
+  <SRS>PROJCS["WGS_1984_World_Equidistant_Cylindrical",GEOGCS["GCS_WGS_1984",DATUM["WGS_1984",SPHEROID["WGS_84",6378137.0,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0.0,AUTHORITY["EPSG","8901"]],UNIT["Degree",0.0174532925199433,AUTHORITY["EPSG","9102"]],AUTHORITY["EPSG","4326"]],PROJECTION["Equidistant_Cylindrical_Ellipsoidal",AUTHORITY["Esri","43061"]],PARAMETER["False_Easting",0.0,AUTHORITY["Esri","100001"]],PARAMETER["False_Northing",0.0,AUTHORITY["Esri","100002"]],PARAMETER["Central_Meridian",0.0,AUTHORITY["Esri","100010"]],PARAMETER["Standard_Parallel_1",0.0,AUTHORITY["Esri","100025"]],UNIT["Meter",1.0,AUTHORITY["EPSG","9001"]],AUTHORITY["EPSG","4087"]]</SRS>
+  <PAMRasterBand band="1">
+    <Description>cassava_ex</Description>
+    <Histograms>
+      <HistItem>
+        <HistMin>-0.01890624314546585</HistMin>
+        <HistMax>0.04807250946760178</HistMax>
+        <BucketCount>256</BucketCount>
+        <IncludeOutOfRange>1</IncludeOutOfRange>
+        <Approximate>0</Approximate>
+        <HistCounts>49|103|314|110|64|52|45|48|59|137|159|187|311|290|268|216|210|168|107|92|76|65|68|62|63|53|51|50|44|40|42|40|40|43|39|57|49|57|53|53|55|51|56|56|59|60|58|51|46|42|33|31|25|28|20|20|18|16|12|11|6|3|4|4|2|2|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|1|0|0|0|0|0|0|0|0|1|0|0|0|0|0|0|0|0|0|0|290|517|472|387|344|354|313|275|175|132|116|94|82|73|65|55|45|34|35|28|30|17|19|11|15|1|16|2|16|0|19|7|10|14|3|14|4|17|1|11|3|4|2|2|3|4|3|4|5|4|7|9|9|9|14|10|14|17|20|22|25|23|23|30|32|39|46|53|50|52|53|51|53|49|58|58|57|55|58|58|57|60|59|62|65|67|75|81|97|106|98|110|102|103|93|107|113|115|112|95|93|76|90|79|78|74|67|58|58|56|52|53|41|35|24|27|22|20|12|1</HistCounts>
+      </HistItem>
+    </Histograms>
+    <Metadata>
+      <MDI key="STATISTICS_SKIPFACTORX">1</MDI>
+      <MDI key="STATISTICS_SKIPFACTORY">1</MDI>
+    </Metadata>
+  </PAMRasterBand>
+</PAMDataset>
