@@ -121,7 +121,7 @@ cassava.final<-(filter((cassava.comb),CONTINENT == "Africa"))
 cassava.final<-na.omit(cassava.final)
 
 summary(cassava.final)
-cassava.final$cassavaGCO<-as.factor(cassava.final$cassavaGCO)
+cassava.final$cassavaGCO<-as.factor(cassava.final$CassavaGCO)
 cassava.final$COUNTRY.x<-as.factor(cassava.final$COUNTRY.x)
 cassava.coords<-cassava.final %>% select(Latitude,Longitude) #select coordinates
 
@@ -199,7 +199,7 @@ cassava.final<-(filter((cassava.comb),CONTINENT == "North America"))
 cassava.final<-na.omit(cassava.final)
 
 summary(cassava.final)
-cassava.final$cassavaGCO<-as.factor(cassava.final$cassavaGCO)
+cassava.final$cassavaGCO<-as.factor(cassava.final$CassavaGCO)
 cassava.final$COUNTRY.x<-as.factor(cassava.final$COUNTRY.x)
 cassava.coords<-cassava.final %>% select(Latitude,Longitude) #select coordinates
 
@@ -216,7 +216,7 @@ xy <- data.frame(cbind(x,y))
 #distance matrix
 distance.matrix <- dist.mat
 #distance thresholds (same units as distance_matrix)
-distance.thresholds <- c(0, 1, 5, 10,50)
+distance.thresholds <- c(0, 1, 5, 10)
 #random seed for reproducibility
 random.seed <- 1
 # remove data from spatial dataframe
@@ -277,7 +277,7 @@ cassava.final<-(filter((cassava.comb),CONTINENT == "Australia" | CONTINENT=="Oce
 cassava.final<-na.omit(cassava.final)
 
 summary(cassava.final)
-cassava.final$cassavaGCO<-as.factor(cassava.final$cassavaGCO)
+cassava.final$cassavaGCO<-as.factor(cassava.final$CassavaGCO)
 cassava.final$COUNTRY.x<-as.factor(cassava.final$COUNTRY.x)
 cassava.coords<-cassava.final %>% select(Latitude,Longitude) #select coordinates
 
@@ -347,14 +347,14 @@ reponse.curves.df <- spatialRF::get_response_curves(model.spatial,variables = c(
 spatialRF::plot_response_curves(model.spatial, quantiles = 0.5,ncol = 2,variables = c("Pesticide", "AET_mean", "cassava_Fertilizer", "GDP_Mean"))
 write.csv(x=reponse.curves.df,file="NewAnalyses/SpatialRF/cassava_AusOcean_RespCurv.csv")
 
-########## Europe #########
+########## Europe ######### NOT PRESENT
 #Select Continent
 cassava.comb<-merge(cassava.catagory,cassava.scaled, by="FISHNET_ID")
 cassava.final<-(filter((cassava.comb),CONTINENT == "Europe"))
 cassava.final<-na.omit(cassava.final)
 
 summary(cassava.final)
-cassava.final$cassavaGCO<-as.factor(cassava.final$cassavaGCO)
+cassava.final$cassavaGCO<-as.factor(cassava.final$CassavaGCO)
 cassava.final$COUNTRY.x<-as.factor(cassava.final$COUNTRY.x)
 cassava.coords<-cassava.final %>% select(Latitude,Longitude) #select coordinates
 
@@ -430,7 +430,7 @@ cassava.final<-(filter((cassava.comb),CONTINENT == "South America"))
 cassava.final<-na.omit(cassava.final)
 
 summary(cassava.final)
-cassava.final$cassavaGCO<-as.factor(cassava.final$cassavaGCO)
+cassava.final$cassavaGCO<-as.factor(cassava.final$CassavaGCO)
 cassava.final$COUNTRY.x<-as.factor(cassava.final$COUNTRY.x)
 cassava.coords<-cassava.final %>% select(Latitude,Longitude) #select coordinates
 

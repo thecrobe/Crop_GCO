@@ -29,7 +29,7 @@ maxent()
 Sorghum.me <- maxent(modelEnv, occ.Sorghum.train ) # just using the training data
 print(Sorghum.me)
 plot(Sorghum.me) #Variable Importance 
-occ.Sorghum.pred <- predict(Sorghum.me, modelEnv)
+occ.Sorghum.pred <- predict(Sorghum.me, model
 plot(occ.Sorghum.pred)
 bg <- randomPoints(modelEnv, 1000) #make psuedorandom background points
 e1 <- evaluate(Sorghum.me, p=occ.Sorghum.test, a=bg, x=modelEnv)
