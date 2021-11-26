@@ -460,7 +460,7 @@ model.non.spatial <- spatialRF::rf(
   distance.matrix = distance.matrix,
   distance.thresholds = distance.thresholds,
   xy = xy, #not needed by rf, but other functions read it from the model
-  seed = random.seed,n.cores = 4,
+  seed = random.seed,n.cores = 24,
   verbose = FALSE)
 
 # Moran's Plot
@@ -471,6 +471,7 @@ model.spatial <- spatialRF::rf_spatial(
   model = model.non.spatial,
   method = "mem.moran.sequential", #default method
   verbose = FALSE,
+  n.cores = 24,
   seed = random.seed
 )
 
@@ -495,6 +496,6 @@ spatialRF::plot_importance( model.spatial,verbose = FALSE) + ggtitle("Spatial mo
 write.csv(x=model.spatial$variable.importance, file="NewAnalyses/SpatialRF/Barley_South AmericaVarImp.csv")
 
 #Response Curves
-reponse.curves.df <- spatialRF::get_response_curves(model.spatial)
+reponse.curves.df <- spatialRF::get_response_curves(model.spatial,variables = c("AET_mean", "Barley_Fertilizer", "Pesticide", "GDP_Mean"))
 spatialRF::plot_response_curves(model.spatial, quantiles = 0.5,ncol = 2,variables = c("Pesticide", "AET_mean", "Barley_Fertilizer", "GDP_Mean"))
 write.csv(x=reponse.curves.df,file="NewAnalyses/SpatialRF/Barley_South America_RespCurv.csv")

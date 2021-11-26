@@ -3,8 +3,6 @@ library(spdep)
 library(spdplyr)
 library(rgdal)
 library(ggplot2)
-library(ranger)
-
 #Read In
 #Fishnet- pixel = 100km^2
 fishnet<- readOGR(dsn= "GIS/", layer="Fishnet_yield_NoAntarctica")
@@ -61,7 +59,7 @@ xy <- data.frame(cbind(x,y))
 #distance matrix
 distance.matrix <- dist.mat
 #distance thresholds (same units as distance_matrix)
-distance.thresholds <- c(0, 1, 5, 10, 50)
+distance.thresholds <- c(0, 1, 5, 10, 50, 100)
 #random seed for reproducibility
 random.seed <- 1
 # remove data from spatial dataframe
@@ -88,8 +86,8 @@ model.spatial <- spatialRF::rf_spatial(
   seed = random.seed
 )
 
-write.csv(x = model.spatial$residuals$values, file="NewAnalyses/SpatialRF/Barley_asia_residuals.csv")
-write.csv(x=model.spatial$performance, file="NewAnalyses/SpatialRF/Barley_asia_pref.csv")
+write.csv(x = model.spatial$residuals, file="Barley_asia_residuals.csv")
+write.csv(x=model.spatial$performance, file="Barley_asia_pref.csv")
 #Check residuals
 spatialRF::plot_residuals_diagnostics(model.spatial,verbose = FALSE)
 
@@ -109,8 +107,8 @@ spatialRF::plot_importance( model.spatial,verbose = FALSE) + ggtitle("Spatial mo
 write.csv(x=model.spatial$variable.importance, file="NewAnalyses/SpatialRF/Barley_AsiaVarImp.csv")
 
 #Response Curves
-reponse.curves.df <- spatialRF::get_response_curves(model.spatial,variables = c("AET_mean", "Barley_Fertilizer", "Pesticide", "GDP_Mean"))
-asia.rc<-spatialRF::plot_response_curves(model.spatial, quantiles = 0.5,ncol = 2,variables = c("Pesticide", "AET_mean", "Barley_Fertilizer", "GDP_Mean"))
+reponse.curves.df <- spatialRF::get_response_curves(model.spatial)
+spatialRF::plot_response_curves(model.spatial, quantiles = 0.5,ncol = 2,variables = c("Pesticide", "AET_mean", "Barley_Fertilizer", "GDP_Mean"))
 write.csv(x=reponse.curves.df,file="NewAnalyses/SpatialRF/Barley_Asia_RespCurv.csv")
 
 
@@ -165,8 +163,8 @@ model.spatial <- spatialRF::rf_spatial(
   seed = random.seed
 )
 
-write.csv(x = model.spatial$residuals$values, file="NewAnalyses/SpatialRF/SpatialRF/Barley_africa_residuals.csv")
-write.csv(x=model.spatial$performance, file="NewAnalyses/SpatialRF/Barley_africa_pref.csv")
+write.csv(x = model.spatial$residuals, file="africa_residuals.csv")
+write.csv(x=model.spatial$performance, file="africa_pref.csv")
 
 #Check residuals
 spatialRF::plot_residuals_diagnostics(model.spatial,verbose = FALSE)
@@ -187,8 +185,8 @@ spatialRF::plot_importance( model.spatial,verbose = FALSE) + ggtitle("Spatial mo
 write.csv(x=model.spatial$variable.importance, file="NewAnalyses/SpatialRF/Barley_AfricaVarImp.csv")
 
 #Response Curves
-reponse.curves.df <- spatialRF::get_response_curves(model.spatial,variables = c("AET_mean", "Barley_Fertilizer", "Pesticide", "GDP_Mean"))
-africa.rc<-spatialRF::plot_response_curves(model.spatial, quantiles = 0.5,ncol = 2,variables = c("Pesticide", "AET_mean", "Barley_Fertilizer", "GDP_Mean"))
+reponse.curves.df <- spatialRF::get_response_curves(model.spatial)
+spatialRF::plot_response_curves(model.spatial, quantiles = 0.5,ncol = 2,variables = c("Pesticide", "AET_mean", "Barley_Fertilizer", "GDP_Mean"))
 write.csv(x=reponse.curves.df,file="NewAnalyses/SpatialRF/Barley_Africa_RespCurv.csv")
 
 
@@ -216,7 +214,7 @@ xy <- data.frame(cbind(x,y))
 #distance matrix
 distance.matrix <- dist.mat
 #distance thresholds (same units as distance_matrix)
-distance.thresholds <- c(0, 1, 5, 10,50)
+distance.thresholds <- c(0, 1, 5, 10,50,100)
 #random seed for reproducibility
 random.seed <- 1
 # remove data from spatial dataframe
@@ -243,8 +241,8 @@ model.spatial <- spatialRF::rf_spatial(
   seed = random.seed
 )
 
-write.csv(x = model.spatial$residuals$values, file="NewAnalyses/SpatialRF/Barley_NorthAmerica_residuals.csv")
-write.csv(x=model.spatial$performance, file="NewAnalyses/SpatialRF/Barley_NorthAmerica_pref.csv")
+write.csv(x = model.spatial$residuals, file="Barley_NorthAmerica_residuals.csv")
+write.csv(x=model.spatial$performance, file="Barley_NorthAmerica_pref.csv")
 
 #Check residuals
 spatialRF::plot_residuals_diagnostics(model.spatial,verbose = FALSE)
@@ -261,14 +259,13 @@ ggplot(barley.final, aes(x=Longitude, y=Latitude, color=model.spatial$residuals$
 
 
 #Variable Importance
-spatialRF::plot_importance(model.spatial,verbose = FALSE) + ggtitle("Spatial model")
+spatialRF::plot_importance( model.spatial,verbose = FALSE) + ggtitle("Spatial model")
 write.csv(x=model.spatial$variable.importance, file="NewAnalyses/SpatialRF/Barley_NorthAmerica_VarImp.csv")
 
 #Response Curves
-reponse.curves.df <- spatialRF::get_response_curves(model.spatial,variables =c("Pesticide", "AET_mean", "Barley_Fertilizer", "GDP_Mean"))
-NorthAm.rc<-spatialRF::plot_response_curves(model.spatial, quantiles = 0.5,ncol = 2,variables = c("Pesticide", "AET_mean", "Barley_Fertilizer", "GDP_Mean"))
+reponse.curves.df <- spatialRF::get_response_curves(model.spatial)
+spatialRF::plot_response_curves(model.spatial, quantiles = 0.5,ncol = 2,variables = c("Pesticide", "AET_mean", "Barley_Fertilizer", "GDP_Mean"))
 write.csv(x=reponse.curves.df,file="NewAnalyses/SpatialRF/Barley_NorthAmerica_RespCurv.csv")
-
 
 ########## Australia + Oceania #########
 #Select Continent
@@ -294,7 +291,7 @@ xy <- data.frame(cbind(x,y))
 #distance matrix
 distance.matrix <- dist.mat
 #distance thresholds (same units as distance_matrix)
-distance.thresholds <- c(0, 1, 5, 10,50)
+distance.thresholds <- c(0, 1, 5, 10,50,100)
 #random seed for reproducibility
 random.seed <- 1
 # remove data from spatial dataframe
@@ -321,8 +318,8 @@ model.spatial <- spatialRF::rf_spatial(
   seed = random.seed
 )
 
-write.csv(x = model.spatial$residuals$values, file="NewAnalyses/SpatialRF/Barley_ausocean_residuals.csv")
-write.csv(x=model.spatial$performance, file="NewAnalyses/SpatialRF/Barley_ausocean_pref.csv")
+write.csv(x = model.spatial$residuals, file="Barley_ausocean_residuals.csv")
+write.csv(x=model.spatial$performance, file="Barley_ausocean_pref.csv")
 
 #Check residuals
 spatialRF::plot_residuals_diagnostics(model.spatial,verbose = FALSE)
@@ -343,9 +340,11 @@ spatialRF::plot_importance( model.spatial,verbose = FALSE) + ggtitle("Spatial mo
 write.csv(x=model.spatial$variable.importance, file="NewAnalyses/SpatialRF/Barley_AusOceanVarImp.csv")
 
 #Response Curves
-reponse.curves.df <- spatialRF::get_response_curves(model.spatial,variables = c("AET_mean", "Barley_Fertilizer", "Pesticide", "GDP_Mean"))
+reponse.curves.df <- spatialRF::get_response_curves(model.spatial)
 spatialRF::plot_response_curves(model.spatial, quantiles = 0.5,ncol = 2,variables = c("Pesticide", "AET_mean", "Barley_Fertilizer", "GDP_Mean"))
 write.csv(x=reponse.curves.df,file="NewAnalyses/SpatialRF/Barley_AusOcean_RespCurv.csv")
+
+
 
 ########## Europe #########
 #Select Continent
@@ -371,7 +370,7 @@ xy <- data.frame(cbind(x,y))
 #distance matrix
 distance.matrix <- dist.mat
 #distance thresholds (same units as distance_matrix)
-distance.thresholds <- c(0, 1, 5, 10,50)
+distance.thresholds <- c(0, 1, 5, 10)
 #random seed for reproducibility
 random.seed <- 1
 # remove data from spatial dataframe
@@ -398,8 +397,8 @@ model.spatial <- spatialRF::rf_spatial(
   seed = random.seed
 )
 
-write.csv(x = model.spatial$residuals$values, file="NewAnalyses/SpatialRF/Barley_europe_residuals.csv")
-write.csv(x=model.spatial$performance, file="NewAnalyses/SpatialRF/Barley_europe_pref.csv")
+write.csv(x = model.spatial$residuals, file="Barley_europe_residuals.csv")
+write.csv(x=model.spatial$performance, file="Barley_europe_pref.csv")
 #Check residuals
 spatialRF::plot_residuals_diagnostics(model.spatial,verbose = FALSE)
 
@@ -415,13 +414,15 @@ ggplot(barley.final, aes(x=Longitude, y=Latitude, color=model.spatial$residuals$
 
 
 #Variable Importance
-spatialRF::plot_importance(model.spatial,verbose = FALSE) + ggtitle("Spatial model")
+spatialRF::plot_importance( model.spatial,verbose = FALSE) + ggtitle("Spatial model")
 write.csv(x=model.spatial$variable.importance, file="NewAnalyses/SpatialRF/Barley_EuropeVarImp.csv")
 
 #Response Curves
-reponse.curves.df <- spatialRF::get_response_curves(model.spatial,variables = c("AET_mean", "Barley_Fertilizer", "Pesticide", "GDP_Mean"))
+reponse.curves.df <- spatialRF::get_response_curves(model.spatial)
 spatialRF::plot_response_curves(model.spatial, quantiles = 0.5,ncol = 2,variables = c("Pesticide", "AET_mean", "Barley_Fertilizer", "GDP_Mean"))
 write.csv(x=reponse.curves.df,file="NewAnalyses/SpatialRF/Barley_Europe_RespCurv.csv")
+
+
 
 ########## South America #########
 #Select Continent
@@ -447,7 +448,7 @@ xy <- data.frame(cbind(x,y))
 #distance matrix
 distance.matrix <- dist.mat
 #distance thresholds (same units as distance_matrix)
-distance.thresholds <- c(0, 1, 5, 10,50)
+distance.thresholds <- c(0, 1, 5, 10, 50, 100)
 #random seed for reproducibility
 random.seed <- 1
 # remove data from spatial dataframe
@@ -474,8 +475,8 @@ model.spatial <- spatialRF::rf_spatial(
   seed = random.seed
 )
 
-write.csv(x = model.spatial$residuals$values, file="NewAnalyses/SpatialRF/Barley_South America_residuals.csv")
-write.csv(x=model.spatial$performance, file="NewAnalyses/SpatialRF/Barley_South America_pref.csv")
+write.csv(x = model.spatial$residuals, file="Barley_South America_residuals.csv")
+write.csv(x=model.spatial$performance, file="Barley_South America_pref.csv")
 #Check residuals
 spatialRF::plot_residuals_diagnostics(model.spatial,verbose = FALSE)
 
@@ -498,3 +499,6 @@ write.csv(x=model.spatial$variable.importance, file="NewAnalyses/SpatialRF/Barle
 reponse.curves.df <- spatialRF::get_response_curves(model.spatial)
 spatialRF::plot_response_curves(model.spatial, quantiles = 0.5,ncol = 2,variables = c("Pesticide", "AET_mean", "Barley_Fertilizer", "GDP_Mean"))
 write.csv(x=reponse.curves.df,file="NewAnalyses/SpatialRF/Barley_South America_RespCurv.csv")
+
+
+
