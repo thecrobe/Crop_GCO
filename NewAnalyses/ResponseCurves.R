@@ -9,10 +9,10 @@ data<-read.csv(file="NewAnalyses/ResponseCurves.csv", header=T)
 
 fertilizer<- data %>% filter(predictor.name == "Fertilizer")
 
-f_plot<-ggplot(fertilizer, aes(x=predictor,y=response)) +
-  facet_grid(~Crop,scales = "free_y")  +
-  geom_point(aes(color=Region),alpha=0.1) +
-  geom_smooth(method="loess", color="black", size=2,se = TRUE) +
+ggplot(fertilizer, aes(x=predictor,y=response)) +
+  facet_wrap(~Crop,scales = "free",ncol=6)  +
+  geom_point(aes(color=Region),alpha=0.3) +
+  geom_smooth(method="lm",span=0, color="black", size=2,se = TRUE) +
   theme_justin +
   xlab("Log10 Fertilizer") +
   ylab ("Log10 Yield") +
@@ -24,7 +24,7 @@ pesticide<- data %>% filter(predictor.name == "Pesticide")
 p_plot<-ggplot(pesticide, aes(x=predictor,y=response)) +
   facet_grid(~Crop,scales = "free_y")  +
   geom_point(aes(color=Region),alpha=0.1) +
-  geom_smooth(method="loess", color="black", size=2,se = TRUE) +
+  geom_smooth(method="lm", color="black", size=2,se = TRUE) +
   theme_justin +
   xlab("Log10 Pesticide") +
   ylab ("Log10 Yield") +
@@ -36,7 +36,7 @@ gdp<- data %>% filter(predictor.name == "GDP")
 g_plot<-ggplot(gdp, aes(x=predictor,y=response)) +
   facet_grid(~Crop,scales = "free_y")  +
   geom_point(aes(color=Region),alpha=0.1) +
-  geom_smooth(method="loess", color="black", size=2,se = TRUE) +
+  geom_smooth(method="lm", color="black", size=2,se = TRUE) +
   theme_justin +
   xlab("Log10 GDP") +
   ylab ("Log10 Yield") +
@@ -48,7 +48,7 @@ aet<- data %>% filter(predictor.name == "Evapotranspiration")
 a_plot<-ggplot(aet, aes(x=predictor,y=response)) +
   facet_grid(~Crop,scales = "free_y")  +
   geom_point(aes(color=Region),alpha=0.1) +
-  geom_smooth(method="loess", color="black", size=2,se = TRUE) +
+  geom_smooth(method="lm", color="black", size=2,se = TRUE) +
   theme_justin +
   xlab("Log 10 Evapotranspiration") +
   ylab ("Log10 Yield") +
@@ -56,9 +56,9 @@ a_plot<-ggplot(aet, aes(x=predictor,y=response)) +
   scale_color_npg() 
 
 #Combine Figure
-figure <- ggarrange(f_plot,p_plot,a_plot,g_plot,
-                    labels = c("A", "B", "C","D"),
-                    ncol = 1, nrow = 4, common.legend = TRUE, legend = "bottom")
+figure <- ggarrange(p_plot,a_plot,g_plot,
+                    labels = c("A", "B", "C"),
+                    ncol = 1, nrow = 3, common.legend = TRUE, legend = "bottom")
 
 ######### 
 
@@ -70,17 +70,17 @@ ggplot(varimp, aes(x=Variable, y=Region,fill=Fert.Standard)) +
   facet_grid(~Crop) + 
   theme(axis.text.x = element_text(angle = 45, hjust=1))
 
-#########
-
-Model Pref 
+######### Model Pref 
 
 pref<-read.csv(file="NewAnalyses/Model_Preformance.csv", header=T)
 
-ggplot(pref, aes(x=r.squared.oob,y=Region, color=rmse.oob)) + 
-  geom_point() + 
-  scale_color_viridis(option="magma") + 
-  facet_grid(~Crop)  + 
-  theme_justin
+ggplot(pref, aes(x=Crop,y=Region, fill=pref$r.squared.oob)) + 
+  geom_tile() +
+  geom_point(aes(size=pref$rmse.oob, alpha=0.5, color="#111111")) +
+  theme_bw() +
+  scale_fill_viridis(option="mako")
+
+
 
 
 

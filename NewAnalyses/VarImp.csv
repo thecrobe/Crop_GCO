@@ -35,14 +35,14 @@ Cassava,Australia + Oceania,Evapotranspiration,0.00305482,1.283726786,Top
 Cassava,Australia + Oceania,Fertilizer,0.00237965,1,Top
 Cassava,Australia + Oceania,Pesticide,0.010732769,4.510230592,Top
 Cassava,Australia + Oceania,GDP,0.012250137,5.147874142,Top
-Cassava,Europe,Evapotranspiration,0.00305482,1.283726786,Top
-Cassava,Europe,Fertilizer,0.00237965,1,Top
-Cassava,Europe,Pesticide,0.010732769,4.510230592,Top
-Cassava,Europe,GDP,0.012250137,5.147874142,Top
-Cassava,North America,Evapotranspiration,0.014810122,1.619625462,Top
-Cassava,North America,Fertilizer,0.009144165,1,Top
-Cassava,North America,Pesticide,0.007227124,0.790353672,Top
-Cassava,North America,GDP,0.005662137,0.61920761,Top
+Cassava,Europe,Evapotranspiration,NA,NA,Top
+Cassava,Europe,Fertilizer,NA,NA,Top
+Cassava,Europe,Pesticide,NA,NA,Top
+Cassava,Europe,GDP,NA,NA,Top
+Cassava,North America,Evapotranspiration,0.003810573,0.206533878,Top
+Cassava,North America,Fertilizer,0.018450112,1,Top
+Cassava,North America,Pesticide,0.018531961,1.004436221,Top
+Cassava,North America,GDP,0.004117156,0.223150728,Top
 Cassava,South America,Evapotranspiration,0.005005185,0.56268051,Top
 Cassava,South America,Fertilizer,0.008895251,1,Top
 Cassava,South America,Pesticide,0.006290254,0.707147438,Top
