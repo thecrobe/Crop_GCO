@@ -2,7 +2,6 @@ library(dplyr)
 library(rgdal)
 library(ggplot2)
 library(wesanderson)
-library(rgdal)
 library(spdplyr)
 library(sp)
 library(rgeos)
@@ -217,4 +216,14 @@ potGCO<-readOGR(dsn = "GIS/",layer="Potato")
 potGCOcentroid<-gCentroid(potGCO)
 distance <- spDistsN1(xy,potGCOcentroid, longlat = FALSE)
 print(distance/1000) #KMs away form GCO 
+
+
+# Fertilizer Plots 
+
+#Read In
+#Fishnet- pixel = 100km^2
+fish<- readOGR(dsn= "GIS/", layer="Fishnet_yield_NoAntarctica")
+fert<- readOGR(dsn="GIS/",layer = "FertNear")
+summary(fert$)
+
 

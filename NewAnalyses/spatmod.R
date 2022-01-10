@@ -54,6 +54,7 @@ barley.sper <- errorsarlm(logBarley ~ barley.near$rescale_ND, data=fishnet.barle
 summary(barley.sper) #Summary
 fishnet.barley$residualsSpecError <- residuals(barley.sper) #Residuals
 moran.mc(fishnet.barley$residualsSpecError, lw, 999,zero.policy = TRUE) #Test for autocorrelation
+?moran.mc
 
 ggplot(xy1, aes(x=X1,y=X2, color=fishnet.barley$residualsSpecError)) + 
   geom_point(size=1.0) #plot residuals

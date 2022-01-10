@@ -36,13 +36,13 @@ cassava.catagory<-sp::merge(cassava.cat,county.pivot, by="COUNTRY.x")
 cassava.catagory<-cassava.catagory@data
 
 
-
+cassava.final<-cassava.comb
 ########## Asia #########
 #Select Continent
 cassava.comb<-merge(cassava.catagory,cassava.scaled, by="FISHNET_ID")
 cassava.final<-(filter((cassava.comb),CONTINENT == "Asia"))
 cassava.final<-na.omit(cassava.final)
-
+dm<-dist(cassa)
 summary(cassava.final)
 cassava.final$cassavaGCO<-as.factor(cassava.final$cassavaGCO)
 cassava.final$COUNTRY.x<-as.factor(cassava.final$COUNTRY.x)
@@ -52,7 +52,7 @@ cassava.coords<-cassava.final %>% select(Latitude,Longitude) #select coordinates
 dist.mat <- data.matrix(dist(cbind(cassava.coords$Latitude, cassava.coords$Longitude)))
 dim(cassava.final) #check dims
 dim(dist.mat) #check dims
-
+object.size(dist.mat)
 #coordinates of the cases
 x<-cassava.coords$Latitude
 y<-cassava.coords$Longitude

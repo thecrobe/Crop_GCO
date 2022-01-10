@@ -40,10 +40,8 @@ barley.catagory<-barley.catagory@data
 ########## Asia #########
 #Select Continent
 barley.comb<-merge(barley.catagory,barley.scaled, by="FISHNET_ID")
-barley.final<-(filter((barley.comb),CONTINENT == "Asia"))
+barley.final<-(filter((barley.comb),CONTINENT == "Africa"))
 barley.final<-na.omit(barley.final)
-
-summary(barley.final)
 barley.final$BarleyGCO<-as.factor(barley.final$BarleyGCO)
 barley.final$COUNTRY.x<-as.factor(barley.final$COUNTRY.x)
 barley.coords<-barley.final %>% select(Latitude,Longitude) #select coordinates
