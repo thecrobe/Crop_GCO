@@ -26,7 +26,7 @@ theme_justin<-theme_bw() +theme(axis.line = element_line(colour = "black"),
                                 panel.background = element_blank())
 
 fishnet<- readOGR(dsn= "GIS/", layer="Fishnet_yield_NoAntarctica")
-fishnet
+
 #Barley 
 fishnet.barley<-subset(fishnet, fishnet$mean_barle > 0 ) #yield > 0 
 xy <- coordinates(fishnet.barley)
@@ -57,39 +57,9 @@ moran.mc(fishnet.barley$residualsSpecError, lw, 999,zero.policy = TRUE) #Test fo
 ggplot(xy1, aes(x=X1,y=X2, color=fishnet.barley$residualsSpecError)) + 
   geom_point(size=1.0) #plot residuals
 
-
-#Pivot Table To ID Top Producers by Country Sum 
-barley.pivot<-dcast(barley.near, COUNTRY ~., value.var="mean_barle", fun.aggregate=sum)
-barley.pivot<-arrange(barley.pivot,.)
-tail(barley.pivot, 3) #ID Top 3 Producing Countries
-barley.top<-tail(barley.pivot, 3)
-sum(barley.pivot$.) #Total Production
-sum(barley.top$.)/sum(barley.pivot$.) # % produced by top 3 
-
-
-#Filter Countries
-china<-filter(barley.near, COUNTRY == "China") 
-china.Perc<-sum(china$mean_barle)/sum(barley.pivot$.) 
-print(china.Perc) # % of Global Production For Crop 
-china.color<-"#1665AF"
-summary(china)
-
-usa<-filter(barley.near, COUNTRY == "United States")
-usa.Perc<-sum(usa$mean_barle)/sum(barley.pivot$.) 
-print(usa.Perc) # % of Global Production For Crop 
-usa.color<-"#8F4A33"
-
-russia<-filter(barley.near, COUNTRY == "Russian Federation")
-russia.Perc<-sum(russia$mean_barle)/sum(barley.pivot$.) 
-print(russia.Perc) # % of Global Production For Crop 
-russia.color<-"#D3867A"
-
 #Plot
-ggplot(barley.near, aes(x=rescale_ND, y=barley.near$logBarley)) +
+barley.plot<-ggplot(barley.near, aes(x=rescale_ND, y=barley.near$logBarley)) +
   geom_point(alpha=0.3) +theme_justin + 
-#  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_barle)), color=china.color, alpha=0.9) + 
-#  geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$mean_barle)), color=usa.color, alpha=0.5) + 
-#  geom_point(data=russia, aes(x=rescale_ND, y=log10(russia$mean_barle)),color=russia.color, alpha=0.2) +
   geom_abline(aes(intercept=coef(barley.sper)[2], slope=coef(barley.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
 
 
@@ -123,42 +93,9 @@ moran.mc(fishnet.cassava$residualsSpecError, lw, 999,zero.policy = TRUE) #Test f
 ggplot(xy1, aes(x=X1,y=X2, color=fishnet.cassava$residualsSpecError)) + 
   geom_point(size=1.0) #plot residuals
 
-#Pivot Table To ID Top Producers by Country Sum 
-cassava.pivot<-dcast(cassava.near, COUNTRY ~., value.var="mean_cassa", fun.aggregate=sum)
-cassava.pivot<-arrange(cassava.pivot,.)
-tail(cassava.pivot, 3) #ID Top 3 Producing Countries
-cassava.top<-tail(cassava.pivot, 3)
-sum(cassava.pivot$.) #Total Production
-sum(cassava.top$.)/sum(cassava.pivot$.) # % produced by top 3 
-
-
-#Filter Countries
-china<-filter(cassava.near, COUNTRY == "China") 
-china.Perc<-sum(china$mean_cassa)/sum(cassava.pivot$.) 
-print(china.Perc) # % of Global Production For Crop 
-china.color<-"#1665AF"
-summary(china)
-
-#Brazil
-brazil<-filter(cassava.near, COUNTRY == "Brazil") 
-brazil.Perc<-sum(brazil$mean_cassa)/sum(cassava.pivot$.) 
-print(brazil.Perc) # % of Global Production For Crop 
-brazil.color<-"#E28D15"
-summary(brazil)
-
-#Indonesia
-indo<-filter(cassava.near, COUNTRY == "Indonesia") 
-indo.Perc<-sum(indo$mean_cassa)/sum(cassava.pivot$.) 
-print(indo.Perc) # % of Global Production For Crop 
-indo.color<-"#63377C"
-summary(indo)
-
 #Plot
-ggplot(cassava.near, aes(x=rescale_ND, y=cassava.near$logCassava)) +
-  geom_point(alpha=0.3) +theme_justin + 
-  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_cassa)), color=china.color, alpha=0.9) + 
-  geom_point(data=brazil, aes(x=rescale_ND, y=log10(brazil$mean_cassa)), color=brazil.color, alpha=0.5) + 
-  geom_point(data=indo, aes(x=rescale_ND, y=log10(indo$mean_cassa)),color=indo.color, alpha=0.2) +
+cassava.plot<-ggplot(cassava.near, aes(x=rescale_ND, y=cassava.near$logCassava)) +
+  geom_point(alpha=0.3) +theme_justin +
   geom_abline(aes(intercept=coef(cassava.sper)[2], slope=coef(cassava.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
 
 
@@ -194,37 +131,9 @@ ggplot(xy1, aes(x=X1,y=X2, color=fishnet.groundnut$residualsSpecError)) +
   geom_point(size=1.0) #plot residuals
 
 
-#Pivot Table To ID Top Producers by Country Sum 
-groundnut.pivot<-dcast(groundnut.near, COUNTRY ~., value.var="mean_groun", fun.aggregate=sum)
-groundnut.pivot<-arrange(groundnut.pivot,.)
-tail(groundnut.pivot, 3) #ID Top 3 Producing Countries
-groundnut.top<-tail(groundnut.pivot, 3)
-sum(groundnut.pivot$.) #Total Production
-sum(groundnut.top$.)/sum(groundnut.pivot$.) # % produced by top 3 
-
-#Filter Countries
-china<-filter(groundnut.near, COUNTRY == "China") 
-china.Perc<-sum(china$mean_groun)/sum(groundnut.pivot$.) 
-print(china.Perc) # % of Global Production For Crop 
-china.color<-"#1665AF"
-summary(china)
-
-indo<-filter(groundnut.near, COUNTRY == "Indonesia")
-indo.Perc<-sum(indo$mean_groun)/sum(groundnut.pivot$.) 
-print(indo.Perc) # % of Global Production For Crop 
-indo.color<-"#63377C"
-
-india<-filter(groundnut.near, COUNTRY == "India")
-india.Perc<-sum(india$mean_groun)/sum(groundnut.pivot$.) 
-print(india.Perc) # % of Global Production For Crop 
-india.color<-"#078D40"
-
 #Plot
-ggplot(groundnut.near, aes(x=rescale_ND, y=logGroundnut)) +
+groundnut.plot<-ggplot(groundnut.near, aes(x=rescale_ND, y=logGroundnut)) +
   geom_point(alpha=0.3) +theme_justin + 
-  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_groun)), color=china.color, alpha=0.5) + 
-  geom_point(data=indo, aes(x=rescale_ND, y=log10(indo$mean_groun)),color=indo.color, alpha=0.8) +
-  geom_point(data=india, aes(x=rescale_ND, y=log10(india$mean_groun)),color=india.color, alpha=0.5) + 
   geom_abline(aes(intercept=coef(groundnut.sper)[2], slope=coef(groundnut.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
 
 
@@ -260,39 +169,9 @@ moran.mc(fishnet.maize$residualsSpecError, lw, 999,zero.policy = TRUE) #Test for
 ggplot(xy1, aes(x=X1,y=X2, color=fishnet.maize$residualsSpecError)) + 
   geom_point(size=1.0) #plot residuals
 
-
-#Pivot Table To ID Top Producers by Country Sum 
-maize.pivot<-dcast(maize.near, COUNTRY ~., value.var="mean_maize", fun.aggregate=sum)
-maize.pivot<-arrange(maize.pivot,.)
-tail(maize.pivot, 3) #ID Top 3 Producing Countries
-maize.top<-tail(maize.pivot, 3)
-sum(maize.pivot$.) #Total Production
-sum(maize.top$.)/sum(maize.pivot$.) # % produced by top 3 
-
-#Filter Countries
-china<-filter(maize.near, COUNTRY == "China") 
-china.Perc<-sum(china$mean_maize)/sum(maize.pivot$.) 
-print(china.Perc) # % of Global Production For Crop 
-china.color<-"#1665AF"
-summary(china)
-
-usa<-filter(maize.near, COUNTRY == "United States")
-usa.Perc<-sum(usa$mean_maize)/sum(maize.pivot$.) 
-print(usa.Perc) # % of Global Production For Crop 
-usa.color<-"#8F4A33"
-
-russia<-filter(maize.near, COUNTRY == "Russian Federation")
-russia.Perc<-sum(russia$mean_maize)/sum(maize.pivot$.) 
-print(russia.Perc) # % of Global Production For Crop 
-russia.color<-"#D3867A"
-
-
 #Plot
-ggplot(maize.near, aes(x=rescale_ND, y=logMaize)) +
-  geom_point(alpha=0.3) +theme_justin + 
-  geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$mean_maize)), color=usa.color, alpha=0.8) + 
-  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_maize)),color=china.color, alpha=0.5) +
-  geom_point(data=russia, aes(x=rescale_ND, y=log10(russia$mean_maize)),color=russia.color, alpha=0.3) + 
+maize.plot<-ggplot(maize.near, aes(x=rescale_ND, y=logMaize)) +
+  geom_point(alpha=0.3) +theme_justin +
   geom_abline(aes(intercept=coef(maize.sper)[2], slope=coef(maize.sper)[2]), color="grey", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
 
 
@@ -329,39 +208,9 @@ moran.mc(fishnet.potato$residualsSpecError, lw, 999,zero.policy = TRUE) #Test fo
 ggplot(xy1, aes(x=X1,y=X2, color=fishnet.potato$residualsSpecError)) + 
   geom_point(size=1.0) #plot residuals
 
-
-#Filter Countries
-
-#Pivot Table To ID Top Producers by Country Sum 
-potat.pivot<-dcast(potat.near, COUNTRY ~., value.var="mean_potat", fun.aggregate=sum)
-potat.pivot<-arrange(potat.pivot,.)
-tail(potat.pivot, 3) #ID Top 3 Producing Countries
-potat.top<-tail(potat.pivot, 3)
-sum(potat.pivot$.) #Total Production
-sum(potat.top$.)/sum(potat.pivot$.) # % produced by top 3 
-
-usa<-filter(potat.near, COUNTRY == "United States")
-usa.Perc<-sum(usa$mean_potat)/sum(potat.pivot$.) 
-print(usa.Perc) # % of Global Production For Crop 
-usa.color<-"#8F4A33"
-
-china<-filter(potat.near, COUNTRY == "China") 
-china.Perc<-sum(china$mean_potat)/sum(potat.pivot$.) 
-print(china.Perc) # % of Global Production For Crop 
-china.color<-"#1665AF"
-
-canada<-filter(potat.near, COUNTRY == "Canada") 
-canada.Perc<-sum(canada$mean_potat)/sum(potat.pivot$.) 
-print(canada.Perc) # % of Global Production For Crop 
-canada.color<-"#98C24B"
-
-
 #Plot
-ggplot(potat.near, aes(x=rescale_ND, y=logPotato)) +
-  geom_point(alpha=0.3) +theme_justin + 
-  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_potat)),color=china.color, alpha=0.8) +
-  geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$mean_potat)),color=usa.color, alpha=0.4) + 
-  geom_point(data=canada, aes(x=rescale_ND, y=log10(canada$mean_potat)), color=canada.color, alpha=0.3) + 
+potato.plot<-ggplot(potat.near, aes(x=rescale_ND, y=logPotato)) +
+  geom_point(alpha=0.3) +theme_justin  + 
   geom_abline(aes(intercept=coef(potato.sper)[2], slope=coef(potato.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
 
 
@@ -398,37 +247,9 @@ ggplot(xy1, aes(x=X1,y=X2, color=fishnet.rapeseed$residualsSpecError)) +
   geom_point(size=1.0) #plot residuals
 
 
-#Pivot Table To ID Top Producers by Country Sum 
-rapes.pivot<-dcast(rapes.near, COUNTRY ~., value.var="mean_rapes", fun.aggregate=sum)
-rapes.pivot<-arrange(rapes.pivot,.)
-tail(rapes.pivot, 3) #ID Top 3 Producing Countries
-rapes.top<-tail(rapes.pivot, 3)
-sum(rapes.pivot$.) #Total Production
-sum(rapes.top$.)/sum(rapes.pivot$.) # % produced by top 3 
-
-#Filter Countries
-china<-filter(rapes.near, COUNTRY == "China") 
-china.Perc<-sum(china$mean_rapes)/sum(rapes.pivot$.) 
-print(china.Perc) # % of Global Production For Crop 
-china.color<-"#1665AF"
-
-brazil<-filter(rapes.near, COUNTRY == "Brazil")
-brazil.Perc<-sum(brazil$mean_rapes)/sum(rapes.pivot$.) 
-print(brazil.Perc) # % of Global Production For Crop 
-brazil.color<-"#E28D15"
-
-russia<-filter(rapes.near, COUNTRY == "Russian Federation")
-russia.Perc<-sum(russia$mean_rapes)/sum(rapes.pivot$.) 
-print(russia.Perc) # % of Global Production For Crop 
-russia.color<-"#D3867A"
-
-
 #Plot
-ggplot(rapes.near, aes(x=rescale_ND, y=logRapeseed)) +
-  geom_point(alpha=0.3) +theme_justin + 
-  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_rapes)),color=china.color, alpha=0.5) +
-  geom_point(data=russia, aes(x=rescale_ND, y=log10(russia$mean_rapes)),color=russia.color, alpha=0.3) + 
-  geom_point(data=brazil, aes(x=rescale_ND, y=log10(brazil$mean_rapes)), color=brazil.color, alpha=0.8) + 
+rapeseed.plot<-ggplot(rapes.near, aes(x=rescale_ND, y=logRapeseed)) +
+  geom_point(alpha=0.3) +theme_justin  + 
   geom_abline(aes(intercept=coef(rapeseed.sper)[2], slope=coef(rapeseed.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
 
 
@@ -464,38 +285,9 @@ moran.mc(fishnet.rice$residualsSpecError, lw, 999,zero.policy = TRUE) #Test for 
 ggplot(xy1, aes(x=X1,y=X2, color=fishnet.rice$residualsSpecError)) + 
   geom_point(size=1.0) #plot residuals
 
-
-#Pivot Table To ID Top Producers by Country Sum 
-Rice.pivot<-dcast(Rice.near, COUNTRY ~., value.var="mean_rice_", fun.aggregate=sum)
-Rice.pivot<-arrange(Rice.pivot,.)
-tail(Rice.pivot, 3) #ID Top 3 Producing Countries
-Rice.top<-tail(Rice.pivot, 3)
-sum(Rice.pivot$.) #Total Production
-sum(Rice.top$.)/sum(Rice.pivot$.) # % produced by top 3 
-
-#Filter Countries
-china<-filter(Rice.near, COUNTRY == "China") 
-china.Perc<-sum(china$mean_Rice)/sum(Rice.pivot$.) 
-print(china.Perc) # % of Global Production For Crop 
-china.color<-"#1665AF"
-
-brazil<-filter(Rice.near, COUNTRY == "Brazil")
-brazil.Perc<-sum(brazil$mean_Rice)/sum(Rice.pivot$.) 
-print(brazil.Perc) # % of Global Production For Crop 
-brazil.color<-"#E28D15"
-
-india<-filter(Rice.near, COUNTRY == "India")
-india.Perc<-sum(india$mean_rice_)/sum(Rice.pivot$.) 
-print(india.Perc) # % of Global Production For Crop 
-india.color<-"#078D40"
-
-
 #Plot
-ggplot(Rice.near, aes(x=rescale_ND, y=logRice)) +
-  geom_point(alpha=0.3) +theme_justin + 
-  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_rice_)),color=china.color, alpha=0.5) +
-  geom_point(data=brazil, aes(x=rescale_ND, y=log10(brazil$mean_rice_)), color=brazil.color, alpha=0.8) + 
-  geom_point(data=india, aes(x=rescale_ND, y=log10(india$mean_rice_)),color=russia.color, alpha=0.3) + 
+rice.plot<-ggplot(Rice.near, aes(x=rescale_ND, y=logRice)) +
+  geom_point(alpha=0.3) +theme_justin  + 
   geom_abline(aes(intercept=coef(rice.sper)[2], slope=coef(rice.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
 
 
@@ -532,37 +324,9 @@ ggplot(xy1, aes(x=X1,y=X2, color=fishnet.rye$residualsSpecError)) +
   geom_point(size=1.0) #plot residuals
 
 
-#Pivot Table To ID Top Producers by Country Sum 
-rye.pivot<-dcast(Rye.near, COUNTRY ~., value.var="mean_rye_Y", fun.aggregate=sum)
-rye.pivot<-arrange(rye.pivot,.)
-tail(rye.pivot, 3) #ID Top 3 Producing Countries
-rye.top<-tail(rye.pivot, 3)
-sum(rye.pivot$.) #Total Production
-sum(rye.top$.)/sum(rye.pivot$.) # % produced by top 3 
-
-#Filter Countries
-
-russia<-filter(Rye.near, COUNTRY == "Russian Federation")
-russia.Perc<-sum(russia$mean_rye_Y)/sum(rye.pivot$.) 
-print(russia.Perc) # % of Global Production For Crop 
-russia.color<-"#D3867A"
-
-china<-filter(Rye.near, COUNTRY == "China") 
-china.Perc<-sum(china$mean_rye)/sum(rye.pivot$.) 
-print(china.Perc) # % of Global Production For Crop 
-china.color<-"#1665AF"
-
-usa<-filter(Rye.near, COUNTRY == "United States")
-usa.Perc<-sum(usa$mean_rye_Y)/sum(rye.pivot$.) 
-print(usa.Perc) # % of Global Fertilizer For Crop 
-usa.color<-"#8F4A33"
-
 #Plot
-ggplot(Rye.near, aes(x=rescale_ND, y=logRye)) +
-  geom_point(alpha=0.3) +theme_justin + 
-  geom_point(data=russia, aes(x=rescale_ND, y=log10(russia$mean_rye_Y)), color=russia.color, alpha=0.8) + 
-  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_rye_Y)),color=china.color, alpha=0.8) +
-  geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$mean_rye_Y)),color=usa.color, alpha=0.3) + 
+rye.plot<-ggplot(Rye.near, aes(x=rescale_ND, y=logRye)) +
+  geom_point(alpha=0.3) +theme_justin  + 
   geom_abline(aes(intercept=coef(rye.sper)[2], slope=coef(rye.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
 
 
@@ -597,39 +361,9 @@ moran.mc(fishnet.sorghum$residualsSpecError, lw, 999,zero.policy = TRUE) #Test f
 ggplot(xy1, aes(x=X1,y=X2, color=fishnet.sorghum$residualsSpecError)) + 
   geom_point(size=1.0) #plot residuals
 
-
-#Pivot Table To ID Top Producers by Country Sum 
-sorghum.pivot<-dcast(sorghum.near, COUNTRY ~., value.var="mean_sorgh", fun.aggregate=sum)
-sorghum.pivot<-arrange(sorghum.pivot,.)
-tail(sorghum.pivot, 3) #ID Top 3 Producing Countries
-sorghum.top<-tail(sorghum.pivot, 3)
-sum(sorghum.pivot$.) #Total Production
-sum(sorghum.top$.)/sum(sorghum.pivot$.) # % produced by top 3 
-
-#Filter Countries
-
-china<-filter(sorghum.near, COUNTRY == "China") 
-china.Perc<-sum(china$mean_sorgh)/sum(sorghum.pivot$.) 
-print(china.Perc) # % of Global Production For Crop 
-china.color<-"#1665AF"
-
-usa<-filter(sorghum.near, COUNTRY == "United States")
-usa.Perc<-sum(usa$mean_sorgh)/sum(sorghum.pivot$.) 
-print(usa.Perc) # % of Global Production For Crop 
-usa.color<-"#8F4A33"
-
-russia<-filter(sorghum.near, COUNTRY == "Russian Federation")
-russia.Perc<-sum(russia$mean_sorgh)/sum(sorghum.pivot$.) 
-print(russia.Perc) # % of Global Production For Crop 
-russia.color<-"#D3867A"
-
-
 #Plot
-ggplot(sorghum.near, aes(x=rescale_ND, y=logSorghum)) +
+sorghum.plot<-ggplot(sorghum.near, aes(x=rescale_ND, y=logSorghum)) +
   geom_point(alpha=0.3) +theme_justin + 
-  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_sorgh)),color=china.color, alpha=0.8) +
-  geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$mean_sorgh)),color=usa.color, alpha=0.5) + 
-  geom_point(data=russia, aes(x=rescale_ND, y=log10(russia$mean_sorgh)), color=russia.color, alpha=0.3) + 
   geom_abline(aes(intercept=coef(sorghum.sper)[2], slope=coef(sorghum.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
 
 
@@ -664,38 +398,8 @@ moran.mc(fishnet.soybean$residualsSpecError, lw, 999,zero.policy = TRUE) #Test f
 ggplot(xy1, aes(x=X1,y=X2, color=fishnet.soybean$residualsSpecError)) + 
   geom_point(size=1.0) #plot residuals
 
-
-#Pivot Table To ID Top Producers by Country Sum 
-soybe.pivot<-dcast(soybean.near, COUNTRY ~., value.var="mean_soybe", fun.aggregate=sum)
-soybe.pivot<-arrange(soybe.pivot,.)
-tail(soybe.pivot, 3) #ID Top 3 Producing Countries
-soybe.top<-tail(soybe.pivot, 3)
-sum(soybe.pivot$.) #Total Production
-sum(soybe.top$.)/sum(soybe.pivot$.) # % produced by top 3 
-
-#Filter Countries
-china<-filter(soybean.near, COUNTRY == "China") 
-china.Perc<-sum(china$mean_soybe)/sum(soybe.pivot$.) 
-print(china.Perc) # % of Global Production For Crop 
-china.color<-"#1665AF"
-
-usa<-filter(soybean.near, COUNTRY == "United States")
-usa.Perc<-sum(usa$mean_soybe)/sum(soybe.pivot$.) 
-print(usa.Perc) # % of Global Production For Crop 
-usa.color<-"#8F4A33"
-
-russia<-filter(soybean.near, COUNTRY == "Russian Federation")
-russia.Perc<-sum(russia$mean_soybe)/sum(soybe.pivot$.) 
-print(russia.Perc) # % of Global Production For Crop 
-russia.color<-"#D3867A"
-
-
 #Plot
-ggplot(soybean.near, aes(x=rescale_ND, y=logSoybean)) +
-  geom_point(alpha=0.3) +theme_justin + 
-  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_soybe)),color=china.color, alpha=0.8) +
-  geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$mean_soybe)),color=usa.color, alpha=0.3) + 
-  geom_point(data=russia, aes(x=rescale_ND, y=log10(russia$mean_soybe)), color=russia.color, alpha=0.1) + 
+soybean.plot<-ggplot(soybean.near, aes(x=rescale_ND, y=logSoybean))  + 
   geom_abline(aes(intercept=coef(soybean.sper)[2], slope=coef(soybean.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
 
 
@@ -731,36 +435,9 @@ ggplot(xy1, aes(x=X1,y=X2, color=fishnet.sunflower$residualsSpecError)) +
   geom_point(size=1.0) #plot residuals
 
 
-#Pivot Table To ID Top Producers by Country Sum 
-sunflower.pivot<-dcast(sunflower.near, COUNTRY ~., value.var="mean_sunfl", fun.aggregate=sum)
-sunflower.pivot<-arrange(sunflower.pivot,.)
-tail(sunflower.pivot, 3) #ID Top 3 Producing Countries
-sunflower.top<-tail(sunflower.pivot, 3)
-sum(sunflower.pivot$.) #Total Production
-sum(sunflower.top$.)/sum(sunflower.pivot$.) # % produced by top 3 
-
-#Filter Countries
-usa<-filter(sunflower.near, COUNTRY == "United States")
-usa.Perc<-sum(usa$mean_sunfl)/sum(sunflower.pivot$.) 
-print(usa.Perc) # % of Global Production For Crop 
-usa.color<-"#8F4A33"
-
-china<-filter(sunflower.near, COUNTRY == "China") 
-china.Perc<-sum(china$mean_sunfl)/sum(sunflower.pivot$.) 
-print(china.Perc) # % of Global Production For Crop 
-china.color<-"#1665AF"
-
-brazil<-filter(sunflower.near, COUNTRY == "Brazil")
-brazil.Perc<-sum(brazil$mean_sunfle)/sum(cassava.pivot$.) 
-print(brazil.Perc) # % of Global Production For Crop 
-brazil.color<-"#E28D15"
-
 #Plot
-ggplot(sunflower.near, aes(x=rescale_ND, y=logSunflower)) +
+sunflower.plot<-ggplot(sunflower.near, aes(x=rescale_ND, y=logSunflower)) +
   geom_point(alpha=0.3) +theme_justin + 
-  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_sunfl)),color=china.color, alpha=0.8) +
-  geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$mean_sunfl)), color=usa.color, alpha=0.4) + 
-  geom_point(data=brazil, aes(x=rescale_ND, y=log10(brazil$mean_sunfl)), color=brazil.color, alpha=0.3) + 
   geom_abline(aes(intercept=coef(sunflower.sper)[2], slope=coef(sunflower.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
 
 
@@ -794,39 +471,9 @@ moran.mc(fishnet.wheat$residualsSpecError, lw, 999,zero.policy = TRUE) #Test for
 ggplot(xy1, aes(x=X1,y=X2, color=fishnet.wheat$residualsSpecError, )) + 
   geom_point(size=1.0) #plot residuals
 
-
-#Pivot Table To ID Top Producers by Country Sum 
-wheat.pivot<-dcast(wheat.near, COUNTRY ~., value.var="mean_wheat", fun.aggregate=sum)
-wheat.pivot<-arrange(wheat.pivot,.)
-tail(wheat.pivot, 3) #ID Top 3 Producing Countries
-wheat.top<-tail(wheat.pivot, 3)
-sum(wheat.pivot$.) #Total Production
-sum(wheat.top$.)/sum(wheat.pivot$.) # % produced by top 3 
-
-#Filter Countries
-
-usa<-filter(wheat.near, COUNTRY == "United States")
-usa.Perc<-sum(usa$mean_wheat)/sum(wheat.pivot$.) 
-print(usa.Perc) # % of Global Production For Crop 
-usa.color<-"#8F4A33"
-
-china<-filter(wheat.near, COUNTRY == "China") 
-china.Perc<-sum(china$mean_wheat)/sum(wheat.pivot$.) 
-print(china.Perc) # % of Global Production For Crop 
-china.color<-"#1665AF"
-
-russia<-filter(wheat.near, COUNTRY == "Russian Federation")
-russia.Perc<-sum(russia$mean_wheat)/sum(wheat.pivot$.) 
-print(russia.Perc) # % of Global Production For Crop 
-russia.color<-"#D3867A"
-
-
 #Plot
-ggplot(wheat.near, aes(x=rescale_ND, y=logWheat)) +
-  geom_point(alpha=0.3) +theme_justin + 
-  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_wheat)),color=china.color, alpha=0.8) +
-  geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$mean_wheat)),color=usa.color, alpha=0.4) + 
-  geom_point(data=russia, aes(x=rescale_ND, y=log10(russia$mean_wheat)), color=russia.color, alpha=0.3) + 
+wheat.plot<-ggplot(wheat.near, aes(x=rescale_ND, y=logWheat)) +
+  geom_point(alpha=0.3) +theme_justin  + 
   geom_abline(aes(intercept=coef(wheat.sper)[2], slope=coef(wheat.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
 
 
