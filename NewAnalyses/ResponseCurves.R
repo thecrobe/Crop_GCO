@@ -59,14 +59,15 @@ ggplot(aet, aes(x=predictor,y=response)) +
 
 ######### 
 
-varimp<-read.csv(file="NewAnalyses/VarImp.csv",header=T)
+varimp<-read.csv(file="NewAnalyses/Global_VarImp.csv",header=T)
+varimp$Variable <- factor(varimp$Variable, levels=c("Fertilizer", "Evapotranspiration", "Pesticide","GDP","GCO"))
 
-ggplot(varimp, aes(x=Variable, y=Region,fill=Fert.Standard)) + 
+
+ggplot(varimp, aes(x=Variable, y=Crop,fill=Importance)) + 
   geom_tile() + 
-  scale_fill_gradient2(midpoint = 1.0, low="#3B9AB2", high = "#F21A00") +
-  facet_wrap(~Crop,nrow = 2,ncol = 6) + 
   theme_bw() + 
   theme(axis.text.x = element_text(angle = 45, hjust=1)) + 
+  scale_fill_viridis_c()+
   xlab("Driver") + ylab("Global Region") 
 
 
