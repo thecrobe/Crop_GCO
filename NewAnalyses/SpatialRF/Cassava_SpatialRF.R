@@ -35,8 +35,6 @@ county.pivot<-cassava.cat@data %>% group_by(COUNTRY.x) %>% dplyr::summarize(Coun
 cassava.catagory<-sp::merge(cassava.cat,county.pivot, by="COUNTRY.x")
 cassava.catagory<-cassava.catagory@data
 
-
-cassava.final<-cassava.comb
 ########## Asia #########
 #Select Continent
 cassava.comb<-merge(cassava.catagory,cassava.scaled, by="FISHNET_ID")
