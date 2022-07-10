@@ -11,6 +11,7 @@ library(ggplot2)
 library(wesanderson)
 library(latticeExtra)
 library(RColorBrewer)
+library(gridExtra)
 
 #data wrangling
 library(reshape2)
@@ -59,8 +60,17 @@ ggplot(xy1, aes(x=X1,y=X2, color=fishnet.barley$residualsSpecError)) +
 
 #Plot
 barley.plot<-ggplot(barley.near, aes(x=rescale_ND, y=barley.near$logBarley)) +
+<<<<<<< HEAD
+  geom_point(alpha=0.1) +theme_justin + 
+#  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_barle)), color=china.color, alpha=0.9) + 
+#  geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$mean_barle)), color=usa.color, alpha=0.5) + 
+#  geom_point(data=russia, aes(x=rescale_ND, y=log10(russia$mean_barle)),color=russia.color, alpha=0.2) +
+  geom_abline(aes(intercept=coef(barley.sper)[2], slope=coef(barley.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield") +labs(title="Barley",subtitle="Slope=0.015, p < 0.0001")
+
+=======
   geom_point(alpha=0.3) +theme_justin + 
   geom_abline(aes(intercept=coef(barley.sper)[2], slope=coef(barley.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+>>>>>>> 69b2d5123fa5200145e09d95d88506efbd2f53f8
 
 
 #Cassava 
@@ -95,8 +105,16 @@ ggplot(xy1, aes(x=X1,y=X2, color=fishnet.cassava$residualsSpecError)) +
 
 #Plot
 cassava.plot<-ggplot(cassava.near, aes(x=rescale_ND, y=cassava.near$logCassava)) +
+<<<<<<< HEAD
+  geom_point(alpha=0.1) +theme_justin + 
+#  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_cassa)), color=china.color, alpha=0.9) + 
+#  geom_point(data=brazil, aes(x=rescale_ND, y=log10(brazil$mean_cassa)), color=brazil.color, alpha=0.5) + 
+#  geom_point(data=indo, aes(x=rescale_ND, y=log10(indo$mean_cassa)),color=indo.color, alpha=0.2) +
+  geom_abline(aes(intercept=coef(cassava.sper)[2], slope=coef(cassava.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield") + labs(title="Cassava",subtitle="Slope=0.039, p < 0.0001")
+=======
   geom_point(alpha=0.3) +theme_justin +
   geom_abline(aes(intercept=coef(cassava.sper)[2], slope=coef(cassava.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+>>>>>>> 69b2d5123fa5200145e09d95d88506efbd2f53f8
 
 
 #Groundnut 
@@ -133,8 +151,16 @@ ggplot(xy1, aes(x=X1,y=X2, color=fishnet.groundnut$residualsSpecError)) +
 
 #Plot
 groundnut.plot<-ggplot(groundnut.near, aes(x=rescale_ND, y=logGroundnut)) +
+<<<<<<< HEAD
+  geom_point(alpha=0.1) +theme_justin + 
+#  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_groun)), color=china.color, alpha=0.5) + 
+#  geom_point(data=indo, aes(x=rescale_ND, y=log10(indo$mean_groun)),color=indo.color, alpha=0.8) +
+#  geom_point(data=india, aes(x=rescale_ND, y=log10(india$mean_groun)),color=india.color, alpha=0.5) + 
+  geom_abline(aes(intercept=coef(groundnut.sper)[2], slope=coef(groundnut.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield") +labs(title="Groundnut", subtitle="Slope=0.02, p < 0.0001")
+=======
   geom_point(alpha=0.3) +theme_justin + 
   geom_abline(aes(intercept=coef(groundnut.sper)[2], slope=coef(groundnut.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+>>>>>>> 69b2d5123fa5200145e09d95d88506efbd2f53f8
 
 
 #Maize 
@@ -171,10 +197,18 @@ ggplot(xy1, aes(x=X1,y=X2, color=fishnet.maize$residualsSpecError)) +
 
 #Plot
 maize.plot<-ggplot(maize.near, aes(x=rescale_ND, y=logMaize)) +
+<<<<<<< HEAD
+  geom_point(alpha=0.1) +theme_justin + 
+#  geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$mean_maize)), color=usa.color, alpha=0.8) + 
+#  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_maize)),color=china.color, alpha=0.5) +
+#  geom_point(data=russia, aes(x=rescale_ND, y=log10(russia$mean_maize)),color=russia.color, alpha=0.3) + 
+  geom_abline(aes(intercept=coef(maize.sper)[2], slope=coef(maize.sper)[3]), color="grey", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield") +labs(title="Maize", subtitle="Slope=0.002, p=0.437")
+=======
   geom_point(alpha=0.3) +theme_justin +
   geom_abline(aes(intercept=coef(maize.sper)[2], slope=coef(maize.sper)[2]), color="grey", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
 
 
+>>>>>>> 69b2d5123fa5200145e09d95d88506efbd2f53f8
 
 #Potato 
 fishnet.potato<-subset(fishnet, fishnet$mean_potat > 0 ) #yield > 0 
@@ -200,7 +234,7 @@ lw <- nb2listw(nb, zero.policy = TRUE)
 #Log Transform yields
 fishnet.potato$logPotato<-log10(fishnet.potato$mean_potat)
 #Spatial Error Model
-potato.sper <- errorsarlm(logPotato ~ potato.near$rescale_ND, data=fishnet.potato, lw, tol.solve=1.0e-30,zero.policy  = TRUE)
+potato.sper <- errorsarlm(logPotato ~ potat.near$rescale_ND, data=fishnet.potato, lw, tol.solve=1.0e-30,zero.policy  = TRUE)
 summary(potato.sper) #Summary
 fishnet.potato$residualsSpecError <- residuals(potato.sper) #Residuals
 moran.mc(fishnet.potato$residualsSpecError, lw, 999,zero.policy = TRUE) #Test for autocorrelation
@@ -210,8 +244,16 @@ ggplot(xy1, aes(x=X1,y=X2, color=fishnet.potato$residualsSpecError)) +
 
 #Plot
 potato.plot<-ggplot(potat.near, aes(x=rescale_ND, y=logPotato)) +
+<<<<<<< HEAD
+  geom_point(alpha=0.1) +theme_justin + 
+#  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_potat)),color=china.color, alpha=0.8) +
+#  geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$mean_potat)),color=usa.color, alpha=0.4) + 
+#  geom_point(data=canada, aes(x=rescale_ND, y=log10(canada$mean_potat)), color=canada.color, alpha=0.3) + 
+  geom_abline(aes(intercept=coef(potato.sper)[2], slope=coef(potato.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield") +labs(title="Potato", subtitle="Slope=0.02, p < 0.0001")
+=======
   geom_point(alpha=0.3) +theme_justin  + 
   geom_abline(aes(intercept=coef(potato.sper)[2], slope=coef(potato.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+>>>>>>> 69b2d5123fa5200145e09d95d88506efbd2f53f8
 
 
 #Rapeseed 
@@ -238,7 +280,7 @@ lw <- nb2listw(nb, zero.policy = TRUE)
 #Log Transform yields
 fishnet.rapeseed$logRapeseed<-log10(fishnet.rapeseed$mean_rapes)
 #Spatial Error Model
-rapeseed.sper <- errorsarlm(logRapeseed ~ rapeseed.near$rescale_ND, data=fishnet.rapeseed, lw, tol.solve=1.0e-30,zero.policy  = TRUE)
+rapeseed.sper <- errorsarlm(logRapeseed ~ rapes.near$rescale_ND, data=fishnet.rapeseed, lw, tol.solve=1.0e-30,zero.policy  = TRUE)
 summary(rapeseed.sper) #Summary
 fishnet.rapeseed$residualsSpecError <- residuals(rapeseed.sper) #Residuals
 moran.mc(fishnet.rapeseed$residualsSpecError, lw, 999,zero.policy = TRUE) #Test for autocorrelation
@@ -249,8 +291,16 @@ ggplot(xy1, aes(x=X1,y=X2, color=fishnet.rapeseed$residualsSpecError)) +
 
 #Plot
 rapeseed.plot<-ggplot(rapes.near, aes(x=rescale_ND, y=logRapeseed)) +
+<<<<<<< HEAD
+  geom_point(alpha=0.1) +theme_justin + 
+#  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_rapes)),color=china.color, alpha=0.5) +
+#  geom_point(data=russia, aes(x=rescale_ND, y=log10(russia$mean_rapes)),color=russia.color, alpha=0.3) + 
+#  geom_point(data=brazil, aes(x=rescale_ND, y=log10(brazil$mean_rapes)), color=brazil.color, alpha=0.8) + 
+  geom_abline(aes(intercept=coef(rapeseed.sper)[2], slope=coef(rapeseed.sper)[3]), color="grey", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield") +labs(title="Rapeseed", subtitle="Slope=-0.001, p =0.0501")
+=======
   geom_point(alpha=0.3) +theme_justin  + 
   geom_abline(aes(intercept=coef(rapeseed.sper)[2], slope=coef(rapeseed.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+>>>>>>> 69b2d5123fa5200145e09d95d88506efbd2f53f8
 
 
 #Rice 
@@ -277,7 +327,7 @@ lw <- nb2listw(nb, zero.policy = TRUE)
 #Log Transform yields
 fishnet.rice$logRice<-log10(fishnet.rice$mean_rice_)
 #Spatial Error Model
-rice.sper <- errorsarlm(logRice ~ rice.near$rescale_ND, data=fishnet.rice, lw, tol.solve=1.0e-30,zero.policy  = TRUE)
+rice.sper <- errorsarlm(logRice ~ Rice.near$rescale_ND, data=fishnet.rice, lw, tol.solve=1.0e-30,zero.policy  = TRUE)
 summary(rice.sper) #Summary
 fishnet.rice$residualsSpecError <- residuals(rice.sper) #Residuals
 moran.mc(fishnet.rice$residualsSpecError, lw, 999,zero.policy = TRUE) #Test for autocorrelation
@@ -287,8 +337,16 @@ ggplot(xy1, aes(x=X1,y=X2, color=fishnet.rice$residualsSpecError)) +
 
 #Plot
 rice.plot<-ggplot(Rice.near, aes(x=rescale_ND, y=logRice)) +
+<<<<<<< HEAD
+  geom_point(alpha=0.1) +theme_justin + 
+  #geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_rice_)),color=china.color, alpha=0.5) +
+  #geom_point(data=brazil, aes(x=rescale_ND, y=log10(brazil$mean_rice_)), color=brazil.color, alpha=0.8) + 
+  #geom_point(data=india, aes(x=rescale_ND, y=log10(india$mean_rice_)),color=russia.color, alpha=0.3) + 
+  geom_abline(aes(intercept=coef(rice.sper)[2], slope=coef(rice.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield") +labs(title="Rice", subtitle="Slope = -0.017, p < 0.0001")
+=======
   geom_point(alpha=0.3) +theme_justin  + 
   geom_abline(aes(intercept=coef(rice.sper)[2], slope=coef(rice.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+>>>>>>> 69b2d5123fa5200145e09d95d88506efbd2f53f8
 
 
 #Rye 
@@ -306,7 +364,7 @@ yield$rescale_ND<-distances/(1000*1000)
 Rye.near<-yield %>% dplyr::select(mean_rye_Y,rescale_ND,COUNTRY)
 Rye.near<-Rye.near %>% filter(mean_rye_Y > 0, na.rm=TRUE)
 Rye.near<-Rye.near %>% filter(rescale_ND > 0, na.rm=TRUE)
-Rye.near$logRye<-log10(rye.near$mean_rye_Y)
+Rye.near$logRye<-log10(Rye.near$mean_rye_Y)
 
 
 #Links
@@ -315,7 +373,7 @@ lw <- nb2listw(nb, zero.policy = TRUE)
 #Log Transform yields
 fishnet.rye$logRye<-log10(fishnet.rye$mean_rye_Y)
 #Spatial Error Model
-rye.sper <- errorsarlm(logRye ~ rye.near$rescale_ND, data=fishnet.rye, lw, tol.solve=1.0e-30,zero.policy  = TRUE)
+rye.sper <- errorsarlm(logRye ~ Rye.near$rescale_ND, data=fishnet.rye, lw, tol.solve=1.0e-30,zero.policy  = TRUE)
 summary(rye.sper) #Summary
 fishnet.rye$residualsSpecError <- residuals(rye.sper) #Residuals
 moran.mc(fishnet.rye$residualsSpecError, lw, 999,zero.policy = TRUE) #Test for autocorrelation
@@ -326,9 +384,17 @@ ggplot(xy1, aes(x=X1,y=X2, color=fishnet.rye$residualsSpecError)) +
 
 #Plot
 rye.plot<-ggplot(Rye.near, aes(x=rescale_ND, y=logRye)) +
+<<<<<<< HEAD
+  geom_point(alpha=0.1) +theme_justin + 
+#  geom_point(data=russia, aes(x=rescale_ND, y=log10(russia$mean_rye_Y)), color=russia.color, alpha=0.8) + 
+#  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_rye_Y)),color=china.color, alpha=0.8) +
+#  geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$mean_rye_Y)),color=usa.color, alpha=0.3) + 
+  geom_abline(aes(intercept=coef(rye.sper)[2], slope=coef(rye.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield") +labs(title="Rye", subtitle = "Slope=-0.017, p=0.0004")
+=======
   geom_point(alpha=0.3) +theme_justin  + 
   geom_abline(aes(intercept=coef(rye.sper)[2], slope=coef(rye.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
 
+>>>>>>> 69b2d5123fa5200145e09d95d88506efbd2f53f8
 
 #Sorghum 
 fishnet.sorghum<-subset(fishnet, fishnet$mean_sorgh> 0 ) #yield > 0 
@@ -363,8 +429,16 @@ ggplot(xy1, aes(x=X1,y=X2, color=fishnet.sorghum$residualsSpecError)) +
 
 #Plot
 sorghum.plot<-ggplot(sorghum.near, aes(x=rescale_ND, y=logSorghum)) +
+<<<<<<< HEAD
+  geom_point(alpha=0.1) +theme_justin + 
+#  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_sorgh)),color=china.color, alpha=0.8) +
+#  geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$mean_sorgh)),color=usa.color, alpha=0.5) + 
+#  geom_point(data=russia, aes(x=rescale_ND, y=log10(russia$mean_sorgh)), color=russia.color, alpha=0.3) + 
+  geom_abline(aes(intercept=coef(sorghum.sper)[2], slope=coef(sorghum.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield") +labs(title="Sorghum", subtitle="Slope=0.046, p < 0.0001")
+=======
   geom_point(alpha=0.3) +theme_justin + 
   geom_abline(aes(intercept=coef(sorghum.sper)[2], slope=coef(sorghum.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+>>>>>>> 69b2d5123fa5200145e09d95d88506efbd2f53f8
 
 
 #Soybean 
@@ -399,8 +473,17 @@ ggplot(xy1, aes(x=X1,y=X2, color=fishnet.soybean$residualsSpecError)) +
   geom_point(size=1.0) #plot residuals
 
 #Plot
+<<<<<<< HEAD
+soybean.plot<-ggplot(soybean.near, aes(x=rescale_ND, y=logSoybean)) +
+  geom_point(alpha=0.1) +theme_justin + 
+#  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_soybe)),color=china.color, alpha=0.8) +
+#  geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$mean_soybe)),color=usa.color, alpha=0.3) + 
+#  geom_point(data=russia, aes(x=rescale_ND, y=log10(russia$mean_soybe)), color=russia.color, alpha=0.1) + 
+  geom_abline(aes(intercept=coef(soybean.sper)[2], slope=coef(soybean.sper)[3]), color="grey", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield") +labs(title="Soybean", subtitle="Slope=0.123, p=0.259")
+=======
 soybean.plot<-ggplot(soybean.near, aes(x=rescale_ND, y=logSoybean))  + 
   geom_abline(aes(intercept=coef(soybean.sper)[2], slope=coef(soybean.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+>>>>>>> 69b2d5123fa5200145e09d95d88506efbd2f53f8
 
 
 #Sunflower 
@@ -437,8 +520,16 @@ ggplot(xy1, aes(x=X1,y=X2, color=fishnet.sunflower$residualsSpecError)) +
 
 #Plot
 sunflower.plot<-ggplot(sunflower.near, aes(x=rescale_ND, y=logSunflower)) +
+<<<<<<< HEAD
+  geom_point(alpha=0.1) +theme_justin + 
+#  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_sunfl)),color=china.color, alpha=0.8) +
+#  geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$mean_sunfl)), color=usa.color, alpha=0.4) + 
+# geom_point(data=brazil, aes(x=rescale_ND, y=log10(brazil$mean_sunfl)), color=brazil.color, alpha=0.3) + 
+  geom_abline(aes(intercept=coef(sunflower.sper)[2], slope=coef(sunflower.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield") +labs(title ="Sunflower", subtitle="Slope=-0.007, p=0.0476")
+=======
   geom_point(alpha=0.3) +theme_justin + 
   geom_abline(aes(intercept=coef(sunflower.sper)[2], slope=coef(sunflower.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
+>>>>>>> 69b2d5123fa5200145e09d95d88506efbd2f53f8
 
 
 #Wheat 
@@ -473,9 +564,20 @@ ggplot(xy1, aes(x=X1,y=X2, color=fishnet.wheat$residualsSpecError, )) +
 
 #Plot
 wheat.plot<-ggplot(wheat.near, aes(x=rescale_ND, y=logWheat)) +
+<<<<<<< HEAD
+  geom_point(alpha=0.1) +theme_justin + 
+#  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_wheat)),color=china.color, alpha=0.8) +
+#  geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$mean_wheat)),color=usa.color, alpha=0.4) + 
+#  geom_point(data=russia, aes(x=rescale_ND, y=log10(russia$mean_wheat)), color=russia.color, alpha=0.3) + 
+  geom_abline(aes(intercept=coef(wheat.sper)[2], slope=coef(wheat.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield") + labs(title="Wheat", subtitle="Slope=0.133, p=0.0036")
+
+#Arrange final plot
+grid.arrange(barley.plot,cassava.plot,groundnut.plot,maize.plot,potato.plot,rapeseed.plot,rice.plot,rye.plot,sorghum.plot,soybean.plot,sunflower.plot,wheat.plot, nrow = 3)
+=======
   geom_point(alpha=0.3) +theme_justin  + 
   geom_abline(aes(intercept=coef(wheat.sper)[2], slope=coef(wheat.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield")
 
+>>>>>>> 69b2d5123fa5200145e09d95d88506efbd2f53f8
 
 
 
