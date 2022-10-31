@@ -73,6 +73,41 @@ print(Sim0.1x.repeat)
 Sim0.1x.repeat$importance
 
 # Spatial Model
+Sim0.2x <- spatialRF::rf_spatial(
+  dependent.variable.name = ("Sim0.2x"), 
+  predictor.variable.names = c("AET_mean", "cassava_Fertilizer","Pesticide","GDP_Mean","cassavaBinaryGCO"),
+  distance.matrix = distance.matrix,
+  distance.thresholds = distance.thresholds,
+  max.spatial.predictors = 10,
+  xy = xy,
+  data = cassava.data,
+  method = "mem.moran.sequential", #default method
+  verbose = TRUE,
+  seed = random.seed,cluster = local.cluster
+)
+gc()
+print(Sim0.2x)
+
+#Get response curves
+Sim0.2x.df <- spatialRF::get_response_curves(Sim0.2x,variables = c("AET_mean","cassava_Fertilizer", "Pesticide", "GDP_Mean","cassavaBinaryGCO"))
+write.csv(Sim0.2x$predictions, file="Crop_GCO/Global/ArtificialYields/Sim0.2xcassava_pred.csv")
+write.csv(Sim0.2x$residuals$values, file="Crop_GCO/Global/ArtificialYields//Sim0.2xcassava_resid.csv")
+write.csv(Sim0.2x$variable.importance, file="Crop_GCO/Global/ArtificialYields//Sim0.2xcassava_VarImp.csv")
+write.csv(Sim0.2x$performance, file="Crop_GCO/Global/ArtificialYields//Sim0.2xcassava_preformance.csv")
+write.csv(Sim0.2x.df, file="Crop_GCO/Global/ArtificialYields//Sim0.2xcassava_curves.csv")
+
+Sim0.2x.repeat <- spatialRF::rf_repeat(
+  model = Sim0.2x, 
+  repetitions = 5,
+  seed = random.seed,
+  verbose = FALSE,
+  cluster = local.cluster
+)
+print(Sim0.2x.repeat)
+Sim0.2x.repeat$importance
+
+
+# Spatial Model
 Sim0.5x <- spatialRF::rf_spatial(
   dependent.variable.name = ("Sim0.5x"), 
   predictor.variable.names = c("AET_mean", "cassava_Fertilizer","Pesticide","GDP_Mean","cassavaBinaryGCO"),
@@ -87,9 +122,6 @@ Sim0.5x <- spatialRF::rf_spatial(
 )
 gc()
 print(Sim0.5x)
-
-
-
 
 #Get response curves
 Sim0.5x.df <- spatialRF::get_response_curves(Sim0.5x,variables = c("AET_mean","cassava_Fertilizer", "Pesticide", "GDP_Mean","cassavaBinaryGCO"))
@@ -108,6 +140,41 @@ Sim0.5x.repeat <- spatialRF::rf_repeat(
 )
 print(Sim0.5x.repeat)
 Sim0.5x.repeat$importance
+
+# Spatial Model
+Sim0.8x <- spatialRF::rf_spatial(
+  dependent.variable.name = ("Sim0.8x"), 
+  predictor.variable.names = c("AET_mean", "cassava_Fertilizer","Pesticide","GDP_Mean","cassavaBinaryGCO"),
+  distance.matrix = distance.matrix,
+  distance.thresholds = distance.thresholds,
+  max.spatial.predictors = 10,
+  xy = xy,
+  data = cassava.data,
+  method = "mem.moran.sequential", #default method
+  verbose = TRUE,
+  seed = random.seed,cluster = local.cluster
+)
+gc()
+print(Sim0.8x)
+
+#Get response curves
+Sim0.8x.df <- spatialRF::get_response_curves(Sim0.8x,variables = c("AET_mean","cassava_Fertilizer", "Pesticide", "GDP_Mean","cassavaBinaryGCO"))
+write.csv(Sim0.8x$predictions, file="Crop_GCO/Global/ArtificialYields/Sim0.8xcassava_pred.csv")
+write.csv(Sim0.8x$residuals$values, file="Crop_GCO/Global/ArtificialYields//Sim0.8xcassava_resid.csv")
+write.csv(Sim0.8x$variable.importance, file="Crop_GCO/Global/ArtificialYields//Sim0.8xcassava_VarImp.csv")
+write.csv(Sim0.8x$performance, file="Crop_GCO/Global/ArtificialYields//Sim0.8xcassava_preformance.csv")
+write.csv(Sim0.8x.df, file="Crop_GCO/Global/ArtificialYields//Sim0.8xcassava_curves.csv")
+
+Sim0.8x.repeat <- spatialRF::rf_repeat(
+  model = Sim0.8x, 
+  repetitions = 5,
+  seed = random.seed,
+  verbose = FALSE,
+  cluster = local.cluster
+)
+print(Sim0.8x.repeat)
+Sim0.8x.repeat$importance
+
 
 
 # Spatial Model
@@ -145,6 +212,74 @@ write.csv(Sim1.0x$variable.importance, file="Crop_GCO/Global/ArtificialYields//S
 write.csv(Sim1.0x$performance, file="Crop_GCO/Global/ArtificialYields//Sim1.0xcassava_preformance.csv")
 write.csv(Sim1.0x.df, file="Crop_GCO/Global/ArtificialYields//Sim1.0xcassava_curves.csv")
 
+# Spatial Model
+Sim1.1x <- spatialRF::rf_spatial(
+  dependent.variable.name = ("Sim1.1x"), 
+  predictor.variable.names = c("AET_mean", "cassava_Fertilizer","Pesticide","GDP_Mean","cassavaBinaryGCO"),
+  distance.matrix = distance.matrix,
+  distance.thresholds = distance.thresholds,
+  max.spatial.predictors = 10,
+  xy = xy,
+  data = cassava.data,
+  method = "mem.moran.sequential", #default method
+  verbose = TRUE,
+  seed = random.seed,cluster = local.cluster
+)
+gc()
+print(Sim1.1x)
+
+#Get response curves
+Sim1.1x.df <- spatialRF::get_response_curves(Sim1.1x,variables = c("AET_mean","cassava_Fertilizer", "Pesticide", "GDP_Mean","cassavaBinaryGCO"))
+write.csv(Sim1.1x$predictions, file="Crop_GCO/Global/ArtificialYields/Sim1.1xcassava_pred.csv")
+write.csv(Sim1.1x$residuals$values, file="Crop_GCO/Global/ArtificialYields//Sim1.1xcassava_resid.csv")
+write.csv(Sim1.1x$variable.importance, file="Crop_GCO/Global/ArtificialYields//Sim1.1xcassava_VarImp.csv")
+write.csv(Sim1.1x$performance, file="Crop_GCO/Global/ArtificialYields//Sim1.1xcassava_preformance.csv")
+write.csv(Sim1.1x.df, file="Crop_GCO/Global/ArtificialYields//Sim1.1xcassava_curves.csv")
+
+Sim1.1x.repeat <- spatialRF::rf_repeat(
+  model = Sim1.1x, 
+  repetitions = 5,
+  seed = random.seed,
+  verbose = FALSE,
+  cluster = local.cluster
+)
+print(Sim1.1x.repeat)
+Sim1.1x.repeat$importance
+
+# Spatial Model
+Sim1.2x <- spatialRF::rf_spatial(
+  dependent.variable.name = ("Sim1.2x"), 
+  predictor.variable.names = c("AET_mean", "cassava_Fertilizer","Pesticide","GDP_Mean","cassavaBinaryGCO"),
+  distance.matrix = distance.matrix,
+  distance.thresholds = distance.thresholds,
+  max.spatial.predictors = 10,
+  xy = xy,
+  data = cassava.data,
+  method = "mem.moran.sequential", #default method
+  verbose = TRUE,
+  seed = random.seed,cluster = local.cluster
+)
+gc()
+print(Sim1.2x)
+
+#Get response curves
+Sim1.2x.df <- spatialRF::get_response_curves(Sim1.2x,variables = c("AET_mean","cassava_Fertilizer", "Pesticide", "GDP_Mean","cassavaBinaryGCO"))
+write.csv(Sim1.2x$predictions, file="Crop_GCO/Global/ArtificialYields/Sim1.2xcassava_pred.csv")
+write.csv(Sim1.2x$residuals$values, file="Crop_GCO/Global/ArtificialYields//Sim1.2xcassava_resid.csv")
+write.csv(Sim1.2x$variable.importance, file="Crop_GCO/Global/ArtificialYields//Sim1.2xcassava_VarImp.csv")
+write.csv(Sim1.2x$performance, file="Crop_GCO/Global/ArtificialYields//Sim1.2xcassava_preformance.csv")
+write.csv(Sim1.2x.df, file="Crop_GCO/Global/ArtificialYields//Sim1.2xcassava_curves.csv")
+
+Sim1.2x.repeat <- spatialRF::rf_repeat(
+  model = Sim1.2x, 
+  repetitions = 5,
+  seed = random.seed,
+  verbose = FALSE,
+  cluster = local.cluster
+)
+print(Sim1.2x.repeat)
+Sim1.2x.repeat$importance
+
 
 # Spatial Model
 Sim1.5x <- spatialRF::rf_spatial(
@@ -180,6 +315,41 @@ Sim1.5x.repeat <- spatialRF::rf_repeat(
 
 print(Sim1.5x.repeat)
 Sim1.5x.repeat$importance
+
+# Spatial Model
+Sim1.8x <- spatialRF::rf_spatial(
+  dependent.variable.name = ("Sim1.8x"), 
+  predictor.variable.names = c("AET_mean", "cassava_Fertilizer","Pesticide","GDP_Mean","cassavaBinaryGCO"),
+  distance.matrix = distance.matrix,
+  distance.thresholds = distance.thresholds,
+  max.spatial.predictors = 10,
+  xy = xy,
+  data = cassava.data,
+  method = "mem.moran.sequential", #default method
+  verbose = TRUE,
+  seed = random.seed,cluster = local.cluster
+)
+gc()
+print(Sim1.8x)
+
+#Get response curves
+Sim1.8x.df <- spatialRF::get_response_curves(Sim1.8x,variables = c("AET_mean","cassava_Fertilizer", "Pesticide", "GDP_Mean","cassavaBinaryGCO"))
+write.csv(Sim1.8x$predictions, file="Crop_GCO/Global/ArtificialYields/Sim1.8xcassava_pred.csv")
+write.csv(Sim1.8x$residuals$values, file="Crop_GCO/Global/ArtificialYields//Sim1.8xcassava_resid.csv")
+write.csv(Sim1.8x$variable.importance, file="Crop_GCO/Global/ArtificialYields//Sim1.8xcassava_VarImp.csv")
+write.csv(Sim1.8x$performance, file="Crop_GCO/Global/ArtificialYields//Sim1.8xcassava_preformance.csv")
+write.csv(Sim1.8x.df, file="Crop_GCO/Global/ArtificialYields//Sim1.8xcassava_curves.csv")
+
+Sim1.8x.repeat <- spatialRF::rf_repeat(
+  model = Sim1.8x, 
+  repetitions = 5,
+  seed = random.seed,
+  verbose = FALSE,
+  cluster = local.cluster
+)
+print(Sim1.8x.repeat)
+Sim1.8x.repeat$importance
+
 
 # Spatial Model
 Sim2.0x <- spatialRF::rf_spatial(
@@ -281,38 +451,6 @@ Sim3.0x.repeat <- spatialRF::rf_repeat(
 )
 
 # Spatial Model
-Sim3.5x <- spatialRF::rf_spatial(
-  dependent.variable.name = ("Sim3.5x"), 
-  predictor.variable.names = c("AET_mean", "cassava_Fertilizer","Pesticide","GDP_Mean","cassavaBinaryGCO"),
-  distance.matrix = distance.matrix,
-  distance.thresholds = distance.thresholds,
-  max.spatial.predictors = 10,
-  xy = xy,
-  data = cassava.data,
-  method = "mem.moran.sequential", #default method
-  verbose = TRUE,
-  seed = random.seed,cluster = local.cluster
-)
-gc()
-print(Sim3.5x)
-
-#Get response curves
-Sim3.5x.df <- spatialRF::get_response_curves(Sim3.5x,variables = c("AET_mean","cassava_Fertilizer", "Pesticide", "GDP_Mean","cassavaBinaryGCO"))
-write.csv(Sim3.5x$predictions, file="Crop_GCO/Global/ArtificialYields/Sim3.5xcassava_pred.csv")
-write.csv(Sim3.5x$residuals$values, file="Crop_GCO/Global/ArtificialYields//Sim3.5xcassava_resid.csv")
-write.csv(Sim3.5x$variable.importance, file="Crop_GCO/Global/ArtificialYields//Sim3.5xcassava_VarImp.csv")
-write.csv(Sim3.5x$performance, file="Crop_GCO/Global/ArtificialYields//Sim3.5xcassava_preformance.csv")
-write.csv(Sim3.5x.df, file="Crop_GCO/Global/ArtificialYields//Sim3.5xcassava_curves.csv")
-
-Sim3.5x.repeat <- spatialRF::rf_repeat(
-  model = Sim3.5x, 
-  repetitions = 5,
-  seed = random.seed,
-  verbose = FALSE,
-  cluster = local.cluster
-)
-
-# Spatial Model
 Sim4.0x <- spatialRF::rf_spatial(
   dependent.variable.name = ("Sim4.0x"), 
   predictor.variable.names = c("AET_mean", "cassava_Fertilizer","Pesticide","GDP_Mean","cassavaBinaryGCO"),
@@ -343,39 +481,6 @@ Sim4.0x.repeat <- spatialRF::rf_repeat(
   verbose = FALSE,
   cluster = local.cluster
 )
-
-# Spatial Model
-Sim4.5x <- spatialRF::rf_spatial(
-  dependent.variable.name = ("Sim4.5x"), 
-  predictor.variable.names = c("AET_mean", "cassava_Fertilizer","Pesticide","GDP_Mean","cassavaBinaryGCO"),
-  distance.matrix = distance.matrix,
-  distance.thresholds = distance.thresholds,
-  max.spatial.predictors = 10,
-  xy = xy,
-  data = cassava.data,
-  method = "mem.moran.sequential", #default method
-  verbose = TRUE,
-  seed = random.seed,cluster = local.cluster
-)
-gc()
-print(Sim4.5x)
-
-#Get response curves
-Sim4.5x.df <- spatialRF::get_response_curves(Sim4.5x,variables = c("AET_mean","cassava_Fertilizer", "Pesticide", "GDP_Mean","cassavaBinaryGCO"))
-write.csv(Sim4.5x$predictions, file="Crop_GCO/Global/ArtificialYields/Sim4.5xcassava_pred.csv")
-write.csv(Sim4.5x$residuals$values, file="Crop_GCO/Global/ArtificialYields//Sim4.5xcassava_resid.csv")
-write.csv(Sim4.5x$variable.importance, file="Crop_GCO/Global/ArtificialYields//Sim4.5xcassava_VarImp.csv")
-write.csv(Sim4.5x$performance, file="Crop_GCO/Global/ArtificialYields//Sim4.5xcassava_preformance.csv")
-write.csv(Sim4.5x.df, file="Crop_GCO/Global/ArtificialYields//Sim4.5xcassava_curves.csv")
-
-Sim4.5x.repeat <- spatialRF::rf_repeat(
-  model = Sim4.5x, 
-  repetitions = 5,
-  seed = random.seed,
-  verbose = FALSE,
-  cluster = local.cluster
-)
-
 
 # Spatial Model
 Sim5.0x <- spatialRF::rf_spatial(
@@ -410,88 +515,5 @@ write.csv(Sim5.0x$performance, file="Crop_GCO/Global/ArtificialYields//Sim5.0xca
 write.csv(Sim5.0x.df, file="Crop_GCO/Global/ArtificialYields//Sim5.0xcassava_curves.csv")
 
 
-# Spatial Model
 
-Sim10x <- spatialRF::rf_spatial(
-  dependent.variable.name = ("Sim10.0x"), 
-  predictor.variable.names = c("AET_mean", "cassava_Fertilizer","Pesticide","GDP_Mean","cassavaBinaryGCO"),
-  distance.matrix = distance.matrix,
-  distance.thresholds = distance.thresholds,
-  max.spatial.predictors = 10,
-  xy = xy,
-  data = cassava.data,
-  method = "mem.moran.sequential", #default method
-  verbose = TRUE,
-  seed = random.seed,cluster = local.cluster
-)
-gc()
-print(Sim10x)
-
-#Get response curves
-Sim10x.df <- spatialRF::get_response_curves(Sim10x,variables = c("AET_mean","cassava_Fertilizer", "Pesticide", "GDP_Mean","cassavaBinaryGCO"))
-write.csv(Sim10x$predictions, file="Crop_GCO/Global/ArtificialYields/Sim10xcassava_pred.csv")
-write.csv(Sim10x$residuals$values, file="Crop_GCO/Global/ArtificialYields//Sim10xcassava_resid.csv")
-write.csv(Sim10x$variable.importance, file="Crop_GCO/Global/ArtificialYields//Sim10xcassava_VarImp.csv")
-write.csv(Sim10x$performance, file="Crop_GCO/Global/ArtificialYields//Sim10xcassava_preformance.csv")
-write.csv(Sim10x.df, file="Crop_GCO/Global/ArtificialYields//Sim10xcassava_curves.csv")
-
-Sim10.0x.repeat <- spatialRF::rf_repeat(
-  model = Sim10x, 
-  repetitions = 5,
-  seed = random.seed,
-  verbose = FALSE,
-  cluster = local.cluster
-)
-
-# Spatial Model
-Sim50x <- spatialRF::rf_spatial(
-  dependent.variable.name = ("Sim50.0x"), 
-  predictor.variable.names = c("AET_mean", "cassava_Fertilizer","Pesticide","GDP_Mean","cassavaBinaryGCO"),
-  distance.matrix = distance.matrix,
-  distance.thresholds = distance.thresholds,
-  max.spatial.predictors = 10,
-  xy = xy,
-  data = cassava.data,
-  method = "mem.moran.sequential", #default method
-  verbose = TRUE,
-  seed = random.seed,cluster = local.cluster
-)
-gc()
-print(Sim50x)
-
-#Get response curves
-Sim50x.df <- spatialRF::get_response_curves(Sim50x,variables = c("AET_mean","cassava_Fertilizer", "Pesticide", "GDP_Mean","cassavaBinaryGCO"))
-write.csv(Sim50x$predictions, file="Crop_GCO/Global/ArtificialYields/Sim50xcassava_pred.csv")
-write.csv(Sim50x$residuals$values, file="Crop_GCO/Global/ArtificialYields//Sim50xcassava_resid.csv")
-write.csv(Sim50x$variable.importance, file="Crop_GCO/Global/ArtificialYields//Sim50xcassava_VarImp.csv")
-write.csv(Sim50x$performance, file="Crop_GCO/Global/ArtificialYields//Sim50xcassava_preformance.csv")
-write.csv(Sim50x.df, file="Crop_GCO/Global/ArtificialYields//Sim50xcassava_curves.csv")
-
-Sim50x.repeat <- spatialRF::rf_repeat(
-  model = Sim50x, 
-  repetitions = 5,
-  seed = random.seed,
-  verbose = FALSE,
-  cluster = local.cluster
-)
-
-
-#Stop cluster
-parallel::stopCluster(cl = local.cluster) #stop cluster
-
-# Summarize results 
-summary<-read.csv(file="NewAnalyses/SimulatedYields/Cassava_SimRepeat.csv")
-
-gco<-dplyr::filter(summary,Variable == "cassavaBinaryGCO")
-
-ggplot(summary, aes(x=Simulation,y=Fert_Standard)) + 
-  geom_point() + 
-  stat_smooth(method="lm") + 
-  xlab("Yield Inflation Factor") + 
-  ylab("GCO Variable Importance") + 
-  theme_cowplot(12)
-
-mod<-lm(Importance~Simulation, data=gco)
-plot(mod) #check fit
-summary(mod)
 
