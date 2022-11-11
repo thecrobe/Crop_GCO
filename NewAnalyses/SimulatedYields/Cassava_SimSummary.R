@@ -1,15 +1,13 @@
 library(tidyverse)
 library(cowplot)
-data<-read.csv(file="/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/Crop_GCO/Cassava_SImRepeat.csv")
+data<-read.csv(file="/Users/justinstewart/Downloads/VarImp_Simulation.csv")
 
-gco<-dplyr::filter(data,Variable == "cassavaBinaryGCO")
+gco<-dplyr::filter(data,Variable == "GCO")
 
-ggplot(gco, aes(x=gco$Simulation,y=gco$Fert_Standard)) + 
-  geom_point() + 
-  stat_smooth(method="lm") + 
+
+ggplot(gco, aes(x=Simulation,y=(FertStandard), color=Variable)) + 
+  geom_point(size=2) + 
+  stat_smooth(method="loess",se = FALSE) + 
   xlab("Yield Inflation Factor") + 
   ylab("GCO Variable Importance") + 
   theme_cowplot(12)
-
-mod<-lm(Importance~Simulation, data=gco)
-summary(mod)
