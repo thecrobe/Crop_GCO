@@ -2,7 +2,6 @@ library(dplyr)
 library(ggplot2)
 library(ggpubr)
 library(ggsci)
-setwd(dir = "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/Crop_GCO/NewAnalyses/")
 
 # Function to produce summary statistics (mean and +/- sd)
 data_summary <- function(x) {
@@ -204,7 +203,7 @@ sunflower.plot<-ggplot(Sunflower, aes(x=log10(PredOverReal),color=SunflowerGCO))
 
 
 #Wheat
-Wheat.real<-na.omit(read.csv(file="../Global/Models//Wheat_RF.csv"))
+Wheat.real<-na.omit(read.csv(file="../Global/Models/Wheat_RF.csv"))
 Wheat.real$FISHNET_ID<-Wheat.real$Fishnet_ID
 
 Wheat.pred<-read.csv(file="Global/ModelOutputs/Wheat_pred.csv",header=T)
@@ -212,7 +211,7 @@ Wheat.real$Predictions<-Wheat.pred$values
 Wheat.real$PredOverReal<-Wheat.real$Predictions/Wheat.real$wheat_HgHa
 Wheat<-left_join(Wheat.real,mapping)
 
-wheat.plot<-ggplot(Wheat, aes(x=(PredOverReal),color=WheatGCO)) + 
+wheat.plot<-ggplot(Wheat, aes(x=log10(PredOverReal),color=WheatGCO)) + 
   geom_density(size=2) + 
   geom_vline(xintercept = 0,linetype="dotdash", size=1) +
   theme_justin + 
