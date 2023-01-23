@@ -100,7 +100,8 @@ rice.spatial <- spatialRF::rf_spatial(
   model = model.non.spatial,
   method = "mem.moran.sequential", #default method
   verbose = FALSE,
-  seed = random.seed,cluster = local.cluster
+  seed = random.seed,cluster = local.cluster,
+ max.spatial.predictors = 10
 )
 print(rice.spatial)
 parallel::stopCluster(cl = local.cluster) #stop cluster
