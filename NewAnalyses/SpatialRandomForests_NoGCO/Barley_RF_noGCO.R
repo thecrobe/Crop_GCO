@@ -11,14 +11,13 @@ library(dplyr)
 
 #Read In
 #Fishnet- pixel = 100km^2
-fishnet<- readOGR(dsn= "Crop_GCO/Global/GIS/", layer="Fishnet_yield_NoAntarctica")
-summary(fishnet)
+fishnet<- readOGR(dsn= "GIS/", layer="Fishnet_yield_NoAntarctica")
 #Set Projection
 proj4string(fishnet) <- CRS("+init=epsg:3786") 
 
 #Some covariates
-barley.model<-na.omit(read.csv(file="Crop_GCO/Global/Models/Barley_RF.csv", header=T))
-mapping<-read.csv(file="Crop_GCO/Global/GCO_Mapping.csv", header=T)
+barley.model<-na.omit(read.csv(file="Global/Models/Barley_RF.csv", header=T))
+mapping<-read.csv(file="Global/GCO_Mapping.csv", header=T)
 mapping$Fishnet_ID<-mapping$FISHNET_ID #Fixing name
 
 #Merging fishnet with covariates
@@ -33,7 +32,7 @@ barley.scaled$FISHNET_ID<-as.numeric(barley.p@data$Fishnet_ID)
 #Select categorical covariates
 barley.cat<-barley.p %>% select(COUNTRY.x, FISHNET_ID,Latitude,Longitude)
 
-barley.final<-merge(barley.cat,barley.scaled, by="FISHNET_ID")
+barley.final<-cbind(barley.cat,barley.scaled)
 barley.final<-na.omit(barley.final)
 barley.coords<-barley.final %>% select(Latitude,Longitude) #select coordinates
 summary(barley.final)
@@ -67,7 +66,7 @@ doParallel::registerDoParallel(cl = local.cluster)
 #NonSpatial Model
 model.non.spatial <- spatialRF::rf(
   data = barley.data, 
-  dependent.variable.name = "barley_HgHa",
+  dependent.variable.name = "mean_barle",
   predictor.variable.names = c("AET_mean","Barley_Fertilizer", "Pesticide", "GDP_Mean"),
   distance.matrix = distance.matrix,
   distance.thresholds = distance.thresholds,
@@ -113,7 +112,7 @@ ggplot(barley.data, aes(x=Longitude, y=Latitude, color=barley.resid$barley.spati
 barley.curves.df <- spatialRF::get_response_curves(barley.spatial,variables = c("AET_mean","Barley_Fertilizer", "Pesticide", "GDP_Mean"))
 write.csv(barley.spatial$predictions, file="NewAnalyses/SpatialRandomForests_NoGCO/barley_nogco_predictions")
 write.csv(barley.spatial$residuals$values, file="NewAnalyses/SpatialRandomForests_NoGCO/barley_nogco_resid")
-write.csv(barley.spatial$variable.importance, file="NewAnalyses/SpatialRandomForests_NoGCO/barley_nogco_varImp"")
+write.csv(barley.spatial$variable.importance, file="NewAnalyses/SpatialRandomForests_NoGCO/barley_nogco_varImp")
 write.csv(barley.spatial$performance, file="NewAnalyses/SpatialRandomForests_NoGCO/barley_nogco_performance")
-write.csv(barley.curves.df, file=""NewAnalyses/SpatialRandomForests_NoGCO/barley_nogco_curves")
+write.csv(barley.curves.df, file="NewAnalyses/SpatialRandomForests_NoGCO/barley_nogco_curves")
 
