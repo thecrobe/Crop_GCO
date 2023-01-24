@@ -25,32 +25,18 @@ mapping$Fishnet_ID<-mapping$FISHNET_ID #Fixing name
 m <- sp::merge(fishnet, cassava.model, by='Fishnet_ID')
 cassava<-sp::merge(m, mapping, by='Fishnet_ID')
 cassava.p = subset(cassava, cassava_HgHa > 0) #selecting values > 0 
-cassava.p$cassava10x<-cassava.p$cassava_HgHa*10 # 10 times actual amount 
 
 #Transform numerical covariates
-cassava.num<-cassava.p@data %>% select(cassava_HgHa, AET_mean, cassava_Fertilizer, Pesticide,GDP_Mean,cassava10x) 
-cassava.scaled<-data.frame(log10(cassava.num+1)) #psuedo count to avoid inf
-cassava.scaled$FISHNET_ID<-as.numeric(cassava.p@data$Fishnet_ID)
-
+cassava.num<-cassava.p@data %>% select(cassava_HgHa, AET_mean, cassava_Fertilizer, Pesticide,GDP_Mean) 
+cassava.num$FISHNET_ID<-as.numeric(cassava.p@data$Fishnet_ID)
 #Select categorical covariates
-cassava.cat<-cassava.p %>% select(COUNTRY.x,CassavaGCO, FISHNET_ID,Latitude,Longitude)
+cassava.cat<-cassava.p %>% select(CassavaGCO, FISHNET_ID,Latitude,Longitude)
 
 #Merge
-
-cassava.final<-merge(cassava.catagory,cassava.scaled, by="FISHNET_ID")
+cassava.final<-merge(cassava.catagory,cassava.num, by="FISHNET_ID")
 cassava.final$cassavaGCO<-as.factor(cassava.final$CassavaGCO)
 cassava.final$cassavaGCO
-cassava.inside<-filter(cassava.final, CassavaGCO == "Inside")
-cassava.inside$model10x
-cassava.outside<-filter(cassava.final, CassavaGCO == "Outside")
-cassava10x<-data.frame(cassava.p$cassava_HgHa*10) # 10 times actual amount 
-cassava.inside$x10<-cassava10x$cassava.p.cassava_HgHa...10
-dim(cassava.final)
-inner_join(cassava.outside,cassava10x)
-
-cassava.final$cassavaBinaryGCO<- ifelse(cassava.final$CassavaGCO == 'Inside', 1, 0) #set binary dummy
-
-
+cassava.final$cassavaBinaryGCO<-(ifelse(cassava.final$CassavaGCO == 'Inside', 1, 0)) #set binary dummy
 
 cassava.coords<-cassava.final %>% select(Latitude,Longitude) #select coordinates
 summary(cassava.final)
@@ -69,7 +55,7 @@ xy <- data.frame(cbind(x,y))
 #distance matrix
 distance.matrix <- dist.mat
 #distance thresholds (same units as distance_matrix)
-distance.thresholds <- c(0, 1, 5, 10, 50)
+distance.thresholds <- c(50)
 #random seed for reproducibility
 random.seed <- 1
 # remove data from spatial dataframe
@@ -77,63 +63,21 @@ cassava.data<-cassava.final
 
 #Set up cluster
 local.cluster <- parallel::makeCluster(
-  parallel::detectCores() - 20,
+  parallel::detectCores() - 14,
   type = "PSOCK")
 doParallel::registerDoParallel(cl = local.cluster)
 
-#NonSpatial Model
-model.non.spatial <- spatialRF::rf(
-  data = cassava.data, 
-  dependent.variable.name = "cassava_HgHa",
-  predictor.variable.names = c("AET_mean","cassava_Fertilizer", "Pesticide", "GDP_Mean","cassavaBinaryGCO"),
-  distance.matrix = distance.matrix,
-  distance.thresholds = distance.thresholds,
-  xy = xy, #not needed by rf, but other functions read it from the model
-  seed = random.seed,
-  cluster = local.cluster,
-  verbose = FALSE)
-
-print(model.non.spatial)
-cassava.100x<-model.non.spatial
-
-str(cassava.data)
-
-gc() #cleanup ram
-# Moran's Plot
-spatialRF::plot_moran(model.non.spatial, verbose = FALSE)
-
-######
-
 # Spatial Model
-cassava.spatial <- spatialRF::rf_spatial(
-  model = model.non.spatial,
+Trial <- spatialRF::rf_spatial(
+  dependent.variable.name = "Sim10x",
+  predictor.variable.names = c("AET_mean","cassava_Fertilizer", "Pesticide", "GDP_Mean","cassavaBinaryGCO"),
+  data = cassava.data,
+  distance.matrix = distance.matrix,
   method = "mem.moran.sequential", #default method
-  verbose = FALSE,
+  verbose = TRUE,
   seed = random.seed,cluster = local.cluster
 )
-print(cassava.spatial)
+
+print(Sim10xSpatial)
 parallel::stopCluster(cl = local.cluster) #stop cluster
 gc()
-
-cas.resid<-data.frame(cassava.spatial$residuals$values) #extract residuals
-dim(cas.resid)
-#Plot residuals
-ggplot(cassava.data, aes(x=Longitude, y=Latitude, color=cas.resid$cassava.spatial.residuals.values)) + 
-  geom_point() +
-  scale_color_viridis_c(option = "F") +
-  theme_bw() +
-  labs(color = "Eigenvalue") +
-  ggtitle("Variable: Residuals") + 
-  ggplot2::theme(legend.position = "bottom")+ 
-  ggplot2::xlab("Longitude") + 
-  ggplot2::ylab("Latitude")
-
-#Get response curves
-cassava.curves.df <- spatialRF::get_response_curves(cassava.spatial,variables = c("AET_mean","cassava_Fertilizer", "Pesticide", "GDP_Mean","cassavaBinaryGCO"))
-
-
-write.csv(cassava.spatial$predictions, file="./PowerAnalysis/Cassava_Global10xPred.csv")
-write.csv(cassava.spatial$residuals$values, file="./PowerAnalysis/Cassava_Global10xresid.csv")
-write.csv(cassava.spatial$variable.importance, file="./PowerAnalysis/Cassava_Global10xVarImp.csv")
-write.csv(cassava.spatial$performance, file="./PowerAnalysis/Cassava_Global10xpreformance.csv")
-write.csv(cassava.curves.df, file="./PowerAnalysis/Cassava_Global10xcurves.csv")

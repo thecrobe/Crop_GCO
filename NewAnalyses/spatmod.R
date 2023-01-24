@@ -62,9 +62,6 @@ ggplot(xy1, aes(x=X1,y=X2, color=fishnet.barley$residualsSpecError)) +
 barley.plot<-ggplot(barley.near, aes(x=rescale_ND, y=barley.near$logBarley)) +
 <<<<<<< HEAD
   geom_point(alpha=0.1) +theme_justin + 
-#  geom_point(data=china, aes(x=rescale_ND, y=log10(china$mean_barle)), color=china.color, alpha=0.9) + 
-#  geom_point(data=usa, aes(x=rescale_ND, y=log10(usa$mean_barle)), color=usa.color, alpha=0.5) + 
-#  geom_point(data=russia, aes(x=rescale_ND, y=log10(russia$mean_barle)),color=russia.color, alpha=0.2) +
   geom_abline(aes(intercept=coef(barley.sper)[2], slope=coef(barley.sper)[3]), color="red", size=2) +labs(color='GCO') +theme_justin +xlab("Distance From GCO (1000's km)") +ylab ("Log10 Yield") +labs(title="Barley",subtitle="Slope=0.015, p < 0.0001")
 
 =======
