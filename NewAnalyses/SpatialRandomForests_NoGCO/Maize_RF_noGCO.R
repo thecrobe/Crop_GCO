@@ -11,7 +11,7 @@ library(dplyr)
 
 #Read In
 #Fishnet- pixel = 100km^2
-fishnet<- readOGR(dsn= "GIS/", layer="Fishnet_yield_NoAntarctica")
+fishnet<- readOGR(dsn= "GIS", layer="Fishnet_yield_NoAntarctica")
 #Set Projection
 proj4string(fishnet) <- CRS("+init=epsg:3786") 
 
@@ -51,15 +51,15 @@ xy <- data.frame(cbind(x,y))
 #distance matrix
 distance.matrix <- dist.mat
 #distance thresholds (same units as distance_matrix)
-distance.thresholds <- c(0, 1, 5, 10, 50)
+distance.thresholds <- c(0, 1)
 #random seed for reproducibility
 random.seed <- 1
 # remove data from spatial dataframe
-maize.data<-data.frame(maize.final)
+maize.data<-data.frame(maize.final@data)
 
 #Set up cluster
 local.cluster <- parallel::makeCluster(
-  parallel::detectCores() - 3,
+  parallel::detectCores() - 1,
   type = "PSOCK")
 doParallel::registerDoParallel(cl = local.cluster)
 
@@ -87,9 +87,9 @@ spatialRF::plot_moran(model.non.spatial, verbose = FALSE)
 maize.spatial <- spatialRF::rf_spatial(
   model = model.non.spatial,
   method = "mem.moran.sequential", #default method
-  verbose = FALSE,
+  verbose = TRUE,
   seed = random.seed,cluster = local.cluster,
-  max.spatial.predictors = 10
+  max.spatial.predictors = 5,
 )
 print(maize.spatial)
 parallel::stopCluster(cl = local.cluster) #stop cluster
@@ -110,8 +110,8 @@ ggplot(maize.data, aes(x=Longitude, y=Latitude, color=maize.resid$maize.spatial.
 
 #Get response curves
 maize.curves.df <- spatialRF::get_response_curves(maize.spatial,variables = c("AET_mean","maize_Fertilizer", "Pesticide", "GDP_Mean"))
-write.csv(maize.spatial$predictions, file="NewAnalyses/SpatialRandomForests_NoGCO/maize_nogco_predictions")
-write.csv(maize.spatial$residuals$values, file="NewAnalyses/SpatialRandomForests_NoGCO/maize_nogco_resid")
-write.csv(maize.spatial$variable.importance, file="NewAnalyses/SpatialRandomForests_NoGCO/maize_nogco_varImp")
-write.csv(maize.spatial$performance, file="NewAnalyses/SpatialRandomForests_NoGCO/maize_nogco_performance")
-write.csv(maize.curves.df, file="NewAnalyses/SpatialRandomForests_NoGCO/maize_nogco_curves")
+write.csv(maize.spatial$predictions, file="Global/SpatialRandomForests_NoGCO/maize_nogco_predictions")
+write.csv(maize.spatial$residuals$values, file="Global/SpatialRandomForests_NoGCO/maize_nogco_resid")
+write.csv(maize.spatial$variable.importance, file="Global/SpatialRandomForests_NoGCO/maize_nogco_varImp")
+write.csv(maize.spatial$performance, file="Global/SpatialRandomForests_NoGCO/maize_nogco_performance")
+write.csv(maize.curves.df, file="Global/SpatialRandomForests_NoGCO/maize_nogco_curves")
