@@ -1,15 +1,6 @@
 library(dplyr)
 library(ggplot2)
 library(ggpubr)
-library(ggsci)
-
-# Function to produce summary statistics (mean and +/- sd)
-data_summary <- function(x) {
-  m <- mean(x)
-  ymin <- m-sd(x)
-  ymax <- m+sd(x)
-  return(c(y=m,ymin=ymin,ymax=ymax))
-}
 
 #Graphics
 theme_justin<-theme_bw() +theme(axis.line = element_line(colour = "black"), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.border = element_blank(), panel.background = element_blank()) + theme(legend.position = "none")
@@ -26,7 +17,7 @@ barley.plot<-ggplot(barley, aes(x=(residuals))) +
   geom_density(size=1, color="blue") + 
   geom_density(size=1,data = noGCO, aes(x=residuals), color="red") +
   theme_justin + 
-  xlab("Barley") + xlab("Prediction Error") +
+   xlab("Residuals") +
   scale_color_npg() + ggtitle("Barley") + 
   labs(color = "GCO")
 
@@ -41,7 +32,7 @@ cassava.plot<-ggplot(cassava, aes(x=(residuals))) +
   geom_density(size=1, color="blue") + 
   geom_density(size=1,data = noGCO, aes(x=residuals), color="red") +
   theme_justin + 
-  xlab("Barley") + xlab("Prediction Error") +
+   xlab("Residuals") +
   scale_color_npg() + ggtitle("Cassava") + 
   labs(color = "GCO")
 
@@ -55,7 +46,7 @@ groundnut.plot<-ggplot(groundnut, aes(x=(residuals))) +
   geom_density(size=1, color="blue") + 
   geom_density(size=1,data = noGCO, aes(x=residuals), color="red") +
   theme_justin + 
-  xlab("Barley") + xlab("Prediction Error") +
+   xlab("Residuals") +
   scale_color_npg() + ggtitle("Groundnut") + 
   labs(color = "GCO")
 
@@ -69,7 +60,7 @@ maize.plot<-ggplot(maize, aes(x=(residuals))) +
   geom_density(size=1, color="blue") + 
   geom_density(size=1,data = noGCO, aes(x=residuals), color="red") +
   theme_justin + 
-  xlab("Barley") + xlab("Prediction Error") +
+   xlab("Residuals") +
   scale_color_npg() + ggtitle("Maize") + 
   labs(color = "GCO")
 
@@ -83,7 +74,7 @@ rapeseed.plot<-ggplot(rapeseed, aes(x=(residuals))) +
   geom_density(size=1, color="blue") + 
   geom_density(size=1,data = noGCO, aes(x=residuals), color="red") +
   theme_justin + 
-  xlab("Barley") + xlab("Prediction Error") +
+   xlab("Residuals") +
   scale_color_npg() + ggtitle("Rapeseed") + 
   labs(color = "GCO")
 
@@ -97,7 +88,7 @@ rice.plot<-ggplot(rice, aes(x=(residuals))) +
   geom_density(size=1, color="blue") + 
   geom_density(size=1,data = noGCO, aes(x=residuals), color="red") +
   theme_justin + 
-  xlab("Barley") + xlab("Prediction Error") +
+   xlab("Residuals") +
   scale_color_npg() + ggtitle("Rice") + 
   labs(color = "GCO")
 
@@ -111,7 +102,7 @@ rye.plot<-ggplot(rye, aes(x=(residuals))) +
   geom_density(size=1, color="blue") + 
   geom_density(size=1,data = noGCO, aes(x=residuals), color="red") +
   theme_justin + 
-  xlab("Barley") + xlab("Prediction Error") +
+   xlab("Residuals") +
   scale_color_npg() + ggtitle("Rye") + 
   labs(color = "GCO")
 
@@ -125,7 +116,7 @@ sorghum.plot<-ggplot(sorghum, aes(x=(residuals))) +
   geom_density(size=1, color="blue") + 
   geom_density(size=1,data = noGCO, aes(x=residuals), color="red") +
   theme_justin + 
-  xlab("Barley") + xlab("Prediction Error") +
+   xlab("Residuals") +
   scale_color_npg() + ggtitle("Sorghum") + 
   labs(color = "GCO")
 
@@ -139,7 +130,7 @@ soybean.plot<-ggplot(soybean, aes(x=(residuals))) +
   geom_density(size=1, color="blue") + 
   geom_density(size=1,data = noGCO, aes(x=residuals), color="red") +
   theme_justin + 
-  xlab("Barley") + xlab("Prediction Error") +
+   xlab("Residuals") +
   scale_color_npg() + ggtitle("Soybean") + 
   labs(color = "GCO")
 
@@ -153,7 +144,7 @@ sunflower.plot<-ggplot(sunflower, aes(x=(residuals))) +
   geom_density(size=1, color="blue") + 
   geom_density(size=1,data = noGCO, aes(x=residuals), color="red") +
   theme_justin + 
-  xlab("Barley") + xlab("Prediction Error") +
+  xlab("Residuals") +
   scale_color_npg() + ggtitle("Sunflower") + 
   labs(color = "GCO")
 
@@ -167,16 +158,29 @@ wheat.plot<-ggplot(wheat, aes(x=(residuals))) +
   geom_density(size=1, color="blue") + 
   geom_density(size=1,data = noGCO, aes(x=residuals), color="red") +
   theme_justin + 
-  xlab("Barley") + xlab("Prediction Error") +
+   xlab("Residuals") +
   scale_color_npg() + ggtitle("Wheat") + 
   labs(color = "GCO")
 
+#Potato
+potato<-read.csv(file="NewAnalyses/SpatialRandomForests/ModelOutputs/potato_resid.csv",header=T)
+noGCO<-read.csv(file="NewAnalyses/SpatialRandomForests_NoGCO/potato_nogco_resid")
+noGCO$residuals<-10^(noGCO$x)-1
+potato$residuals<-10^(potato$x)-1 #backtransform
+
+potato.plot<-ggplot(potato, aes(x=(residuals))) + 
+  geom_density(size=1, color="blue") + 
+  geom_density(size=1,data = noGCO, aes(x=residuals), color="red") +
+  theme_justin + 
+  xlab("Residuals") +
+  scale_color_npg() + ggtitle("Potato") + 
+  labs(color = "GCO")
 
 
 ### Plot
 multipanel<-ggarrange(barley.plot,cassava.plot,groundnut.plot,maize.plot,potato.plot,rapeseed.plot,rice.plot,rye.plot,sorghum.plot,soybean.plot,sunflower.plot,wheat.plot,ncol = 4,nrow = 3,common.legend = TRUE)
 
-ggsave(plot = multipanel,filename = "PredictionError.png",path = "../Figures/",dpi = 300,height = 8,width = 10)
+ggsave(plot = multipanel,filename = "Residuals_GCO_NoGCO.tiff",path = "../Figures/",dpi = 300,height = 8,width = 10)
 
 
 
