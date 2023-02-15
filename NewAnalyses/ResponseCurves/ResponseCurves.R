@@ -12,7 +12,7 @@ theme_justin<-theme_bw() +theme(axis.line = element_line(colour = "black"),
 
 
 # Model variable importance
-varimp<-read.csv(file="NewAnalyses/Global_VarImp.csv",header=T)
+varimp<-read.csv(file="/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/Crop_GCO/NewAnalyses/ResponseCurves/",header=T)
 varimp$Variable <- factor(varimp$Variable, levels=c("Fertilizer", "Evapotranspiration", "Pesticide","GDP","GCO"))
 varimp$Crop<-factor(varimp$Crop, levels=unique(varimp$Crop))
 
@@ -28,7 +28,7 @@ ggplot(varimp, aes(x=Variable, y=Crop,fill=FertStandardized)) +
 
 
 #Read in Response Curves
-data<-read.csv(file="NewAnalyses/Global_ResponseCurves.csv", header=T)
+data<-read.csv(file="/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/Analysis/Crop_GCO/NewAnalyses/SpatialRandomForests/Global_ResponseCurves.csv", header=T)
 
 fertilizer<- data %>% filter(predictor.name == "Fertilizer" & quantile==0.5)
 fertilizer.plot<-ggplot(fertilizer, aes(x=predictor,y=response)) +
@@ -73,8 +73,8 @@ aet.plot<-ggplot(aet, aes(x=predictor,y=response)) +
   labs(title = "Evapotranspiration Response Curves")
 
 
-ggsave(plot = gdp.plot,
+ggsave(plot = aet.plot,
        dpi = 300,
-       path = "../Figures/",
-       filename = "GDP_ResponseCurve.tiff"
+       path = "/Users/justinstewart/Dropbox/Collaborations/TobyKiers/Crop_Productivity_GCO/PNAS_submission/Figures/Supplemental/",
+       filename = "AET_ResponseCurve.tiff"
        ,width = 8,height = 5)
