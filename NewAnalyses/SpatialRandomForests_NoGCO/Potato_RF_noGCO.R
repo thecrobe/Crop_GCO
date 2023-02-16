@@ -23,10 +23,10 @@ mapping$Fishnet_ID<-mapping$FISHNET_ID #Fixing name
 #Merging fishnet with covariates
 m <- sp::merge(fishnet, potato.model, by='Fishnet_ID')
 potato<-sp::merge(m, mapping, by='Fishnet_ID')
-potato.p = subset(potato, potato_HgHa > 0) #selecting values > 0 
+potato.p = subset(potato, mean_potat.x > 0) #selecting values > 0 
 #Transform numerical covariates
 
-potato.num<-potato.p@data %>% select(potato_HgHa, AET_mean, potato_Fertilizer, Pesticide,GDP_Mean) 
+potato.num<-potato.p@data %>% select(mean_potat.x, AET_mean, Potato_Fe, Pesticide,GDP_Mean) 
 potato.scaled<-data.frame(log10(potato.num+1)) #psuedo count to avoid inf
 potato.scaled$FISHNET_ID<-as.numeric(potato.p@data$Fishnet_ID)
 #Select categorical covariates
